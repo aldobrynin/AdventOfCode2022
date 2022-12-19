@@ -16,7 +16,7 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
         [CommandOption("-d|--day")]
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public int? Day { get; init; }
-        
+
         [Description("Whether to run against sample input")]
         [CommandOption("-s|--sample")]
         [DefaultValue(false)]
@@ -37,9 +37,10 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
         var inputFile = Path.Combine(dayInputDirectory, sample ? "sample.txt" : "input.txt");
         AnsiConsole.MarkupLine("Using input from [underline navy]{0}[/]", inputFile);
         var input = File.ReadLines(inputFile);
-        method.Invoke(null, new object[] { input });
+        var action = (Action<IEnumerable<string>>)Delegate.CreateDelegate(typeof(Action<IEnumerable<string>>), method);
+        action(input);
     }
-    
+
 #pragma warning disable CS8765
     public override int Execute(CommandContext context, AoCCommandSettings settings)
 #pragma warning restore CS8765

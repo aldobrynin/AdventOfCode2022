@@ -1,4 +1,14 @@
 ﻿using Solution;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
-await new CommandApp<AoCCommand>().RunAsync(args);
+try
+{
+    var app = new CommandApp<AoCCommand>();
+    app.Configure(x => x.PropagateExceptions());
+    await app.RunAsync(args);
+}
+catch (Exception ex)
+{
+    AnsiConsole.WriteException(ex);
+}
