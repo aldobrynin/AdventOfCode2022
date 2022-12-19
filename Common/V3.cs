@@ -1,0 +1,58 @@
+using System.Globalization;
+
+public record V3(int X, int Y, int Z)
+{
+    public static V3 Left = new V3(-1, 0, 0);
+    public static V3 Right = new V3(1, 0, 0);
+    public static V3 Up = new V3(0, 1, 0);
+    public static V3 Down = new V3(0, -1, 0);
+    public static V3 Top = new V3(0, 0, 1);
+    public static V3 Bottom = new V3(0, 0, -1);
+
+    public static V3 Parse(string s)
+    {
+        var tokens = s.Split(new []{',', ' '}, 3);
+        return new V3(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]));
+    }
+
+    public static V3[] Directions4 => new[]
+    {
+        Left,
+        Up,
+        Right,
+        Down,
+    };
+    
+    public static V3[] Directions6 => new[]
+    {
+        Left,
+        Up,
+        Right,
+        Down,
+        Top,
+        Bottom,
+    };
+    
+    public static V3 Zero => new (0, 0, 0);
+
+    public IEnumerable<V3> Neighbors6() => V3.Directions6.Select(dir => this + dir);
+
+    public int DistTo(V3 other) => Math.Abs(X - other.X)
+                                   + Math.Abs(Y - other.Y)
+                                   + Math.Abs(Z - other.Z);
+    public V3 Abs() => new V3(Math.Abs(X), Math.Abs(Y), Math.Abs(Z));
+
+    public int CDistTo(V other) => Math.Max(Math.Abs(other.X - X), Math.Abs(other.Y - Y));
+
+    public override string ToString() =>
+        $"[{X},{Y},{Z}]";
+
+    public static V3 operator +(V3 a, V3 b) => new V3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+    public static V3 operator -(V3 a, V3 b) => new V3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+    public static V3 operator -(V3 a) => new V3(-a.X, -a.Y, -a.Z);
+    public static V3 operator *(V3 a, int k) => new V3(k * a.X, k * a.Y, k * a.Z);
+    public static V3 operator *(int k, V3 a) => new V3(k * a.X, k * a.Y, k * a.Z);
+    public static V3 operator /(V3 a, int k) => new V3(a.X / k, a.Y / k, a.Z / k);
+
+    public V3 Signum() => new V3(Math.Sign(X), Math.Sign(Y), Math.Sign(Z));
+}
