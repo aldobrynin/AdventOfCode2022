@@ -146,7 +146,6 @@ public class Day19
         if (current.Resources >= blueprint.GeodeRobotPrice)
         {
             yield return (Resources.OneGeode, blueprint.GeodeRobotPrice);
-            yield return (Resources.Zero, Resources.Zero);
             yield break;
         }
 
