@@ -10,5 +10,5 @@ try
 }
 catch (Exception ex)
 {
-    AnsiConsole.WriteException(ex);
+    AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
 }
