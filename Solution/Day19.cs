@@ -106,10 +106,12 @@ public class Day19
             .ToArray();
 
         blueprints
+            .AsParallel()
             .Sum(b => SearchOutcomes(b, maxTime: 24).Max(s => s.Resources.Geode) * b.Id)
             .Dump("Part1: ");
         
         blueprints
+            .AsParallel()
             .Take(3)
             .Select(b => SearchOutcomes(b, maxTime: 32).Max(s => s.Resources.Geode))
             .Product()
