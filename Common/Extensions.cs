@@ -13,7 +13,7 @@ public static class Extensions
             return map[pos.Y][pos.X];
         throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
     }
-    
+
     public static T Get<T>(this T[,] map, V pos)
     {
         if (pos.IsInRange(map))
@@ -32,11 +32,11 @@ public static class Extensions
     public static void Set<T>(this T[,] map, V pos, T value)
     {
         if (pos.IsInRange(map))
-            map[pos.Y,pos.X] = value;
+            map[pos.Y, pos.X] = value;
         else
             throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
     }
-    
+
     public static IEnumerable<V> FindAll<T>(this T[][] map, T value)
     {
         for (var y = 0; y < map.Length; y++)
@@ -48,6 +48,10 @@ public static class Extensions
     }
 
     public static int Product(this IEnumerable<int> source) => source.Aggregate(1, (x, y) => x * y);
+
+    public static int Product<T>(this IEnumerable<T> source, Func<T, int> selector) =>
+        source.Aggregate(1, (x, y) => x * selector(y));
+
     public static long Product(this IEnumerable<long> source) => source.Aggregate(1L, (x, y) => x * y);
 
     public static T Dump<T>(this T source, string? message = null, Func<T, object>? transform = null)
@@ -84,7 +88,7 @@ public static class Extensions
                 var print = transform == null ? source[i, j] : transform(source[i, j]);
                 Console.Write(print);
             }
-            
+
             Console.WriteLine();
         }
 
@@ -103,14 +107,14 @@ public static class Extensions
     {
         return string.Join(separator, source);
     }
-    
+
     public static IEnumerable<BfsState> Bfs<T>(this T[][] map, CanMove canMove, params V[] initial)
     {
         var visited = initial.ToHashSet();
         var queue = new Queue<BfsState>();
         foreach (var v in initial)
             queue.Enqueue(new BfsState(v, 0));
-    
+
         while (queue.TryDequeue(out var item))
         {
             yield return item;
