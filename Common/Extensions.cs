@@ -13,6 +13,13 @@ public static class Extensions
             return map[pos.Y][pos.X];
         throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
     }
+    
+    public static T Get<T>(this T[,] map, V pos)
+    {
+        if (pos.IsInRange(map))
+            return map[pos.Y, pos.X];
+        throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
+    }
 
     public static void Set<T>(this T[][] map, V pos, T value)
     {
@@ -22,6 +29,14 @@ public static class Extensions
             throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
     }
 
+    public static void Set<T>(this T[,] map, V pos, T value)
+    {
+        if (pos.IsInRange(map))
+            map[pos.Y,pos.X] = value;
+        else
+            throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
+    }
+    
     public static IEnumerable<V> FindAll<T>(this T[][] map, T value)
     {
         for (var y = 0; y < map.Length; y++)

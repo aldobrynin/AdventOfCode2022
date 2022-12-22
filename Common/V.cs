@@ -9,6 +9,11 @@ public record V(int X, int Y)
     {
         return X >= 0 && X < map[0].Length && Y >= 0 && Y < map.Length;
     }
+    
+    public bool IsInRange<T>(T[,] map)
+    {
+        return X >= 0 && X < map.GetLength(1) && Y >= 0 && Y < map.GetLength(0);
+    }
 
     public static V Parse(string s)
     {
@@ -41,6 +46,16 @@ public record V(int X, int Y)
             yield return point;
 
         yield return other;
+    }
+
+    public V Rotate(int degrees)
+    {
+        double angle = Math.PI * degrees / 180.0;
+        (double sinAngle, double cosAngle) = Math.SinCos(angle);
+
+        var x = (int)(X * cosAngle - Y * sinAngle);
+        var y = (int)(X * sinAngle + Y * cosAngle);
+        return new(x, y);
     }
 
     public override string ToString() => $"[{X},{Y}]";
