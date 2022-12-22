@@ -7,15 +7,16 @@ public class Day21
 {
     public static void Solve(IEnumerable<string> input)
     {
-        var monkeys = ParseTree(input);
+        var lines = input as string[] ?? input.ToArray();
+        var monkeys = ParseTree(lines);
+        EvaluateNode(monkeys["root"]).Dump("Part1: ");
 
+        monkeys = ParseTree(lines);
         var root = monkeys["root"];
-        root.Evaluate().Dump("Part1: ");
-
+        root.Operator = "-";
         monkeys["humn"].Value = new Equation(1, 0);
-        var equation = root.Left!.Evaluate() - root.Right!.Evaluate();
-        var result = -equation.B / equation.A;
-        Math.Round(result).Dump("Part2: ");
+        var equation = EvaluateNode(root);
+        Math.Round(-equation.B / equation.A).Dump("Part2: ");
     }
 
     private static Dictionary<string, TreeNode> ParseTree(IEnumerable<string> input)
@@ -25,10 +26,10 @@ public class Day21
             {
                 var parts = line.Split(new[] { ':', ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
                 var equationTokens = parts[1].Split(' ');
-                var value = equationTokens.Length == 1 ? long.Parse(equationTokens[0]) : 0;
+                var value = equationTokens.Length == 1 ? (long?)long.Parse(equationTokens[0]) : null;
                 return new TreeNode(parts[0])
                 {
-                    Value = new Equation(0, value),
+                    Value = value == null ? null : new Equation(0, value.Value),
                     Operator = equationTokens.Length > 1 ? equationTokens[1] : null,
                     Left = equationTokens.Length > 1 ? new TreeNode(equationTokens[0]) : null,
                     Right = equationTokens.Length > 1 ? new TreeNode(equationTokens[2]) : null,
@@ -44,25 +45,45 @@ public class Day21
         return monkeys;
     }
 
+    private static Equation EvaluateNode(TreeNode item)
+    {
+        var stack = new Stack<TreeNode>();
+        stack.Push(item);
+        while (stack.TryPeek(out var next) && item.Value == null)
+        {
+            if (next.Value != null)
+            {
+                stack.Pop();
+                continue;
+            }
+
+            if (next.Left?.Value != null && next.Right?.Value != null)
+            {
+                next.Value = next.Operator switch
+                {
+                    "+" => next.Left.Value + next.Right.Value,
+                    "-" => next.Left.Value - next.Right.Value,
+                    "*" => next.Left.Value * next.Right.Value,
+                    "/" => next.Left.Value / next.Right.Value,
+                    _ => throw new Exception($"WTF: {next.Operator}"),
+                };
+                stack.Pop();
+                continue;
+            }
+
+            if (next.Left is { Value: null }) stack.Push(next.Left);
+            if (next.Right is { Value: null }) stack.Push(next.Right);
+        }
+
+        return item.Value ?? throw new Exception("couldn't solve it :(");
+    }
+
     private record TreeNode(string Name)
     {
-        public Equation Value { get; set; } = null!;
-        public string? Operator { get; init; }
+        public Equation? Value { get; set; }
+        public string? Operator { get; set; }
         public TreeNode? Left { get; set; }
         public TreeNode? Right { get; set; }
-
-        public Equation Evaluate()
-        {
-            return Operator switch
-            {
-                "+" => Left!.Evaluate() + Right!.Evaluate(),
-                "-" => Left!.Evaluate() - Right!.Evaluate(),
-                "*" => Left!.Evaluate() * Right!.Evaluate(),
-                "/" => Left!.Evaluate() / Right!.Evaluate(),
-                null => Value,
-                _ => throw new ArgumentOutOfRangeException(nameof(Operator), Operator),
-            };
-        }
     }
 
     // A*x^K + B
