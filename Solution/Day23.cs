@@ -12,9 +12,9 @@ public class Day23
         var elvesSet = map.Coordinates().Where(v => map.Get(v) == '#').ToHashSet();
 
         SimulateElvesPositions(elvesSet)
-            .Take(10)
+            .Skip(9)
+            .Take(1)
             .Select(GetEmptyPointsCount)
-            .Last()
             .Dump("Part1: ");
 
         SimulateElvesPositions(elvesSet)
@@ -29,31 +29,26 @@ public class Day23
         return totalPoints - points.Count;
     }
 
-    private static IEnumerable<IReadOnlyCollection<V>> SimulateElvesPositions(IReadOnlySet<V> initialPositions)
+    private static IEnumerable<IReadOnlyCollection<V>> SimulateElvesPositions(IReadOnlySet<V> elvesSet)
     {
         var round = 0;
-        var elvesSet = initialPositions;
-
-        while (round < 1000)
+        (V From, V To, bool StayPut) ToProposition(V elf)
         {
-            var proposedPositions = new List<(V From, V To)>(elvesSet.Count);
-            var isFinalState = true;
-            foreach (var elf in elvesSet)
-            {
-                var nextPosition = HasAnyNeighbor(elvesSet, elf) ? ProposeMove(elvesSet, elf, round) : elf;
-                if (elf != nextPosition)
-                    isFinalState = false;
-                proposedPositions.Add((elf, nextPosition));
-            }
+            bool HasElf(V v) => elvesSet.Contains(v);
+            var proposedMove = HasAnyNeighbor(HasElf, elf) ? ProposeMove(HasElf, elf, round) : elf;
+            return (From: elf, To: proposedMove, elf == proposedMove);
+        }
 
+        var isFinalState = false;
+        while (!isFinalState)
+        {
+            var proposedPositions = elvesSet.Select(ToProposition).ToArray();
             elvesSet = proposedPositions
-                .GroupBy(x => x.To, (_, s) => s.ToArray())
-                .SelectMany(x => x.Length == 1 ? new[] { x[0].To } : x.Select(c => c.From))
+                .GroupBy(x => x.To)
+                .SelectMany(group => group.Select(c => group.Skip(1).Any() ? c.From : c.To))
                 .ToHashSet();
-
+            isFinalState = proposedPositions.All(x => x.StayPut);
             yield return elvesSet;
-            if (isFinalState)
-                yield break;
             round++;
         }
     }
@@ -67,26 +62,23 @@ public class Day23
         return (new(minX, minY), new(maxX, maxY));
     }
 
-    private static IEnumerable<V[]> GetMoves(int round)
+    private static readonly V[][] Dirs =
     {
-        var dirs = new[]
-        {
-            new[] { V.S, V.SE, V.SW },
-            new[] { V.N, V.NE, V.NW },
-            new[] { V.W, V.NW, V.SW },
-            new[] { V.E, V.NE, V.SE },
-        };
+        new[] { V.S, V.SE, V.SW },
+        new[] { V.N, V.NE, V.NW },
+        new[] { V.W, V.NW, V.SW },
+        new[] { V.E, V.NE, V.SE },
+    };
 
-        for (var i = 0; i < dirs.Length; i++)
-            yield return dirs[(i + round) % dirs.Length];
-    }
+    private static bool HasAnyNeighbor(Func<V, bool>  hasElf, V elf) =>
+        V.Directions8.Any(dir => hasElf(elf + dir));
 
-    private static bool HasAnyNeighbor(IReadOnlySet<V> elvesSet, V elf) =>
-        V.Directions8.Any(dir => elvesSet.Contains(elf + dir));
-
-    private static V ProposeMove(IReadOnlySet<V> elvesSet, V elf, int round)
+    private static V ProposeMove(Func<V, bool> hasElf, V elf, int round)
     {
-        var nextDirection = GetMoves(round).FirstOrDefault(dir => dir.All(d => !elvesSet.Contains(d + elf)));
-        return elf + (nextDirection != null ? nextDirection[0] : V.Zero);
+        var nextDirection = Enumerable.Range(0, Dirs.Length)
+            .Select(i => Dirs[(i + round) % Dirs.Length])
+            .FirstOrDefault(dir => dir.All(d => !hasElf(d + elf)))
+            ?[0] ?? V.Zero;
+        return elf + nextDirection;
     }
 }
