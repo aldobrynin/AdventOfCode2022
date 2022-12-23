@@ -4,6 +4,15 @@ public record V(int X, int Y)
     public static V Right = new V(1, 0);
     public static V Up = new V(0, 1);
     public static V Down = new V(0, -1);
+    
+    public static V E = new V(1, 0);
+    public static V W = new V(-1, 0);
+    public static V N = new V(0, 1);
+    public static V S = new V(0, -1);
+    public static V NE = N + E;
+    public static V NW = N + W;
+    public static V SE = S + E;
+    public static V SW = S + W;
 
     public bool IsInRange<T>(T[][] map)
     {
@@ -27,6 +36,11 @@ public record V(int X, int Y)
         Up,
         Right,
         Down,
+    };
+
+    public static V[] Directions8 => new[]
+    {
+        E, NE, N, NW, W, SW, S, SE
     };
     
     public static V Zero => new V(0, 0);

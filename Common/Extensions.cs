@@ -77,6 +77,14 @@ public static class Extensions
         return source.Select((_, i) => i);
     }
 
+    public static IEnumerable<V> Coordinates<T>(this T[][] map)
+    {
+        for (var y = 0; y < map.Length; y++)
+        for (var x = 0; x < map[y].Length; x++)
+            yield return new V(x, y);
+            
+    }
+
     public static T[,] DumpMap<T>(this T[,] source, string? message = null, Func<T, object>? transform = null)
     {
         if (message != null)
