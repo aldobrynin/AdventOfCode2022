@@ -82,7 +82,7 @@ public static class Extensions
         for (var y = 0; y < map.Length; y++)
         for (var x = 0; x < map[y].Length; x++)
             yield return new V(x, y);
-            
+
     }
 
     public static T[,] DumpMap<T>(this T[,] source, string? message = null, Func<T, object>? transform = null)
@@ -115,31 +115,4 @@ public static class Extensions
     {
         return string.Join(separator, source);
     }
-
-    public static IEnumerable<BfsState> Bfs<T>(this T[][] map, CanMove canMove, params V[] initial)
-    {
-        var visited = initial.ToHashSet();
-        var queue = new Queue<BfsState>();
-        foreach (var v in initial)
-            queue.Enqueue(new BfsState(v, 0));
-
-        while (queue.TryDequeue(out var item))
-        {
-            yield return item;
-            var result = item;
-            var next = V.Directions4
-                .Select(x => x + result.Pos)
-                .Where(x => x.IsInRange(map))
-                .Where(v => canMove(result.Pos, v))
-                .Where(x => !visited.Contains(x));
-            foreach (var n in next)
-            {
-                visited.Add(n);
-                queue.Enqueue(new BfsState(n, item.Steps + 1));
-            }
-        }
-    }
 }
-
-public record BfsState(V Pos, int Steps);
-public delegate bool CanMove(V from, V to);
