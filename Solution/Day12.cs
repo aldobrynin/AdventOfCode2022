@@ -17,11 +17,13 @@ public class Day12
         bool CanClimb(V from, V to) => map.Get(to) - map.Get(from) <= 1;
 
         map.Bfs(CanClimb, start)
-            .First(x => x.Pos == end)
+            .First(x => x.State == end)
+            .Distance
             .Dump("Part1: ");
 
         map.Bfs(CanClimb, map.FindAll('a').ToArray())
-            .First(x => x.Pos == end)
+            .First(x => x.State == end)
+            .Distance
             .Dump("Part2: ");
     }
 }

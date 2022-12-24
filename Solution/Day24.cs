@@ -13,8 +13,8 @@ public class Day24
         var map = input
             .Select(x => x.ToCharArray())
             .ToArray();
-        var start = FindNonWallCoord(map, 0).Dump("Start: ");
-        var end = FindNonWallCoord(map, map.Length - 1).Dump("End: ");
+        var start = FindNonWallCoord(map, 0);
+        var end = FindNonWallCoord(map, map.Length - 1);
 
         var blizzards = LoadBlizzards(map);
         var blizzardsPerMove = new Dictionary<int, HashSet<V>>(1_000);
@@ -74,14 +74,9 @@ public class Day24
     private static V GetBlizzardPosition(Blizzard blizzard, int xLength, int yLength, int move)
     {
         var (pos, dir) = blizzard;
-        var nextPos = pos + dir * move + new V(-1, -1);
-        return new V(
-            Mod(nextPos.X, xLength - 2),
-            Mod(nextPos.Y, yLength - 2)
-        ) + new V(1, 1);
+        var nextPos = pos + dir * move - new V(1, 1);
+        return nextPos.Mod(yLength - 2, xLength - 2) + new V(1, 1);
     }
-
-    private static int Mod(int v, int divisor) => (v % divisor + divisor) % divisor;
 
     private static V FindNonWallCoord(char[][] map, int y)
     {

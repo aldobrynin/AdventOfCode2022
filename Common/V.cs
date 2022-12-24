@@ -96,4 +96,6 @@ public record V(int X, int Y)
     public static V operator /(V a, int k) => new(a.X / k, a.Y / k);
 
     public V Signum() => new(Math.Sign(X), Math.Sign(Y));
+
+    public V Mod(int height, int width) => new V(X.Mod(width), Y.Mod(height));
 }

@@ -115,4 +115,6 @@ public static class Extensions
     {
         return string.Join(separator, source);
     }
+
+    public static int Mod(this int value, int divisor) => (value % divisor + divisor) % divisor;
 }

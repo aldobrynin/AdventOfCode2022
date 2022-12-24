@@ -56,18 +56,7 @@ public class Day22
             .Last()
             .ToScore().Dump("Part2: ");
 
-        State Normalize(State currentState)
-        {
-            var (pos, currentDirection) = currentState;
-            return pos switch
-            {
-                var (x, _) when x >= xMax => new(pos with { X = 0 }, currentDirection),
-                (< 0, _) => new(pos with { X = xMax - 1 }, currentDirection),
-                (_, < 0) => new(pos with { Y = yMax - 1 }, currentDirection),
-                var (_, y) when y >= yMax => new(pos with { Y = 0 }, currentDirection),
-                _ => currentState,
-            };
-        }
+        State Normalize(State currentState) => currentState with { Position = currentState.Position.Mod(yMax, xMax) };
 
         State Normalize2(State currentState) => xMax > yMax ? Normalize22(currentState) : Normalize21(currentState);
 

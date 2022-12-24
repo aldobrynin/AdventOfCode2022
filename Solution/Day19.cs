@@ -95,7 +95,8 @@ public class Day19
                    && first.Geode <= second.Geode;
         }
     }
-    record State(int TimeLeft, Resources Resources, Resources Robots);
+
+    private record State(Resources Resources, Resources Robots);
 
     public static void Solve(IEnumerable<string> input)
     {
@@ -120,23 +121,21 @@ public class Day19
 
     private static IEnumerable<State> SearchOutcomes(Blueprint blueprint, int maxTime)
     {
-        var queue = new Queue<State>(100_000);
-        var visited = new HashSet<(Resources,Resources)>(100_000);
-        queue.Enqueue(new State(maxTime, Resources.Zero, Resources.OneOre));
-        visited.Add((Resources.Zero, Resources.OneOre));
-        while (queue.TryDequeue(out var item))
-        {
-            if (item.TimeLeft < 0) continue;
-            yield return item;
-            foreach (var (robot, spentResources) in NextRobots(item, blueprint))
-            {
-                var nextRobots = item.Robots + robot;
-                var nextResources = item.Resources - spentResources + item.Robots;
-                if (!visited.Add((nextResources, nextRobots)))
-                    continue;
-                queue.Enqueue(new State(item.TimeLeft - 1, nextResources, nextRobots));
-            }
-        }
+        return SearchHelpers.Bfs(item => GetNextStates(item, blueprint),
+                maxDistance: maxTime,
+                new State(Resources.Zero, Resources.OneOre)
+            )
+            .Select(x => x.State);
+    }
+
+    private static IEnumerable<State> GetNextStates(State current, Blueprint blueprint)
+    {
+        return NextRobots(current, blueprint)
+            .Select(state =>
+                new State(
+                    Resources: current.Resources - state.SpentResources + current.Robots,
+                    Robots: current.Robots + state.Robots)
+            );
     }
 
     private static IEnumerable<(Resources Robots, Resources SpentResources)> NextRobots(State current, Blueprint blueprint)
