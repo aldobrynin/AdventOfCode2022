@@ -51,6 +51,7 @@ public record V(int X, int Y)
 
     public IEnumerable<V> Area5() => Directions5.Select(dir => this + dir);
     public IEnumerable<V> Area4() => Directions4.Select(dir => this + dir);
+    public IEnumerable<V> Area8() => Directions8.Select(dir => this + dir);
 
     public static V[] Directions8 => new[]
     {

@@ -117,4 +117,16 @@ public static class Extensions
     }
 
     public static int Mod(this int value, int divisor) => (value % divisor + divisor) % divisor;
+
+
+    public static IEnumerable<T[]> Rows<T>(this T[][] source)
+    {
+        return source.Select((_, y) => source.ElementAt(y));
+    }
+    
+    public static IEnumerable<T[]> Columns<T>(this T[][] source)
+    {
+        for (var x = 0; x < source[0].Length; x++)
+            yield return source.Rows().Select(r => r[x]).ToArray();
+    }
 }

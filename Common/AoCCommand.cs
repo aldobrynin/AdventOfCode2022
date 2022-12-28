@@ -1,10 +1,9 @@
 using System.ComponentModel;
 using System.Reflection;
-using Common;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace Solution;
+namespace Common;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
@@ -53,7 +52,7 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
     public override int Execute(CommandContext context, AoCCommandSettings settings)
 #pragma warning restore CS8765
     {
-        var dayClass = Assembly.GetExecutingAssembly()
+        var dayClass = Assembly.GetEntryAssembly()
             .DefinedTypes.Where(x => x.Name.StartsWith("Day"))
             .Select(x => (Type: x, Day: GetDayNumber(x.Name)))
             .Where(x => settings.Day == null || x.Day == settings.Day.Value);
