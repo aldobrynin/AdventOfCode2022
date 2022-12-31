@@ -5,17 +5,27 @@ namespace AoC2021;
 public class Map<T>
 {
     private readonly T[][] _arr;
-    private readonly int _sizeX;
-    private readonly int _sizeY;
+
+    public int SizeX { get; }
+
+    public int SizeY { get; }
+
+    public Map(int sizeX, int sizeY)
+    {
+        SizeX = sizeX;
+        SizeY = sizeY;
+        _arr = new T[SizeY][];
+        for (var y = 0; y < SizeY; y++) _arr[y] = new T[SizeX];
+    }
 
     public Map(T[][] arr)
     {
-        _sizeX = arr[0].Length;
-        _sizeY = arr.Length;
-        _arr = new T[_sizeY][];
-        for (var y = 0; y < _sizeY; y++)
+        SizeX = arr[0].Length;
+        SizeY = arr.Length;
+        _arr = new T[SizeY][];
+        for (var y = 0; y < SizeY; y++)
         {
-            _arr[y] = new T[_sizeX];
+            _arr[y] = new T[SizeX];
             Array.Copy(arr[y], _arr[y], arr[y].Length);
         }
     }
