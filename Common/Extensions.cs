@@ -51,6 +51,9 @@ public static class Extensions
 
     public static int Product<T>(this IEnumerable<T> source, Func<T, int> selector) =>
         source.Aggregate(1, (x, y) => x * selector(y));
+    
+    public static long Product<T>(this IEnumerable<T> source, Func<T, long> selector) =>
+        source.Aggregate(1L, (x, y) => x * selector(y));
 
     public static long Product(this IEnumerable<long> source) => source.Aggregate(1L, (x, y) => x * y);
 
