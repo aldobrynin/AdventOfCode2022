@@ -31,17 +31,16 @@ public class Day19
         {
             V3.Zero,
         };
-        var locatedScanners = data.Select(x => x.Id).Take(1).ToHashSet();
-        var knownBeacons = data[0].Beacons.ToHashSet();
+        var locatedScanners = data.Take(1).Select(x => x.Id).ToHashSet();
+        var knownBeacons = data.Take(1).SelectMany(x => x.Beacons).ToHashSet();
 
         while (locatedScanners.Count != data.Length)
         {
             foreach (var (id, beacons) in data.Where(x => !locatedScanners.Contains(x.Id)))
             {
                 var transform = FindTransform(beacons, knownBeacons);
-                if (transform == null) continue;
+                if (transform == default) continue;
 
-                transform.Dump($"Match {id}: ");
                 scanners.Add(transform.Value.Offset);
                 knownBeacons.UnionWith(transform.Value.Beacons);
                 locatedScanners.Add(id);
@@ -50,23 +49,25 @@ public class Day19
 
         knownBeacons.Count.Dump("Part1: ");
 
-        scanners.SelectMany(first => scanners.Select(second => (first, second)))
-            .Max(x => x.first.DistTo(x.second))
+        scanners.SelectMany(first => scanners.Select(first.DistTo))
+            .Max()
             .Dump("Part2: ");
 
     }
 
     private static (V3 Offset, V3[] Beacons)? FindTransform(V3[] beacons, IReadOnlySet<V3> knownBeacons)
     {
-        for (int rotation = 0; rotation < 24; rotation++)
+        for (var rotation = 0; rotation < 24; rotation++)
         {
             var rotated = beacons.Select(b => Rotate(b, rotation)).ToArray();
-            foreach (var offset in rotated.SelectMany(r => knownBeacons.Select(b => b - r)).Distinct())
-            {
-                var translated = rotated.Select(r => r + offset).ToArray();
-                if (translated.Count(knownBeacons.Contains) >= 12)
-                    return (offset, translated);
-            }
+            var offset = rotated.SelectMany(r => knownBeacons.Select(b => b - r))
+                .GroupBy(x => x)
+                .Where(x => x.Count() >= 12)
+                .Select(x => x.Key)
+                .SingleOrDefault();
+            if (offset == null) continue;
+            var translated = rotated.Select(r => r + offset).ToArray();
+            return (offset, translated);
         }
 
         return null;
