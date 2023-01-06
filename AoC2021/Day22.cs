@@ -30,19 +30,35 @@ public class Day22
     {
         var ranges = input.Select(Procedure.Parse).ToArray();
         var initRange = new Range(-50, 50);
-        var range3d = new Range3d(initRange, initRange, initRange);
+        var initRange3d = new Range3d(initRange, initRange, initRange);
 
-        var enabledSet = new HashSet<V3>();
+        var cubes = new HashSet<Range3d>();
         foreach (var (enable, range) in ranges)
         {
-            foreach (var v in range.Intersect(range3d)?.All() ?? Enumerable.Empty<V3>())
+            var intersectingCubes = cubes.Where(c => c.Intersects(range)).ToArray();
+            if (enable)
             {
-                if (enable) enabledSet.Add(v);
-                else enabledSet.Remove(v);
+                var newCubes = intersectingCubes.Aggregate(new[] { range },
+                    (cur, next) => cur.SelectMany(s => s.Subtract(next)).ToArray()
+                );
+                cubes.UnionWith(newCubes);
+            }
+            else
+            {
+                foreach (var cube in intersectingCubes)
+                {
+                    cubes.Remove(cube);
+                    cubes.UnionWith(cube.Subtract(range));
+                }
             }
         }
 
-        enabledSet.Count.Dump("Part1: ");
+        cubes.Select(c => c.Intersect(initRange3d))
+            .Sum(c => c == null ? 0 : c.X.LongLength * c.Y.LongLength * c.Z.LongLength)
+            .Dump("Part1: ");
+
+        cubes.Sum(c => c.X.LongLength * c.Y.LongLength * c.Z.LongLength)
+            .Dump("Part2: ");
     }
 }
 
