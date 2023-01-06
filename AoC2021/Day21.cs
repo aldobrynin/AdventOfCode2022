@@ -58,20 +58,22 @@ public class Day21
         var player = players[playerIndex];
 
         var diceRoll = new[] { 1, 2, 3 };
-        foreach (var newPosition in diceRoll
+        foreach (var (key, count) in diceRoll
                      .SelectMany(d1 => diceRoll
                          .SelectMany(d2 => diceRoll.Select(d3 => d1 + d2 + d3)))
                      .Select(move => (player.Position + move - 1) % 10 + 1)
+                     .GroupBy(x => x)
+                     .Select(x => (x.Key, Count: x.Count()))
                 )
         {
-            var newPlayer = new Player(newPosition, Score: player.Score + newPosition);
+            var newPlayer = new Player(key, Score: player.Score + key);
             var nextPlayers = players.Select((p, index) => index == playerIndex ? newPlayer : p).ToArray();
             var nextPlayerIndex = (playerIndex + 1) % players.Length;
 
             var cacheKey = new CacheKey(nextPlayers, nextPlayerIndex);
             if (!outcomes.TryGetValue(cacheKey, out var cached))
                 cached = outcomes[cacheKey] = GetWins(nextPlayers, nextPlayerIndex, outcomes);
-            result += cached;
+            result += cached * count;
         }
 
         return result;
