@@ -51,7 +51,7 @@ public static class Extensions
 
     public static int Product<T>(this IEnumerable<T> source, Func<T, int> selector) =>
         source.Aggregate(1, (x, y) => x * selector(y));
-    
+
     public static long Product<T>(this IEnumerable<T> source, Func<T, long> selector) =>
         source.Aggregate(1L, (x, y) => x * selector(y));
 
@@ -78,6 +78,21 @@ public static class Extensions
     public static IEnumerable<int> Indices<T>(this IEnumerable<T> source)
     {
         return source.Select((_, i) => i);
+    }
+
+    public static T[][] Transpose<T>(this T[][] source)
+    {
+        var copy = new T[source[0].Length][];
+        for (int x = 0; x < source[0].Length; x++)
+        {
+            copy[x] = new T[source.Length];
+            for (int y = 0; y < source.Length; y++)
+            {
+                copy[x][y] = source[y][x];
+            }
+        }
+
+        return copy;
     }
 
     public static IEnumerable<V> Coordinates<T>(this T[][] map)
@@ -126,7 +141,7 @@ public static class Extensions
     {
         return source.Select((_, y) => source.ElementAt(y));
     }
-    
+
     public static IEnumerable<T[]> Columns<T>(this T[][] source)
     {
         for (var x = 0; x < source[0].Length; x++)
