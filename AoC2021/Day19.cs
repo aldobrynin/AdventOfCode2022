@@ -39,7 +39,7 @@ public class Day19
             foreach (var (id, beacons) in data.Where(x => !locatedScanners.Contains(x.Id)))
             {
                 var transform = FindTransform(beacons, knownBeacons);
-                if (transform == default) continue;
+                if (transform == null) continue;
 
                 scanners.Add(transform.Value.Offset);
                 knownBeacons.UnionWith(transform.Value.Beacons);
