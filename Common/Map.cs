@@ -1,6 +1,4 @@
-using Common;
-
-namespace AoC2021;
+namespace Common;
 
 public class Map<T>
 {
@@ -56,4 +54,9 @@ public class Map<T>
             Console.WriteLine();
         }
     }
+}
+
+public class Map
+{
+    public static Map<T> From<T>(T[][] source) => new(source);
 }
