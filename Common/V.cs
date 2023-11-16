@@ -87,9 +87,16 @@ public record V(int X, int Y)
         double angle = Math.PI * degrees / 180.0;
         (double sinAngle, double cosAngle) = Math.SinCos(angle);
 
+        sinAngle = Math.Round(sinAngle, 6, MidpointRounding.ToZero);
+        cosAngle = Math.Round(cosAngle, 6, MidpointRounding.ToZero);
         var x = (int)(X * cosAngle - Y * sinAngle);
         var y = (int)(X * sinAngle + Y * cosAngle);
         return new(x, y);
+    }
+    
+    public V RotateAround(int degrees, V pivot) {
+        var translatedThis = this - pivot;
+        return translatedThis.Rotate(degrees) + pivot;
     }
 
     public override string ToString() => $"[{X},{Y}]";
