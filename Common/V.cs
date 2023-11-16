@@ -20,6 +20,11 @@ public record V(int X, int Y)
     {
         return X >= 0 && X < map[0].Length && Y >= 0 && Y < map.Length;
     }
+    
+    public bool IsInRange<T>(Map<T> map)
+    {
+        return X >= 0 && X < map.SizeX && Y >= 0 && Y < map.SizeY;
+    }
 
     public bool IsInRange<T>(T[,] map)
     {

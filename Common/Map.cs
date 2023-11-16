@@ -54,6 +54,8 @@ public class Map<T>
             Console.WriteLine();
         }
     }
+
+    public Map<T> Clone() => new(_arr);
 }
 
 public class Map
