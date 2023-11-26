@@ -150,4 +150,14 @@ public static class Extensions {
         if (list.Count > 0)
             yield return list;
     }
+
+    public static HashSet<T> IntersectAll<T>(this IEnumerable<IEnumerable<T>> source) {
+        HashSet<T> set = null!;
+        foreach (var current in source) {
+            if (set is null) set = current.ToHashSet();
+            else set.IntersectWith(current);
+        }
+
+        return set;
+    }
 }
