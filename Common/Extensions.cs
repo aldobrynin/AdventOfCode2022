@@ -38,7 +38,7 @@ public static class Extensions {
                 yield return new(x, y);
         }
     }
-    
+
     public static IEnumerable<V> FindAll<T>(this Map<T> map, T value) {
         return map.Coordinates().Where(v => Equals(map[v], value));
     }
@@ -159,5 +159,9 @@ public static class Extensions {
         }
 
         return set;
+    }
+
+    public static Dictionary<T, int> CountFrequency<T>(this IEnumerable<T> source) where T : notnull {
+        return source.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
     }
 }
