@@ -164,4 +164,7 @@ public static class Extensions {
     public static Dictionary<T, int> CountFrequency<T>(this IEnumerable<T> source) where T : notnull {
         return source.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
     }
+
+    public static int ToInt(this string source) => int.Parse(source);
+    public static long ToLong(this string source) => long.Parse(source);
 }
