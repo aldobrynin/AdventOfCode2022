@@ -3,8 +3,8 @@ namespace AoC2023;
 public class Day2 {
     public static void Solve(IEnumerable<string> input) {
         var games = input.Select(line => {
-                var segments = line.Split(": ");
-                var id = segments[0].Replace("Game ", string.Empty).ToInt();
+                var segments = line.Replace("Game ", string.Empty).Split(": ");
+                var id = segments[0].ToInt();
                 var rounds = segments[1].Split("; ")
                     .Select(s => s.Split(", ")
                         .Select(r => r.Split(' '))
@@ -26,8 +26,8 @@ public class Day2 {
             .Dump("Part1: ");
 
         games.Select(g => g.Rounds.SelectMany(kv => kv)
-                .GroupBy(x => x.Key)
-                .Product(x => x.Max(s => s.Value))
+                .GroupBy(x => x.Key, x => x.Value)
+                .Product(x => x.Max())
             )
             .Sum()
             .Dump("Part2: ");

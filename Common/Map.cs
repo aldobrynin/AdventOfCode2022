@@ -105,4 +105,5 @@ public class Map<T>
 
 public class Map {
     public static Map<T> From<T>(T[][] source) => new(source);
+    public static Map<T> From<T>(IEnumerable<IEnumerable<T>> source) => new(source.Select(x => x.ToArray()).ToArray());
 }
