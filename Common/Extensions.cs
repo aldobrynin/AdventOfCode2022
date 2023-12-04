@@ -167,4 +167,9 @@ public static class Extensions {
 
     public static int ToInt(this string source) => int.Parse(source);
     public static long ToLong(this string source) => long.Parse(source);
+
+    public static int[] ToIntArray(this string source, string separators = " ,;") =>
+        source.Split(separators.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+            .Select(int.Parse)
+            .ToArray();
 }
