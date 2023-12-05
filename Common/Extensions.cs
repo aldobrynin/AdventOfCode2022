@@ -172,9 +172,23 @@ public static class Extensions {
         source.Split(separators.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
             .Select(int.Parse)
             .ToArray();
-    
+
     public static long[] ToLongArray(this string source, string separators = " ,;") =>
         source.Split(separators.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
             .Select(long.Parse)
             .ToArray();
+
+
+    public static string ToHumanTimeString(this TimeSpan span, int significantDigits = 3) {
+        var format = "G" + significantDigits;
+        return span.TotalMilliseconds < 1000
+            ? span.TotalMilliseconds.ToString(format) + " milliseconds"
+            : span.TotalSeconds < 60
+                ? span.TotalSeconds.ToString(format) + " seconds"
+                : span.TotalMinutes < 60
+                    ? span.TotalMinutes.ToString(format) + " minutes"
+                    : span.TotalHours < 24
+                        ? span.TotalHours.ToString(format) + " hours"
+                        : span.TotalDays.ToString(format) + " days";
+    }
 }

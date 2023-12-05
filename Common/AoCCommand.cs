@@ -66,7 +66,7 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
 
         foreach (var tuple in dayClass) {
             Measure.Time(() => RunSolution(tuple, settings.Sample, year))
-                .Dump("Finished in ");
+                .Dump("Finished in ", t => t.ToHumanTimeString());
         }
 
         return 0;
