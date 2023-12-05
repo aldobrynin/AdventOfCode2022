@@ -103,7 +103,7 @@ public class Map<T>
     public Map<T> Clone() => new(_arr);
 }
 
-public class Map {
+public static class Map {
     public static Map<T> From<T>(T[][] source) => new(source);
     public static Map<T> From<T>(IEnumerable<IEnumerable<T>> source) => new(source.Select(x => x.ToArray()).ToArray());
 }
