@@ -50,12 +50,25 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
         action(input);
     }
 
-#pragma warning disable CS8765
-    public override int Execute(CommandContext context, AoCCommandSettings settings)
-#pragma warning restore CS8765
-    {
+    public override int Execute(CommandContext context, AoCCommandSettings settings) {
         var entryAssembly = Assembly.GetEntryAssembly();
-        var year = int.Parse(entryAssembly!.GetName().Name!.Replace("AoC", string.Empty, StringComparison.OrdinalIgnoreCase));
+        var year = int.Parse(
+            entryAssembly!.GetName().Name!.Replace("AoC", string.Empty, StringComparison.OrdinalIgnoreCase));
+        var puzzlesToRun = FindSolutionToRun(settings, entryAssembly);
+
+        if (puzzlesToRun.Length == 0 && settings.Day.HasValue) {
+            return TryScaffoldSolutionFiles(year, settings.Day.Value);
+        }
+
+        foreach (var tuple in puzzlesToRun) {
+            Measure.Time(() => RunSolution(tuple, settings.Sample, year))
+                .Dump("Finished in ", t => t.ToHumanTimeString());
+        }
+
+        return 0;
+    }
+
+    private static (TypeInfo Type, int Day)[] FindSolutionToRun(AoCCommandSettings settings, Assembly entryAssembly) {
         var dayClass = entryAssembly
             .DefinedTypes.Where(x => x.Name.StartsWith("Day"))
             .Select(x => (Type: x, Day: GetDayNumber(x.Name)))
@@ -63,12 +76,17 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
         dayClass = settings.All
             ? dayClass.OrderBy(x => x.Day)
             : dayClass.OrderByDescending(x => x.Day).Take(1);
+        return dayClass.ToArray();
+    }
 
-        foreach (var tuple in dayClass) {
-            Measure.Time(() => RunSolution(tuple, settings.Sample, year))
-                .Dump("Finished in ", t => t.ToHumanTimeString());
-        }
-
+    private static int TryScaffoldSolutionFiles(int year, int day) {
+        AnsiConsole.MarkupLine("[red]No solutions found[/]");
+        var scaffold = AnsiConsole.Prompt(
+            new ConfirmationPrompt($"Would you like to create a new solution for day {day}?") {
+                DefaultValue = true,
+            });
+        if (!scaffold) return 1;
+        Scaffolder.Scaffold(year, day);
         return 0;
     }
 }
