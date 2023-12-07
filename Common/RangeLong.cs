@@ -19,6 +19,7 @@ public record RangeLong(long From, long To) {
     }
 
     public static RangeLong FromStartAndLength(long start, long length) => new(start, start + length - 1);
+    public static RangeLong FromStartAndEndInclusive(long start, long endInclusive) => new(start, endInclusive);
     public IEnumerable<RangeLong> Subtract(RangeLong other) => Subtract(new[] { other });
 
     public IEnumerable<RangeLong> Subtract(IEnumerable<RangeLong> other) {

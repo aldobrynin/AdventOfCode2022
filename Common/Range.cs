@@ -38,4 +38,6 @@ public record Range(int From, int To)
     }
 
     public override string ToString() => $"[{From};{To}]";
+
+    public static Range FromStartAndEndInclusive(int from, int endInclusive) => new(from, endInclusive);
 }
