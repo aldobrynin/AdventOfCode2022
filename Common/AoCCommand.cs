@@ -41,8 +41,8 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
             dayType.Day, year);
         var method = dayType.Type.GetMethod("Solve", BindingFlags.Public | BindingFlags.Static)
                      ?? throw new Exception($"Solve method is not found in {dayType.Type.Name}");
-        var dayInputDirectory = Path.Combine("inputs", $"day{dayType.Day}");
-        var inputFile = Path.Combine(dayInputDirectory, sample ? "sample.txt" : "input.txt");
+        var dayDirectory = Path.Combine($"Day{dayType.Day:00}");
+        var inputFile = Path.Combine(dayDirectory, sample ? "sample.txt" : "input.txt");
         AnsiConsole.MarkupLine("Using input from [underline navy]{0}[/]", inputFile);
         var input = File.ReadLines(inputFile);
         var action = (Action<IEnumerable<string>>)Delegate.CreateDelegate(typeof(Action<IEnumerable<string>>), method);

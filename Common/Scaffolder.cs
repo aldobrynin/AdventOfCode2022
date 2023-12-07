@@ -5,20 +5,22 @@ public static class Scaffolder {
 
     public static void Scaffold(int year, int day) {
         var projectDirectory = GetProjectDirectory(year);
-        var filePath = Path.Combine(projectDirectory, $"Day{day:00}.cs");
-        File.WriteAllText(filePath, $$"""
-                                      namespace AoC{{year}};
+        var dayString = $"Day{day:00}";
+        var dayDirectory = Path.Combine(projectDirectory, dayString);
+        if (!Directory.Exists(dayDirectory)) Directory.CreateDirectory(dayDirectory);
 
-                                      public class Day{{day}} {
+        var filePath = Path.Combine(dayDirectory, $"{dayString}.cs");
+        File.WriteAllText(filePath, $$"""
+                                      namespace AoC{{year}}.{{dayString}};
+
+                                      public class {{dayString}} {
                                           public static void Solve(IEnumerable<string> input) {
                                               input.Dump("Not implemented");
                                           }
                                       }
                                       """);
-        var inputsDir = Path.Combine(projectDirectory, "inputs", $"day{day}");
-        if (!Directory.Exists(inputsDir)) Directory.CreateDirectory(inputsDir);
         var filesToCreate = FileNames
-            .Select(fileName => Path.Combine(inputsDir, fileName))
+            .Select(fileName => Path.Combine(dayDirectory, fileName))
             .Where(file => !File.Exists(file));
         foreach (var file in filesToCreate) {
             File.WriteAllText(file, string.Empty);
