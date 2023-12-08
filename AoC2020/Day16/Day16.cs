@@ -5,7 +5,6 @@ namespace AoC2020.Day16;
 
 public class Day16 {
     public static void Solve(IEnumerable<string> input) {
-
         var inputArray = input as string[] ?? input.ToArray();
         var fieldDescriptions = inputArray
             .TakeWhile(s => !string.IsNullOrWhiteSpace(s))
@@ -57,7 +56,7 @@ public class Day16 {
         return rangeToTicketField;
     }
 
-    public record FieldDescription(string Name, Range[] Ranges) {
+    public record FieldDescription(string Name, Range<int>[] Ranges) {
         private static readonly Regex Regex = new(@"\d+\-\d+");
 
         public static FieldDescription Parse(string input) {
@@ -66,11 +65,13 @@ public class Day16 {
             return new FieldDescription(segments[0], ranges);
         }
 
-        private static Range ParseRange(string str) {
+        private static Range<int> ParseRange(string str) {
             var edges = str.Split('-');
-            return new Range(int.Parse(edges[0]), int.Parse(edges[1]));
+            return Range.FromStartAndEndInclusive(int.Parse(edges[0]), int.Parse(edges[1]));
         }
 
-        public bool IsValid(int value) => Ranges.Any(r => r.Contains(value));
+        public bool IsValid(int value) {
+            return Ranges.Any(r => r.Contains(value));
+        }
     }
 }

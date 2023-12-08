@@ -2,19 +2,21 @@ using Range = Common.Range;
 
 namespace AoC2021.Day20;
 
-public class Day20
-{
-    private static readonly Range2d NeighborsRange = new(new Range(-1, 1), new Range(-1, 1));
+public class Day20 {
+    private static readonly Range2d NeighborsRange = new(
+        Range.FromStartAndEndInclusive(-1, 1),
+        Range.FromStartAndEndInclusive(-1, 1)
+    );
 
-    public static void Solve(IEnumerable<string> input)
-    {
+    public static void Solve(IEnumerable<string> input) {
         var array = input.ToArray();
         var algorithm = array[0];
 
         var rawMap = array.Skip(2)
             .Select(line => line.Select(c => c == '#').ToArray())
             .ToArray();
-        var range = new Range2d(new Range(0, rawMap[0].Length - 1), new Range(0, rawMap.Length - 1));
+        var range = new Range2d(Range.FromStartAndEndInclusive(0, rawMap[0].Length - 1),
+            Range.FromStartAndEndInclusive(0, rawMap.Length - 1));
         var map = range.All().Where(rawMap.Get).ToHashSet();
 
         EnhanceMany(algorithm, map, range, count: 2).Count.Dump("Part1: ");

@@ -38,12 +38,12 @@ public class RangeTests {
 
     [Test]
     public void Subtract_ShouldRemoveInnerRange() {
-        RangeLong.FromStartAndEndInclusive(0, 10)
-            .Subtract(RangeLong.FromStartAndEndInclusive(4, 5))
+        Range.FromStartAndEndInclusive(0, 10)
+            .Subtract(Range.FromStartAndEndInclusive(4, 5))
             .Should()
             .BeEquivalentTo(new[] {
-                RangeLong.FromStartAndEndInclusive(0, 3),
-                RangeLong.FromStartAndEndInclusive(6, 10),
+                Range.FromStartAndEndInclusive(0, 3),
+                Range.FromStartAndEndInclusive(6, 10),
             });
     }
 }

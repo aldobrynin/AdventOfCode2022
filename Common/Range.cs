@@ -1,43 +1,65 @@
+using System.Collections;
+using System.Numerics;
+
 namespace Common;
 
-public record Range(int From, int To)
-{
-    public IEnumerable<int> All() => Enumerable.Range(From, To - From + 1);
-    public Range Grow(int n) => new Range(From - n, To + n);
-    public bool Contains(int v) => From <= v && v <= To;
-    public bool Contains(Range r) => Contains(r.From) && Contains(r.To);
-
+public record Range<T>(T From, T To) : IEnumerable<T> where T : INumber<T> {
+    public T Length => To - From + T.One;
     public bool IsEmpty() => From > To;
+    public bool Contains(T value) => From <= value && value <= To;
+    public bool Contains(Range<T> other) => Contains(other.From) && Contains(other.To);
 
-    public int Length => To - From + 1;
-    public long LongLength => To - From + 1L;
+    public Range<T> Grow(T value) => new(From - value, To + value);
 
-    public Range? Intersect(Range other)
-    {
-        return Intersects(other) ? new Range(Math.Max(From, other.From), Math.Min(To, other.To)) : null;
+    public Range<T>? Intersect(Range<T> other) {
+        return HasIntersection(other) ? new(T.Max(From, other.From), T.Min(To, other.To)) : null;
     }
 
-    public bool Intersects(Range other)
-    {
+    public Range<T> IntersectOrThrow(Range<T> other) {
+        return Intersect(other) ?? throw new InvalidOperationException($"Range {this} doesn't intersect with {other}");
+    }
+
+    public bool HasIntersection(Range<T> other) {
         return Contains(other.From) || Contains(other.To) || other.Contains(From) || other.Contains(To);
     }
 
-    public Range[] Subtract(Range other)
-    {
-        if (other.Contains(this))
-            return Array.Empty<Range>();
-        var intersect = Intersect(other);
-        if (intersect == null)
-            return new[] { this };
-        return new[]
-            {
-                new Range(From, intersect.From - 1),
-                new Range(intersect.To + 1, To),
-            }.Where(x => !x.IsEmpty())
-            .ToArray();
+    public static Range<T> FromStartAndLength(T start, T length) => new(start, start + length - T.One);
+    public static Range<T> FromStartAndEndInclusive(T start, T endInclusive) => new(start, endInclusive);
+
+    public static Range<T> FromStartAndEndExclusive(T start, T endExclusive) =>
+        FromStartAndEndInclusive(start, endExclusive - T.One);
+
+    public IEnumerable<Range<T>> Subtract(Range<T> other) => Subtract(new[] { other });
+
+    public IEnumerable<Range<T>> Subtract(IEnumerable<Range<T>> other) {
+        var start = From;
+        foreach (var range in other.Where(HasIntersection).OrderBy(x => x.From)) {
+            var newRange = FromStartAndEndExclusive(start, range.From);
+            if (!newRange.IsEmpty()) yield return newRange;
+
+            start = range.To + T.One;
+        }
+
+        if (start <= To) yield return new(start, To);
     }
+
+    public static Range<T> operator +(Range<T> r, T offset) => new(r.From + offset, r.To + offset);
+
+
 
     public override string ToString() => $"[{From};{To}]";
 
-    public static Range FromStartAndEndInclusive(int from, int endInclusive) => new(from, endInclusive);
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public IEnumerator<T> GetEnumerator() {
+        for (var i = From; i <= To; i += T.One) yield return i;
+    }
+}
+
+public static class Range {
+    public static Range<T> FromStartAndLength<T>(T start, T length) where T : INumber<T> =>
+        Range<T>.FromStartAndLength(start, length);
+    
+    public static Range<T> FromStartAndEndInclusive<T>(T start, T endInclusive) where T : INumber<T> =>
+        Range<T>.FromStartAndEndInclusive(start, endInclusive);
 }

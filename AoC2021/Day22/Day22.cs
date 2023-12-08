@@ -17,9 +17,9 @@ public class Day22
                 .Select(int.Parse)
                 .ToArray();
             var range = new Range3d(
-                new Range(captures[0], captures[1]),
-                new Range(captures[2], captures[3]),
-                new Range(captures[4], captures[5])
+                Range<int>.FromStartAndEndInclusive(captures[0], captures[1]),
+                Range<int>.FromStartAndEndInclusive(captures[2], captures[3]),
+                Range<int>.FromStartAndEndInclusive(captures[4], captures[5])
             );
             return new(state == "on", range);
         }
@@ -28,7 +28,7 @@ public class Day22
     public static void Solve(IEnumerable<string> input)
     {
         var ranges = input.Select(Procedure.Parse).ToArray();
-        var initRange = new Range(-50, 50);
+        var initRange = Range.FromStartAndEndInclusive(-50, 50);
         var initRange3d = new Range3d(initRange, initRange, initRange);
 
         var cubes = new HashSet<Range3d>();
@@ -53,10 +53,10 @@ public class Day22
         }
 
         cubes.Select(c => c.Intersect(initRange3d))
-            .Sum(c => c == null ? 0 : c.X.LongLength * c.Y.LongLength * c.Z.LongLength)
+            .Sum(c => c == null ? 0 : 1L * c.X.Length * c.Y.Length * c.Z.Length)
             .Dump("Part1: ");
 
-        cubes.Sum(c => c.X.LongLength * c.Y.LongLength * c.Z.LongLength)
+        cubes.Sum(c => 1L * c.X.Length * c.Y.Length * c.Z.Length)
             .Dump("Part2: ");
     }
 }
