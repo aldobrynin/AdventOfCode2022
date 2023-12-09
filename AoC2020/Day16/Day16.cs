@@ -67,7 +67,7 @@ public class Day16 {
 
         private static Range<int> ParseRange(string str) {
             var edges = str.Split('-');
-            return Range.FromStartAndEndInclusive(int.Parse(edges[0]), int.Parse(edges[1]));
+            return Range.FromStartAndEnd(int.Parse(edges[0]), int.Parse(edges[1]));
         }
 
         public bool IsValid(int value) {

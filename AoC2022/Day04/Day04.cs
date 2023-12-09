@@ -9,7 +9,7 @@ public record ElvesPair(Range<int> First, Range<int> Second) {
 
         Range<int> ToRange(string s) {
             var parts = s.Split('-');
-            return Range.FromStartAndEndInclusive(parts[0].ToInt(), parts[1].ToInt());
+            return Range.FromStartAndEnd(parts[0].ToInt(), parts[1].ToInt());
         }
     }
 }
