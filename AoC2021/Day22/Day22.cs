@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using Range = Common.Range;
+using R = Common.Range;
 
 namespace AoC2021.Day22;
 
@@ -17,9 +17,9 @@ public class Day22
                 .Select(int.Parse)
                 .ToArray();
             var range = new Range3d(
-                Range<int>.FromStartAndEnd(captures[0], captures[1]),
-                Range<int>.FromStartAndEnd(captures[2], captures[3]),
-                Range<int>.FromStartAndEnd(captures[4], captures[5])
+                R.FromStartAndEnd(captures[0], captures[1]),
+                R.FromStartAndEnd(captures[2], captures[3]),
+                R.FromStartAndEnd(captures[4], captures[5])
             );
             return new(state == "on", range);
         }
@@ -28,7 +28,7 @@ public class Day22
     public static void Solve(IEnumerable<string> input)
     {
         var ranges = input.Select(Procedure.Parse).ToArray();
-        var initRange = Range.FromStartAndEnd(-50, 50);
+        var initRange = R.FromStartAndEnd(-50, 50);
         var initRange3d = new Range3d(initRange, initRange, initRange);
 
         var cubes = new HashSet<Range3d>();

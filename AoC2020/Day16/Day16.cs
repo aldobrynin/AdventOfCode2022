@@ -27,7 +27,7 @@ public class Day16 {
         var myTicket = tickets[0];
         var rangesMap = Decode(fieldDescriptions, validNearbyTickets);
         fieldDescriptions.Indices()
-            .Where(rangeInd => fieldDescriptions[rangeInd].Name.StartsWith("departure"))
+            .Where(rangeInd => AoCContext.IsSample || fieldDescriptions[rangeInd].Name.StartsWith("departure"))
             .Select(rangeInd => rangesMap[rangeInd])
             .Select(fieldInd => (long)myTicket[fieldInd])
             .Product()
@@ -67,7 +67,7 @@ public class Day16 {
 
         private static Range<int> ParseRange(string str) {
             var edges = str.Split('-');
-            return Range.FromStartAndEnd(int.Parse(edges[0]), int.Parse(edges[1]));
+            return Range.FromStartAndEndInclusive(int.Parse(edges[0]), int.Parse(edges[1]));
         }
 
         public bool IsValid(int value) {

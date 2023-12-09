@@ -4,19 +4,20 @@ namespace AoC2021.Day20;
 
 public class Day20 {
     private static readonly Range2d NeighborsRange = new(
-        Range.FromStartAndEnd(-1, 1),
-        Range.FromStartAndEnd(-1, 1)
+        Range.FromStartAndEnd(-1, 2),
+        Range.FromStartAndEnd(-1, 2)
     );
 
     public static void Solve(IEnumerable<string> input) {
         var array = input.ToArray();
         var algorithm = array[0];
 
+        var range1 = 0..2;
         var rawMap = array.Skip(2)
             .Select(line => line.Select(c => c == '#').ToArray())
             .ToArray();
-        var range = new Range2d(Range.FromStartAndEnd(0, rawMap[0].Length - 1),
-            Range.FromStartAndEnd(0, rawMap.Length - 1));
+        var range = new Range2d(Range.FromStartAndEnd(0, rawMap[0].Length),
+            Range.FromStartAndEnd(0, rawMap.Length));
         var map = range.All().Where(rawMap.Get).ToHashSet();
 
         EnhanceMany(algorithm, map, range, count: 2).Count.Dump("Part1: ");

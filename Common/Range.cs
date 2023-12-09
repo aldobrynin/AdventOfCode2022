@@ -5,9 +5,10 @@ namespace Common;
 
 public record Range<T>(T From, T To) : IEnumerable<T> where T : INumber<T> {
     public T Length => To - From + T.One;
-    public bool IsEmpty() => From > To;
+    public bool IsEmpty() => From >= To;
     public bool Contains(T value) => From <= value && value < To;
-    public bool Contains(Range<T> other) => Contains(other.From) && Contains(other.To);
+    public bool Contains(Range<T> other) => From <= other.From && other.To <= To;
+    public bool Overlaps(Range<T> other) => T.Max(From, other.From) <= T.Min(To, other.To);
 
     public Range<T> Grow(T value) => new(From - value, To + value);
 
@@ -51,7 +52,7 @@ public record Range<T>(T From, T To) : IEnumerable<T> where T : INumber<T> {
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public IEnumerator<T> GetEnumerator() {
-        for (var i = From; i <= To; i += T.One) yield return i;
+        for (var i = From; i < To; i += T.One) yield return i;
     }
 }
 
@@ -61,4 +62,7 @@ public static class Range {
 
     public static Range<T> FromStartAndEnd<T>(T start, T endExclusive) where T : INumber<T> =>
         Range<T>.FromStartAndEnd(start, endExclusive);
+
+    public static Range<T> FromStartAndEndInclusive<T>(T start, T endInclusive) where T : INumber<T> =>
+        Range<T>.FromStartAndEnd(start, endInclusive + T.One);
 }

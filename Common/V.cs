@@ -65,7 +65,7 @@ public record V(int X, int Y)
 
     public static V Zero => new(0, 0);
 
-    public int DistTo(V other) => Math.Abs(X - other.X) + Math.Abs(Y - other.Y);
+    public int DistTo(V other) => Math.Abs(other.X - X) + Math.Abs(other.Y - Y);
     public V Abs() => new(Math.Abs(X), Math.Abs(Y));
 
     public int CDistTo(V other) => Math.Max(Math.Abs(other.X - X), Math.Abs(other.Y - Y));

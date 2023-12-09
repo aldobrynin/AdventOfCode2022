@@ -39,6 +39,8 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
         AnsiConsole.MarkupLine(
             ":christmas_tree::christmas_tree::christmas_tree:Day [underline red]{0}[/] of AoC {1}:christmas_tree::christmas_tree::christmas_tree:",
             dayType.Day, year);
+        var url = $"https://adventofcode.com/{year}/day/{dayType.Day}";
+        AnsiConsole.MarkupLine("Problem description: [underline navy]{0}[/]", url);
         var method = dayType.Type.GetMethod("Solve", BindingFlags.Public | BindingFlags.Static)
                      ?? throw new Exception($"Solve method is not found in {dayType.Type.Name}");
         var dayDirectory = Path.Combine($"Day{dayType.Day:00}");

@@ -1,3 +1,5 @@
+using Range = Common.Range;
+
 namespace AoC2023.Day05;
 
 public class Day5 {
@@ -6,8 +8,8 @@ public class Day5 {
 
         public static MapRange Create(string source) {
             var values = source.ToLongArray();
-            return new MapRange(Range<long>.FromStartAndLength(values[1], values[2]),
-                Range<long>.FromStartAndLength(values[0], values[2]));
+            return new MapRange(Range.FromStartAndLength(values[1], values[2]),
+                Range.FromStartAndLength(values[0], values[2]));
         }
 
         public override string ToString() => $"{Src} => {Dst}";
@@ -17,7 +19,7 @@ public class Day5 {
         var blocks = input.SplitBy(string.IsNullOrEmpty).ToArray();
         var seeds = blocks.First().Single().Split(':')[1].ToLongArray();
         var seedsRanges = seeds.Chunk(2)
-            .Select(x => Range<long>.FromStartAndLength(start: x[0], length: x[1]))
+            .Select(x => Range.FromStartAndLength(start: x[0], length: x[1]))
             .ToArray();
         var maps = blocks.Skip(1)
             .Select(map => map.Skip(1).Select(MapRange.Create).ToArray())

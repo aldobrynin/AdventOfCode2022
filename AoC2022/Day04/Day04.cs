@@ -22,7 +22,7 @@ public class Day4 {
             .Dump("Part1: ");
 
         pairs
-            .Count(x => x.First.HasIntersection(x.Second) || x.Second.HasIntersection(x.First))
+            .Count(x => x.First.Overlaps(x.Second))
             .Dump("Part2: ");
     }
 }
