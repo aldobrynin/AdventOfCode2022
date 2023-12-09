@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Numerics;
 
 namespace Common;
 
@@ -190,5 +191,18 @@ public static class Extensions {
                     : span.TotalHours < 24
                         ? span.TotalHours.ToString(format) + " hours"
                         : span.TotalDays.ToString(format) + " days";
+    }
+
+    public static BigInteger ModEuclidean(this BigInteger value, BigInteger divisor) {
+        var result = value % divisor;
+        return result < 0 ? result + divisor : result;
+    }
+
+    public static T Reduce<T>(this IEnumerable<T> source, Func<T, T, T> reducer) {
+        using var enumerator = source.GetEnumerator();
+        if (!enumerator.MoveNext()) throw new ArgumentException("Sequence contains no elements");
+        var accumulator = enumerator.Current;
+        while (enumerator.MoveNext()) accumulator = reducer(accumulator, enumerator.Current);
+        return accumulator;
     }
 }

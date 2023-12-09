@@ -2,24 +2,23 @@ namespace AoC2023.Day09;
 
 public class Day09 {
     public static void Solve(IEnumerable<string> input) {
-        var sequences = input.Select(x => x.ToLongArray()).ToArray();
-
-        sequences.Sum(GetNext).Dump("Part1: ");
-
-        sequences.Sum(GetPrev).Dump("Part2: ");
+        input.Select(x => x.ToLongArray())
+            .Select(Extrapolate)
+            .ToArray()
+            .Dump("Part1: ", transform: x => x.Sum(s => s.Last))
+            .Dump("Part2: ", transform: x => x.Sum(s => s.First));
     }
 
-    private static long GetNext(long[] sequence) {
-        if (sequence.All(x => x == 0)) return 0;
-        return sequence.Last() + GetNext(GetDifferences(sequence));
-    }
+    private static (long First, long Last) Extrapolate(long[] history) => FindDiffs(history)
+        .Reduce((a, b) => (b.First - a.First, b.Last + a.Last));
 
-    private static long GetPrev(long[] sequence) {
-        if (sequence.All(x => x == 0)) return 0;
-        return sequence.First() - GetPrev(GetDifferences(sequence));
-    }
+    private static IEnumerable<(long First, long Last)> FindDiffs(long[] sequence) {
+        var edges = new Stack<(long First, long Last)>();
+        while (sequence.Any(x => x != 0)) {
+            edges.Push((sequence[0], sequence[^1]));
+            sequence = sequence.Zip(sequence.Skip(1), (a, b) => b - a).ToArray();
+        }
 
-    private static long[] GetDifferences(long[] sequence) {
-        return sequence.Zip(sequence.Skip(1), (a, b) => b - a).ToArray();
+        return edges;
     }
 }
