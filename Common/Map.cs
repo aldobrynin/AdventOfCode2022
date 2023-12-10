@@ -30,6 +30,9 @@ public class Map<T>
 
     public IEnumerable<V> Coordinates() => _arr.Coordinates();
 
+    public IEnumerable<V> BorderCoordinates() => _arr.Coordinates()
+        .Where(v => v.X == 0 || v.X == SizeX - 1 || v.Y == 0 || v.Y == SizeY - 1);
+
     public T this[V key]
     {
         get => _arr.Get(key);
@@ -97,6 +100,17 @@ public class Map<T>
         {
             foreach (var el in row) Console.Write(el);
             Console.WriteLine();
+        }
+    }
+
+    public void PrintColored(Func<V, (string Text, ConsoleColor? Color)> transform) {
+        foreach (var v in Coordinates()) {
+            var before = Console.ForegroundColor;
+            var (text, color) = transform(v);
+            Console.ForegroundColor = color ?? before;
+            Console.Write(text);
+            Console.ForegroundColor = before;
+            if (v.X == SizeX - 1) Console.WriteLine();
         }
     }
 

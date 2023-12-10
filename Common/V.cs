@@ -107,6 +107,7 @@ public record V(int X, int Y)
     public static V operator *(V a, int k) => new(k * a.X, k * a.Y);
     public static V operator *(int k, V a) => new(k * a.X, k * a.Y);
     public static V operator /(V a, int k) => new(a.X / k, a.Y / k);
+    public static V operator %(V a, int k) => a.Mod(k, k);
 
     public V Signum() => new(Math.Sign(X), Math.Sign(Y));
 
