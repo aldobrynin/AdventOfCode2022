@@ -6,6 +6,7 @@
 [Oo]bj/
 _UpgradeReport_Files/
 [Pp]ackages/
+**/input.txt
 
 Thumbs.db
 Desktop.ini
