@@ -1,6 +1,6 @@
 namespace AoC2020.Day20;
 
-public class Day20 {
+public partial class Day20 {
     public readonly record struct Tile(long Id, Map<char> Map) {
         public static Tile Parse(IReadOnlyList<string> input) {
             return new Tile(
@@ -35,7 +35,7 @@ public class Day20 {
         var neighborsCountPerTile = tiles
             .Select(tile => (tile.Key, cnt: tile.Value.GetBorders().Count(b => counts[NormalizeBorder(b)] > 1)));
         var cornerIds = neighborsCountPerTile.Where(x => x.cnt == 2).Select(x => x.Key).ToArray();
-        cornerIds.Product().Dump("Part1: ");
+        cornerIds.Product().Part1();
 
         for (var row = 0; row < gridSize; row++) {
             for (var col = 0; col < gridSize; col++) {
@@ -85,7 +85,7 @@ public class Day20 {
         var totalCells = seaMap.FindAll('#').Count();
         var monstersCount = FindMonster(seaMap, monster).Length;
         var safeCells = totalCells - monstersCount * cellsInMonster;
-        safeCells.Dump("Part2: ");
+        safeCells.Part2();
 
 
         bool IsValidTopLeftCornerTile(Tile tile) {

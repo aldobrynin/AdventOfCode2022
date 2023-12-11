@@ -1,12 +1,12 @@
-namespace Solution.Day06;
+namespace AoC2022.Day06;
 
-public class Day6
+public partial class Day06
 {
     public static void Solve(IEnumerable<string> input)
     {
         var signal = input.Single();
-        FindIndex(signal, packetLength: 4).Dump("Part1: ");
-        FindIndex(signal, packetLength: 14).Dump("Part2: ");
+        FindIndex(signal, packetLength: 4).Part1();
+        FindIndex(signal, packetLength: 14).Part2();
     }
 
     private static int FindIndex(string s, int packetLength)

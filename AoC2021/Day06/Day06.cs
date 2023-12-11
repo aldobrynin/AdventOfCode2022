@@ -1,12 +1,12 @@
 namespace AoC2021.Day06;
 
-public class Day6
+public partial class Day06
 {
     public static void Solve(IEnumerable<string> input)
     {
         var ages = input.Single().Split(',').Select(int.Parse).ToArray();
-        Simulate(ages).ElementAt(79).Dump("Part1: ");
-        Simulate(ages).ElementAt(255).Dump("Part2: ");
+        Simulate(ages).ElementAt(79).Part1();
+        Simulate(ages).ElementAt(255).Part2();
     }
     
     private static IEnumerable<long> Simulate(IEnumerable<int> initialAges)

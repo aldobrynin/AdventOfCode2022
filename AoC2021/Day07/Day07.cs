@@ -1,12 +1,12 @@
 namespace AoC2021.Day07;
 
-public class Day7
+public partial class Day07
 {
     public static void Solve(IEnumerable<string> input)
     {
         var positions = input.Single().Split(',').Select(int.Parse).ToArray();
-        Cost(positions, Cost).Sum.Dump("Part1: ");
-        Cost(positions, Cost2).Sum.Dump("Part2: ");
+        Cost(positions, Cost).Sum.Part1();
+        Cost(positions, Cost2).Sum.Part2();
     }
 
     private static (int Position, long Sum) Cost(int[] positions, Func<int, int, int> costFunc)

@@ -1,6 +1,6 @@
 namespace AoC2021.Day18;
 
-public class Day18
+public partial class Day18
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -8,13 +8,13 @@ public class Day18
 
         array.Skip(1)
             .Aggregate(array[0].Clone(), (sum, cur) => sum.Add(cur.Clone()).Reduce())
-            .Magnitude().Dump("Part1: ");
+            .Magnitude().Part1();
         
         array.Indices().SelectMany(x => array.Indices().Select(y => (x, y)))
             .Where(tuple => tuple.y != tuple.x)
             .Select(tuple => array[tuple.x].Clone().Add(array[tuple.y].Clone()).Reduce())
             .Max(x => x.Magnitude())
-            .Dump("Part2: ");
+            .Part2();
     }
     
     private class SnailfishNumberParsingException : Exception

@@ -1,6 +1,6 @@
 namespace AoC2021.Day14;
 
-public class Day14
+public partial class Day14
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -8,8 +8,8 @@ public class Day14
         var template = array.First();
 
         var insertions = array.Skip(2).ToArray();
-        Apply(template, insertions, 10).Dump("Part1: ");
-        Apply(template, insertions, 40).Dump("Part2: ");
+        Apply(template, insertions, 10).Part1();
+        Apply(template, insertions, 40).Part2();
     }
 
     private static long Apply(string template, string[] insertions, int transformsCount)

@@ -1,6 +1,6 @@
 namespace AoC2023.Day04;
 
-public class Day4 {
+public partial class Day04 {
     public static void Solve(IEnumerable<string> input) {
         var cards = input.Select(line => line.Split(": ")[1]
                 .Split(" | ")
@@ -11,7 +11,7 @@ public class Day4 {
         cards
             .Where(x => x > 0)
             .Sum(x => 1 << (x - 1))
-            .Dump("Part1: ");
+            .Part1();
 
         var counts = Enumerable.Repeat(1, cards.Length).ToArray();
         for (var index = 0; index < cards.Length; index++)
@@ -20,6 +20,6 @@ public class Day4 {
 
         counts
             .Sum()
-            .Dump("Part2: ");
+            .Part2();
     }
 }

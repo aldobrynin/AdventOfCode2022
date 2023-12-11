@@ -2,7 +2,7 @@ using Range = Common.Range;
 
 namespace AoC2023.Day05;
 
-public class Day5 {
+public partial class Day05 {
     private record MapRange(Range<long> Src, Range<long> Dst) {
         public long Offset => Dst.From - Src.From;
 
@@ -25,8 +25,8 @@ public class Day5 {
             .Select(map => map.Skip(1).Select(MapRange.Create).ToArray())
             .ToArray();
 
-        TranslateValues(seeds).Min().Dump("Part1: ");
-        TranslateRanges(seedsRanges).Min(c => c.From).Dump("Part2: ");
+        TranslateValues(seeds).Min().Part1();
+        TranslateRanges(seedsRanges).Min(c => c.From).Part2();
 
         long[] TranslateValues(long[] origin) =>
             maps.Aggregate(origin,

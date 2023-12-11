@@ -1,12 +1,12 @@
 namespace AoC2020.Day09;
 
-public class Day9
+public partial class Day09
 {
     public static void Solve(IEnumerable<string> input) {
         var preambleLength = AoCContext.IsSample ? 5 : 25;
         var numbers = input.Select(long.Parse).ToArray();
-        var invalidNumber = Part1(numbers, preambleLength).Dump("Part1: ");
-        Part2(numbers, invalidNumber).Dump("Part2: ");
+        var invalidNumber = Part1(numbers, preambleLength).Part1();
+        Part2(numbers, invalidNumber).Part2();
     }
 
     private static long Part1(long[] numbers, int preambleLength) {

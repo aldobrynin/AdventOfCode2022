@@ -1,6 +1,6 @@
 namespace AoC2023.Day07;
 
-public class Day7 {
+public partial class Day07 {
 
     // ReSharper disable once NotAccessedPositionalProperty.Local
     private record Hand(string Cards) {
@@ -46,13 +46,13 @@ public class Day7 {
             .ThenBy(x => x.Hand.CardsValue)
             .Select((x, i) => (i + 1) * x.Bid)
             .Sum()
-            .Dump("Part1: ");
+            .Part1();
 
         hands
             .OrderBy(x => x.Hand.HandTypeJokerAware)
             .ThenBy(x => x.Hand.CardsValueJokerAware)
             .Select((x, i) => (i + 1) * x.Bid)
             .Sum()
-            .Dump("Part2: ");
+            .Part2();
     }
 }

@@ -2,7 +2,7 @@ using Spectre.Console;
 
 namespace AoC2021.Day13;
 
-public class Day13
+public partial class Day13
 {
 
     private record Instruction(string Coordinate, int Value)
@@ -26,9 +26,8 @@ public class Day13
             .ToArray();
 
         Apply(map, instructions)
-            .Take(1)
-            .Select(x => x.Count)
-            .Dump("Part1: ");
+            .First().Count
+            .Part1();
 
         Console.WriteLine("Part2: ");
         Print(Apply(map, instructions)

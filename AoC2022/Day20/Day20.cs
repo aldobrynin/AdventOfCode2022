@@ -1,15 +1,15 @@
-namespace Solution.Day20;
+namespace AoC2022.Day20;
 
-public class Day20
+public partial class Day20
 {
     public static void Solve(IEnumerable<string> input)
     {
         var encryptedMessage = input.Select(long.Parse).ToArray();
         DecryptMessage(encryptedMessage, cycles: 1, multiplier: 1)
-            .Dump("Part1: ");
+            .Part1();
 
         DecryptMessage(encryptedMessage, cycles: 10, multiplier: 811589153)
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static long DecryptMessage(IReadOnlyList<long> input, int cycles, long multiplier)

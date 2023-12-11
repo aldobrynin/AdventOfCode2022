@@ -2,7 +2,7 @@ using System.Text;
 
 namespace AoC2021.Day16;
 
-public class Day16
+public partial class Day16
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -13,8 +13,8 @@ public class Day16
             .StringJoin(string.Empty);
 
         var packet = ParsePacket(rawPacket);
-        packet.VersionsSum().Dump("Part1: ");
-        packet.GetValue().Dump("Part2: ");
+        packet.VersionsSum().Part1();
+        packet.GetValue().Part2();
     }
 
     private static Packet ParsePacket(string s)

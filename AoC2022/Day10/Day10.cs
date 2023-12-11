@@ -1,6 +1,6 @@
-namespace Solution.Day10;
+namespace AoC2022.Day10;
 
-public class Day10
+public partial class Day10
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -21,7 +21,7 @@ public class Day10
             .Indices()
             .Where(i => (i + 1) % 40 == 20)
             .Sum(i => values[i] * (i + 1))
-            .Dump("Part1: ");
+            .Part1();
 
         const int rowLength = 40;
         var crtLines = values.Chunk(rowLength)

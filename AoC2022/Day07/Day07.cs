@@ -1,6 +1,6 @@
-namespace Solution.Day07;
+namespace AoC2022.Day07;
 
-public class Day7
+public partial class Day07
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -34,7 +34,7 @@ public class Day7
 
         Find(root, x => x.Size() < 100_000)
             .Sum(x => x.Size())
-            .Dump("Part1: ");
+            .Part1();
         
         const long TOTAL_SPACE = 70_000_000;
         const long MIN_REQUIRED_SPACE = 30_000_000;
@@ -42,7 +42,7 @@ public class Day7
         var minCleanupSpace = MIN_REQUIRED_SPACE - freeSpace;
         Find(root, x => x.Size() > minCleanupSpace)
             .Select(x => x.Size())
-            .Min().Dump("Part2: ");
+            .Min().Part2();
     }
 
     private static IEnumerable<Directory> Find(Directory root, Func<Directory, bool> condition)

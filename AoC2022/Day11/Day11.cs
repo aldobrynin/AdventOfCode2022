@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Solution.Day11;
+namespace AoC2022.Day11;
 
 public record Monkey(int Number,
     Queue<long> Items,
@@ -58,7 +58,7 @@ public record Monkey(int Number,
     }
 }
 
-public class Day11
+public partial class Day11
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -67,9 +67,9 @@ public class Day11
             .Select(Monkey.Parse)
             .ToArray();
         GetMonkeyBusinessAfterRounds(CloneMonkeys(), roundsCount: 20, worryDivider: 3)
-            .Dump("Part1: ");
+            .Part1();
         GetMonkeyBusinessAfterRounds(CloneMonkeys(), roundsCount: 10000, worryDivider: 1)
-            .Dump("Part2: ");
+            .Part2();
 
         Monkey[] CloneMonkeys()
         {

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace AoC2021.Day23;
 
-public class Day23
+public partial class Day23
 {
     private record State(
         ImmutableArray<string> Hallway,
@@ -83,7 +83,7 @@ public class Day23
             .ToArray();
         FindSolution(rooms)
             .First(s => s.IsComplete())
-            .Cost.Dump("Part1: ");
+            .Cost.Part1();
 
         var extraPod = new[]
         {
@@ -94,7 +94,7 @@ public class Day23
             .ToArray();
         FindSolution(part2Rooms)
             .First(s => s.IsComplete())
-            .Cost.Dump("Part2: ");
+            .Cost.Part2();
     }
 
     private static IEnumerable<State> FindSolution(char[][] map)

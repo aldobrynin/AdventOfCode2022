@@ -1,6 +1,6 @@
 namespace AoC2020.Day03;
 
-public class Day3
+public partial class Day03
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -8,7 +8,7 @@ public class Day3
         var map = Map.From(arr);
         var start = V.Zero;
 
-        CountTrees(start, V.Right * 3 + V.Up).Dump("Part1: ");
+        CountTrees(start, V.Right * 3 + V.Up).Part1();
 
         new[]
             {
@@ -20,7 +20,7 @@ public class Day3
             }
             .Select(m => CountTrees(start, m))
             .Product()
-            .Dump("Part2: ");
+            .Part2();
 
         long CountTrees(V from, V s)
         {

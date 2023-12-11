@@ -1,10 +1,10 @@
 namespace AoC2020.Day15;
 
-public class Day15 {
+public partial class Day15 {
     public static void Solve(IEnumerable<string> input) {
         var nums = input.Single().Split(',').Select(int.Parse).ToArray();
-        Emulate(nums).ElementAt(2020 - 1).Dump("Part1: ");
-        Emulate(nums).ElementAt(30000000 - 1).Dump("Part2: ");
+        Emulate(nums).ElementAt(2020 - 1).Part1();
+        Emulate(nums).ElementAt(30000000 - 1).Part2();
     }
 
     private static IEnumerable<int> Emulate(int[] input) {

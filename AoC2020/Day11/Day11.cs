@@ -1,6 +1,6 @@
 namespace AoC2020.Day11;
 
-public class Day11 {
+public partial class Day11 {
     private const char Floor = '.';
     private const char Empty = 'L';
     private const char Occupied = '#';
@@ -11,12 +11,12 @@ public class Day11 {
         Simulate(map.Clone())
             .Select(s => s.Coordinates().Count(v => s[v] == Occupied))
             .Last()
-            .Dump("Part1: ");
+            .Part1();
 
         SimulatePart2(map.Clone())
             .Select(s => s.Coordinates().Count(v => s[v] == Occupied))
             .Last()
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static IEnumerable<Map<char>> Simulate(Map<char> map) {

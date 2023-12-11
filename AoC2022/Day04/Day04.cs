@@ -1,6 +1,6 @@
 using Range = Common.Range;
 
-namespace Solution.Day04;
+namespace AoC2022.Day04;
 
 public record ElvesPair(Range<int> First, Range<int> Second) {
     public static ElvesPair Parse(string input) {
@@ -14,15 +14,15 @@ public record ElvesPair(Range<int> First, Range<int> Second) {
     }
 }
 
-public class Day4 {
+public partial class Day04 {
     public static void Solve(IEnumerable<string> input) {
         var pairs = input.Select(ElvesPair.Parse).ToArray();
         pairs
             .Count(x => x.First.Contains(x.Second) || x.Second.Contains(x.First))
-            .Dump("Part1: ");
+            .Part1();
 
         pairs
             .Count(x => x.First.Overlaps(x.Second))
-            .Dump("Part2: ");
+            .Part2();
     }
 }

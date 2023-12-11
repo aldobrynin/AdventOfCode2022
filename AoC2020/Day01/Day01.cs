@@ -1,6 +1,6 @@
 namespace AoC2020.Day01;
 
-public class Day1
+public partial class Day01
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -11,7 +11,7 @@ public class Day1
         {
             if (d.Contains(2020 - n))
             {
-                (n * (2020 - n)).Dump("Part1: ");
+                (n * (2020 - n)).Part1();
                 break;
             }
 
@@ -34,7 +34,7 @@ public class Day1
                 var sum = array[i] + array[j] + array[k];
                 if (sum == 2020)
                 {
-                    (array[i] * array[j] * array[k]).Dump("Part2: ");
+                    (array[i] * array[j] * array[k]).Part2();
                     return;
                 }
 

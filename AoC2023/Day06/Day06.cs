@@ -1,6 +1,6 @@
 namespace AoC2023.Day06;
 
-public class Day6 {
+public partial class Day06 {
     public static void Solve(IEnumerable<string> input) {
         var values = input.Select(line => line.Split(':')[1]).ToArray();
         var times = values[0];
@@ -8,12 +8,12 @@ public class Day6 {
         times.ToLongArray()
             .Zip(distances.ToLongArray(), Solve)
             .Product()
-            .Dump("Part1: ");
+            .Part1();
 
         var totalTime = times.Replace(" ", string.Empty).ToLong();
         var totalDistance = distances.Replace(" ", string.Empty).ToLong();
         Solve(totalTime, totalDistance)
-            .Dump("Part2: ");
+            .Part2();
     }
 
     // raceTime*x - x^2 > distance

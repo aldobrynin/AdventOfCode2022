@@ -1,6 +1,6 @@
 namespace AoC2021.Day02;
 
-public class Day2
+public partial class Day02
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -27,7 +27,7 @@ public class Day2
                 aim -= arg;
         }
 
-        (pos * depth).Dump("Part2: ");
+        (pos * depth).Part2();
     }
 
     private static void Part1(IEnumerable<(string Command, int Arg)> input)
@@ -44,7 +44,7 @@ public class Day2
                 depth -= arg;
         }
 
-        (depth * pos).Dump("Part1: ");
+        (depth * pos).Part1();
     }
 }
 

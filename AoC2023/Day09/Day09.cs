@@ -1,12 +1,12 @@
 namespace AoC2023.Day09;
 
-public class Day09 {
+public partial class Day09 {
     public static void Solve(IEnumerable<string> input) {
-        input.Select(x => x.ToLongArray())
+        var forecast = input.Select(x => x.ToLongArray())
             .Select(Extrapolate)
-            .ToArray()
-            .Dump("Part1: ", transform: x => x.Sum(s => s.Last))
-            .Dump("Part2: ", transform: x => x.Sum(s => s.First));
+            .ToArray();
+        forecast.Sum(s => s.Last).Part1();
+        forecast.Sum(s => s.First).Part2();
     }
 
     private static (long First, long Last) Extrapolate(long[] history) => FindDiffs(history)

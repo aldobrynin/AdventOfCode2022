@@ -1,20 +1,19 @@
 using System.Text.RegularExpressions;
 
-namespace Solution.Day05;
+namespace AoC2022.Day05;
 
-public class Day5
+public partial class Day05
 {
     public static void Solve(IEnumerable<string> input)
     {
         var lines = input.ToArray();
         var (stacks, endOfStack) = ParseStacks(lines);
-        endOfStack.Dump("End of stacks: ");
         var instructions = lines.Skip(endOfStack + 2)
             .Select(Instruction.Parse)
             .ToArray();
 
-        ApplyAndPeek(instructions, stacks, ApplyPart1Instruction).Dump("Part1: ");
-        ApplyAndPeek(instructions, stacks, ApplyPart2Instruction).Dump("Part2: ");
+        ApplyAndPeek(instructions, stacks, ApplyPart1Instruction).Part1();
+        ApplyAndPeek(instructions, stacks, ApplyPart2Instruction).Part2();
     }
 
     private static string ApplyAndPeek(

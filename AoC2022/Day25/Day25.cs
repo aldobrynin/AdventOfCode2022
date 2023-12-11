@@ -1,10 +1,10 @@
-namespace Solution.Day25;
+namespace AoC2022.Day25;
 
-public class Day25
+public partial class Day25
 {
     public static void Solve(IEnumerable<string> input)
     {
-        ToSnafu(input.Select(FromSnafu).Sum().Dump("Sum: ")).Dump("Part1: ");
+        ToSnafu(input.Select(FromSnafu).Sum()).Part1();
     }
 
     private static long FromSnafu(string line) => line.Aggregate(0L,

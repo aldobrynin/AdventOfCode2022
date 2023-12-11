@@ -1,12 +1,12 @@
 namespace AoC2020.Day12;
 
-public class Day12 {
+public partial class Day12 {
 
 
     public static void Solve(IEnumerable<string> input) {
         var commands = input.Select(Command.From).ToArray();
-        ExecutePart1(commands).Last().MLen.Dump("Part1: ");
-        ExecutePart2(commands).Last().MLen.Dump("Part2: ");
+        ExecutePart1(commands).Last().MLen.Part1();
+        ExecutePart2(commands).Last().MLen.Part2();
     }
 
     private static IEnumerable<V> ExecutePart1(IEnumerable<Command> commands) {

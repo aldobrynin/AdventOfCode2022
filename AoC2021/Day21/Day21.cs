@@ -2,7 +2,7 @@ using System.Numerics;
 
 namespace AoC2021.Day21;
 
-public class Day21
+public partial class Day21
 {
     private record Player(int Position, long Score = 0);
 
@@ -14,9 +14,9 @@ public class Day21
             .Select(pos => new Player(pos))
             .ToArray();
 
-        SimulatePart1(players).Dump("Part1: ");
+        SimulatePart1(players).Part1();
 
-        SimulatePart2(players).Max().Dump("Part2: ");
+        SimulatePart2(players).Max().Part2();
     }
 
     private static long SimulatePart1(Player[] initialState)

@@ -1,21 +1,21 @@
 using System.Globalization;
 
-namespace Solution.Day21;
+namespace AoC2022.Day21;
 
-public class Day21
+public partial class Day21
 {
     public static void Solve(IEnumerable<string> input)
     {
         var lines = input as string[] ?? input.ToArray();
         var monkeys = ParseTree(lines);
-        EvaluateNode(monkeys["root"]).Dump("Part1: ");
+        EvaluateNode(monkeys["root"]).Part1();
 
         monkeys = ParseTree(lines);
         var root = monkeys["root"];
         root.Operator = "-";
         monkeys["humn"].Value = new Equation(1, 0);
         var equation = EvaluateNode(root);
-        Math.Round(-equation.B / equation.A).Dump("Part2: ");
+        Math.Round(-equation.B / equation.A).Part2();
     }
 
     private static Dictionary<string, TreeNode> ParseTree(IEnumerable<string> input)

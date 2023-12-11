@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Numerics;
+using Spectre.Console;
 
 namespace Common;
 
@@ -65,6 +66,32 @@ public static class Extensions {
         else Console.Out.Write(printObject);
 
         Console.Out.WriteLine();
+        return source;
+    }
+
+    public static T Part1<T>(this T source) => SubmitAnswer(source, 1);
+    public static T Part2<T>(this T source) => SubmitAnswer(source, 2);
+
+    private static T SubmitAnswer<T>(T source, int part) {
+        ArgumentNullException.ThrowIfNull(source);
+        var answerString = source.ToString();
+        ArgumentException.ThrowIfNullOrWhiteSpace(answerString);
+
+        var answer = part switch {
+            1 => AoCContext.Answers.Part1,
+            2 => AoCContext.Answers.Part2,
+            _ => throw new ArgumentOutOfRangeException(nameof(part), part, "Part number is out of range")
+        };
+        var hasCorrectAnswer = !string.IsNullOrWhiteSpace(answer);
+        var isCorrectAnswer = answer == answerString.Trim();
+        var format = "Part{0}: {1}";
+        format = hasCorrectAnswer switch {
+            true when !isCorrectAnswer => $"[red]{format} ❌[/]",
+            true when isCorrectAnswer => $"[green]{format} ✅[/]",
+            _ => format
+        };
+
+        AnsiConsole.MarkupLine(format, part, answerString);
         return source;
     }
 

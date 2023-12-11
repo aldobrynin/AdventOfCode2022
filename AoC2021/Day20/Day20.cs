@@ -2,7 +2,7 @@ using Range = Common.Range;
 
 namespace AoC2021.Day20;
 
-public class Day20 {
+public partial class Day20 {
     private static readonly Range2d NeighborsRange = new(
         Range.FromStartAndEnd(-1, 2),
         Range.FromStartAndEnd(-1, 2)
@@ -20,8 +20,8 @@ public class Day20 {
             Range.FromStartAndEnd(0, rawMap.Length));
         var map = range.All().Where(rawMap.Get).ToHashSet();
 
-        EnhanceMany(algorithm, map, range, count: 2).Count.Dump("Part1: ");
-        EnhanceMany(algorithm, map, range, count: 50).Count.Dump("Part2: ");
+        EnhanceMany(algorithm, map, range, count: 2).Count.Part1();
+        EnhanceMany(algorithm, map, range, count: 50).Count.Part2();
     }
 
     private static HashSet<V> EnhanceMany(string algorithm, HashSet<V> map, Range2d range, int count)

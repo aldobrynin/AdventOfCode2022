@@ -2,14 +2,14 @@ using Range = Common.Range;
 
 namespace AoC2023.Day10;
 
-public class Day10 {
+public partial class Day10 {
     public static void Solve(IEnumerable<string> input) {
         var map = Map.From(input);
         var start = map.FindAll('S').Single();
         var longestLoop = map.Dfs((from, to) => AreTilesConnected(map[from], map[to], to - from), start)
             .Where(x => x.Distance > 1 && start.Area4().Contains(x.State))
             .MaxBy(x => x.Distance) ?? throw new Exception("No loop found");
-        ((longestLoop.Distance + 1) / 2).Dump("Part1: ");
+        ((longestLoop.Distance + 1) / 2).Part1();
         var pipe = longestLoop.FromStart().ToArray();
 
         var adjacentToStart = new[] { pipe[1], longestLoop.State };
@@ -17,7 +17,7 @@ public class Day10 {
             .Where(x => x != 'S')
             .Single(tile => adjacentToStart.All(n => AreTilesConnected(map[n], tile, start - n)));
         map[start] = startTile;
-        FindIsolatedCells(map, pipe.ToHashSet()).Dump("Part2: ");
+        FindIsolatedCells(map, pipe.ToHashSet()).Part2();
     }
 
     private static int FindIsolatedCells(Map<char> map, HashSet<V> pipe) {

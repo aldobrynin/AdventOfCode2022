@@ -3,7 +3,7 @@ using R = Common.Range;
 
 namespace AoC2021.Day22;
 
-public class Day22 {
+public partial class Day22 {
     private record Procedure(bool Enable, Range3d Range) {
         private static readonly Regex Regex = new(@"[\d\-]+", RegexOptions.Compiled);
 
@@ -46,9 +46,9 @@ public class Day22 {
 
         cubes.Select(c => c.Intersect(initRange3d))
             .Sum(c => c == null ? 0 : 1L * c.X.Length * c.Y.Length * c.Z.Length)
-            .Dump("Part1: ");
+            .Part1();
 
         cubes.Sum(c => 1L * c.X.Length * c.Y.Length * c.Z.Length)
-            .Dump("Part2: ");
+            .Part2();
     }
 }

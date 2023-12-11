@@ -1,6 +1,6 @@
-namespace Solution.Day03;
+namespace AoC2022.Day03;
 
-public class Day3
+public partial class Day03
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -13,7 +13,7 @@ public class Day3
                 return first.Intersect(second).Single();
             })
             .Sum(ToScore)
-            .Dump("Part1: ");
+            .Part1();
         
         lines
             .Chunk(3)
@@ -21,7 +21,7 @@ public class Day3
                 .Aggregate<IEnumerable<char>>((p, n) => p.Intersect(n))
                 .Single())
             .Sum(ToScore)
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static int ToScore(char c) => c >= 'a' ? c - 'a' + 1 : c - 'A' + 27;

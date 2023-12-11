@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
-namespace Solution.Day16;
+namespace AoC2022.Day16;
 
 public record State(long OpenMask, int ValveIndex);
 public record ValveData(int Index, string Name, int Rate, IReadOnlyCollection<string> Neighbors) : IParsable<ValveData?>
@@ -38,7 +38,7 @@ public record ValveData(int Index, string Name, int Rate, IReadOnlyCollection<st
     }
 }
 
-public class Day16
+public partial class Day16
 {
     public static void Solve(IEnumerable<string> fileInput)
     {
@@ -49,7 +49,7 @@ public class Day16
 
         Measure.Time(() =>
             {
-                GetTotalFlowForEachState(valves, start.Index, 30).Values.Max().Dump("Part1: ");
+                GetTotalFlowForEachState(valves, start.Index, 30).Values.Max().Part1();
             })
             .Dump("Elapsed: ");
         
@@ -59,7 +59,7 @@ public class Day16
             solutionsMask.SelectMany(elfSolution => solutionsMask.Select(elephantSolution => (elfSolution, elephantSolution)))
                 .Where(x => (x.elfSolution.Key & x.elephantSolution.Key) == 0)
                 .Max(x => x.elfSolution.Value + x.elephantSolution.Value)
-                .Dump("Part2: ");
+                .Part2();
         }).Dump("Elapsed: ");
 
     }

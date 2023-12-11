@@ -1,6 +1,6 @@
 namespace AoC2020.Day10;
 
-public class Day10
+public partial class Day10
 {
     public static void Solve(IEnumerable<string> input) {
         var jolts = input.Select(int.Parse).Order().Prepend(0).ToList();
@@ -11,7 +11,7 @@ public class Day10
 
     private static void Part1(IReadOnlyCollection<int> jolts) {
         var lookup = jolts.Zip(jolts.Skip(1), (a, b) => b - a).ToLookup(x => x);
-        (lookup[1].Count() * lookup[3].Count()).Dump("Part1: ");
+        (lookup[1].Count() * lookup[3].Count()).Part1();
     }
 
     private static void Part2(IReadOnlyList<int> jolts) {
@@ -27,6 +27,6 @@ public class Day10
         }
 
         var res = dp.Last();
-        res.Dump("Part2: ");
+        res.Part2();
     }
 }

@@ -1,6 +1,6 @@
 namespace AoC2023.Day11;
 
-public class Day11 {
+public partial class Day11 {
     public static void Solve(IEnumerable<string> input) {
         var map = Map.From(input);
 
@@ -10,11 +10,11 @@ public class Day11 {
         var galaxies = map.FindAll('#').ToArray();
         GetDistances(galaxies, factor: 2)
             .Sum()
-            .Dump("Part1: ");
+            .Part1();
 
         GetDistances(galaxies, factor: AoCContext.IsSample ? 10 : 1000000)
             .Sum()
-            .Dump("Part2: ");
+            .Part2();
 
         IEnumerable<long> GetDistances(IEnumerable<V> points, int factor) =>
             points

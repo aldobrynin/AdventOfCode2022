@@ -1,16 +1,19 @@
 namespace AoC2023.Day01;
 
-public class Day1 {
+public partial class Day01 {
     public static void Solve(IEnumerable<string> input) {
-        input.Select(line => int.Parse($"{line.First(char.IsDigit)}{line.Last(char.IsDigit)}"))
+        var lines = input.ToArray();
+        lines
+            .Where(line => line.Any(char.IsDigit))
+            .Select(line => int.Parse($"{line.First(char.IsDigit)}{line.Last(char.IsDigit)}"))
             .Sum()
-            .Dump("Part1: ");
+            .Part1();
 
-        input
+        lines
             .Select(line => Parse(line).ToArray())
             .Select(x => x.First() * 10L + x.Last())
             .Sum()
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static IEnumerable<int> Parse(string s) {

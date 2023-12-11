@@ -1,11 +1,11 @@
 namespace AoC2021.Day10;
 
-public class Day10
+public partial class Day10
 {
     public static void Solve(IEnumerable<string> input)
     {
         var array = input as string[] ?? input.ToArray();
-        array.Select(GetCorruptionScore).Sum().Dump("Part1: ");
+        array.Select(GetCorruptionScore).Sum().Part1();
 
         var nonCorrupted = array.Where(x => GetCorruptionScore(x) == 0).ToArray();
         nonCorrupted
@@ -13,7 +13,7 @@ public class Day10
             .Select(x => x.Aggregate(0L, (curr, next) => curr * 5 + AutocompleteScore(next)))
             .Order()
             .ElementAt((nonCorrupted.Length) / 2)
-            .Dump("Part2: ");
+            .Part2();
 
     }
 

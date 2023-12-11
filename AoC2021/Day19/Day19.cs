@@ -1,6 +1,6 @@
 namespace AoC2021.Day19;
 
-public class Day19
+public partial class Day19
 {
     private record Scanner3D(string Id, V3[] Beacons)
     {
@@ -45,11 +45,11 @@ public class Day19
             }
         }
 
-        knownBeacons.Count.Dump("Part1: ");
+        knownBeacons.Count.Part1();
 
         scanners.SelectMany(first => scanners.Select(first.DistTo))
             .Max()
-            .Dump("Part2: ");
+            .Part2();
 
     }
 

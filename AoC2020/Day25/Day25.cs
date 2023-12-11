@@ -1,6 +1,6 @@
 namespace AoC2020.Day25;
 
-public class Day25 {
+public partial class Day25 {
     public static void Solve(IEnumerable<string> input) {
         var lines = input.Select(long.Parse).ToArray();
         var cardPublicKey = lines[0];
@@ -9,8 +9,8 @@ public class Day25 {
         var cardLoopSize = GuessLoopSize(cardPublicKey);
         var doorLoopSize = GuessLoopSize(doorPublicKey);
 
-        Transform(doorPublicKey).ElementAt(cardLoopSize).Dump("Part1: ");
-        Transform(cardPublicKey).ElementAt(doorLoopSize).Dump("Part1: ");
+        Transform(doorPublicKey).ElementAt(cardLoopSize).Part1();
+        Transform(cardPublicKey).ElementAt(doorLoopSize).Part1();
     }
 
     private static IEnumerable<long> Transform(long subjectNumber) {

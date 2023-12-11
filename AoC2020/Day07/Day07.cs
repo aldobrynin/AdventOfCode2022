@@ -1,6 +1,6 @@
 namespace AoC2020.Day07;
 
-public class Day7
+public partial class Day07
 {
     private record Rule(int Count, string Color)
     {
@@ -38,9 +38,9 @@ public class Day7
             colors.UnionWith(target);
         }
 
-        colors.Count.Dump("Part1: ");
+        colors.Count.Part1();
 
-        Get("shiny gold", parsed).Dump("Part2: ");
+        Get("shiny gold", parsed).Part2();
     }
 
     private static long Get(string cur, IReadOnlyDictionary<string, Rule[]> rules)

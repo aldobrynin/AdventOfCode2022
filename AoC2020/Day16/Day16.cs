@@ -3,7 +3,7 @@ using Range = Common.Range;
 
 namespace AoC2020.Day16;
 
-public class Day16 {
+public partial class Day16 {
     public static void Solve(IEnumerable<string> input) {
         var inputArray = input as string[] ?? input.ToArray();
         var fieldDescriptions = inputArray
@@ -18,7 +18,7 @@ public class Day16 {
             .ToArray();
 
         tickets.SelectMany(fields => fields.Where(f => !fieldDescriptions.Any(r => r.IsValid(f))))
-            .Sum().Dump("Part1: ");
+            .Sum().Part1();
 
         var validNearbyTickets = tickets
             .Where(ticket => ticket.All(field => fieldDescriptions.Any(r => r.IsValid(field))))
@@ -31,7 +31,7 @@ public class Day16 {
             .Select(rangeInd => rangesMap[rangeInd])
             .Select(fieldInd => (long)myTicket[fieldInd])
             .Product()
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static Dictionary<int, int> Decode(FieldDescription[] fieldDescriptions, int[][] tickets) {

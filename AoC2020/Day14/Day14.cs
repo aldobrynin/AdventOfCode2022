@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace AoC2020.Day14;
 
-public class Day14 {
+public partial class Day14 {
     public static void Solve(IEnumerable<string> input) {
         var inputArray = input.Select(Parse).ToArray();
         Part1(inputArray);
@@ -34,7 +34,7 @@ public class Day14 {
                 .Aggregate(0L, (acc, current) => acc * 2 + (current - '0'));
         }
 
-        mem.Sum(x => x.Value).Dump("Part1: ");
+        mem.Sum(x => x.Value).Part1();
     }
 
     private static void Part2(IEnumerable<(string Address, string Value)> input) {
@@ -63,6 +63,6 @@ public class Day14 {
                     (current, segment) => current.SelectMany(x => values.Select(v => x + v + segment)).ToList());
         }
 
-        mem.Sum(x => x.Value).Dump("Part2: ");
+        mem.Sum(x => x.Value).Part2();
     }
 }

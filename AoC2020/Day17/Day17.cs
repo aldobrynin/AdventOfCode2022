@@ -1,6 +1,6 @@
 namespace AoC2020.Day17;
 
-public class Day17 {
+public partial class Day17 {
     private const char Active = '#';
 
     public static void Solve(IEnumerable<string> input) {
@@ -12,11 +12,11 @@ public class Day17 {
 
         Emulate(active, v => v.Neighbors3())
             .ElementAt(6)
-            .Dump("Part1: ");
+            .Part1();
 
         Emulate(active, v => v.Neighbors4())
             .ElementAt(6)
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static IEnumerable<int> Emulate(HashSet<V4> active, Func<V4, IEnumerable<V4>> getNeighbors) {

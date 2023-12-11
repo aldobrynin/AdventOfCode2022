@@ -1,6 +1,6 @@
 namespace AoC2021.Day05;
 
-public class Day5
+public partial class Day05
 {
     private record Line(V From, V To)
     {
@@ -19,12 +19,12 @@ public class Day5
             .SelectMany(x => x.From.LineTo(x.To))
             .GroupBy(x => x)
             .Count(x => x.Count() > 1)
-            .Dump("Part1: ");
+            .Part1();
         
         lines
             .SelectMany(x => x.From.LineTo(x.To))
             .GroupBy(x => x)
             .Count(x => x.Count() > 1)
-            .Dump("Part2: ");
+            .Part2();
     }
 }

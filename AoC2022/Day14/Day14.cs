@@ -1,6 +1,6 @@
-namespace Solution.Day14;
+namespace AoC2022.Day14;
 
-public class Day14
+public partial class Day14
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -13,14 +13,14 @@ public class Day14
         DropSand(sandSource, maxY, lines)
             .TakeWhile(s => s.Y != maxY)
             .Count()
-            .Dump("Part1: ");
+            .Part1();
         
         var maxX = lines.SelectMany(x => x.Select(v => v.X)).Max();
         var floorLine = new[] { new V(0, maxY), new V(maxX * 2, maxY) };
         (DropSand(sandSource, maxY, lines.Append(floorLine))
                 .TakeWhile(s => s != sandSource)
                 .Count() + 1)
-            .Dump("Part2: ");
+            .Part2();
     }
     
     static IEnumerable<V> DropSand(V sandSource, int maxY, IEnumerable<V[]> blockLines)

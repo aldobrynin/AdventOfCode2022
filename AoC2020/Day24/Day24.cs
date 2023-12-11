@@ -1,6 +1,6 @@
 namespace AoC2020.Day24;
 
-public class Day24 {
+public partial class Day24 {
     private static readonly Dictionary<string, V> Map = new() {
         ["sw"] = new V(-1, -3),
         ["se"] = new V(+1, -3),
@@ -18,11 +18,11 @@ public class Day24 {
             .Select(x => x.Key)
             .ToHashSet();
 
-        blackTiles.Count.Dump("Part1: ");
+        blackTiles.Count.Part1();
 
         Simulate(blackTiles, limit: 100)
             .Last()
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static IEnumerable<int> Simulate(HashSet<V> blackTiles, int limit) {

@@ -1,6 +1,6 @@
 namespace AoC2021.Day09;
 
-public class Day9
+public partial class Day09
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -11,7 +11,7 @@ public class Day9
         map.Coordinates()
             .Where(v => map.Area4(v).All(n => map[n] > map[v]))
             .Sum(v => map[v] + 1)
-            .Dump("Part1: ");
+            .Part1();
 
         var basins = new List<int>();
         var visited = new HashSet<V>();
@@ -35,6 +35,6 @@ public class Day9
         basins.OrderDescending()
             .Take(3)
             .Product()
-            .Dump("Part2: ");
+            .Part2();
     }
 }

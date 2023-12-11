@@ -1,6 +1,6 @@
 namespace AoC2020.Day21;
 
-public class Day21 {
+public partial class Day21 {
     public record struct Food(HashSet<string> Ingredients, HashSet<string> Allergens) {
         public static Food Parse(string line) {
             var parts = line.Split(" (contains ");
@@ -25,12 +25,13 @@ public class Day21 {
         var ingredientsWithAllergen = allergenToIngredients.SelectMany(x => x.Value).ToHashSet();
 
         foods.Sum(food => food.Ingredients.Count(ingredient => !ingredientsWithAllergen.Contains(ingredient)))
-            .Dump("Part1: ");
+            .Part1();
 
         FindBijection(allergenToIngredients)
             .OrderBy(x => x.Value)
             .Select(x => x.Key)
-            .Dump("Part2: ");
+            .StringJoin()
+            .Part2();
     }
 
     private static Dictionary<string, string> FindBijection(Dictionary<string, HashSet<string>> candidates) {

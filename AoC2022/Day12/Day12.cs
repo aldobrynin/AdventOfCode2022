@@ -1,6 +1,6 @@
-namespace Solution.Day12;
+namespace AoC2022.Day12;
 
-public class Day12
+public partial class Day12
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -17,11 +17,11 @@ public class Day12
         map.Bfs(CanClimb, start)
             .First(x => x.State == end)
             .Distance
-            .Dump("Part1: ");
+            .Part1();
 
         map.Bfs(CanClimb, map.FindAll('a').ToArray())
             .First(x => x.State == end)
             .Distance
-            .Dump("Part2: ");
+            .Part2();
     }
 }

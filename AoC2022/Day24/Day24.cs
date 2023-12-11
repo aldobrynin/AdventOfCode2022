@@ -1,6 +1,6 @@
-namespace Solution.Day24;
+namespace AoC2022.Day24;
 
-public class Day24
+public partial class Day24
 {
     private record State(int Move, V Position);
 
@@ -17,9 +17,9 @@ public class Day24
         var blizzards = LoadBlizzards(map);
         var blizzardsPerMove = new Dictionary<int, HashSet<V>>(1_000);
 
-        var fromStartToEnd = Search(map, start, end, 0, BlizzardsForecast).Move.Dump("Part1: ");
+        var fromStartToEnd = Search(map, start, end, 0, BlizzardsForecast).Move.Part1();
         var fromEndToStart = Search(map, end, start, fromStartToEnd, BlizzardsForecast);
-        Search(map, start, end, fromEndToStart.Move, BlizzardsForecast).Move.Dump("Part2: ");
+        Search(map, start, end, fromEndToStart.Move, BlizzardsForecast).Move.Part2();
 
         IReadOnlySet<V> BlizzardsForecast(int move)
         {

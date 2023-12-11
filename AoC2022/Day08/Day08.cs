@@ -1,6 +1,6 @@
-namespace Solution.Day08;
+namespace AoC2022.Day08;
 
-public class Day8
+public partial class Day08
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -8,11 +8,11 @@ public class Day8
 
         EnumerateTrees(map)
             .Count(tree => V.Directions4.Any(dir => CanReachEndOfMap(map, tree, dir)))
-            .Dump("Part1: ");
+            .Part1();
 
         EnumerateTrees(map)
             .Max(tree => V.Directions4.Product(dir => GetLastVisibleTree(map, tree, dir).DistTo(tree)))
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static bool CanReachEndOfMap(int[][] map, V tree, V direction)

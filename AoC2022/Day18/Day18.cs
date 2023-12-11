@@ -1,8 +1,8 @@
 using Range = Common.Range;
 
-namespace Solution.Day18;
+namespace AoC2022.Day18;
 
-public class Day18 {
+public partial class Day18 {
     public static void Solve(IEnumerable<string> fileInput) {
         var lavaCubes = fileInput
             .Select(V3.Parse)
@@ -11,7 +11,7 @@ public class Day18 {
 
         lavaCubes
             .Sum(cube => cube.Neighbors6().Count(d => !lavaSet.Contains(d)))
-            .Dump("Part1: ");
+            .Part1();
 
         var maxOuterV = new V3(lavaCubes.Max(v => v.X) + 1, lavaCubes.Max(v => v.Y) + 1, lavaCubes.Max(v => v.Z) + 1);
         var minOuterV = new V3(lavaCubes.Min(v => v.X) - 1, lavaCubes.Min(v => v.Y) - 1, lavaCubes.Min(v => v.Z) - 1);
@@ -30,6 +30,6 @@ public class Day18 {
 
         lavaCubes
             .Sum(cube => cube.Neighbors6().Count(d => outerWaterSet.Contains(d)))
-            .Dump("Part2: ");
+            .Part2();
     }
 }

@@ -1,6 +1,6 @@
-namespace Solution.Day23;
+namespace AoC2022.Day23;
 
-public class Day23
+public partial class Day23
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -11,13 +11,13 @@ public class Day23
 
         SimulateElvesPositions(elvesSet)
             .Skip(9)
-            .Take(1)
             .Select(GetEmptyPointsCount)
-            .Dump("Part1: ");
+            .First()
+            .Part1();
 
         SimulateElvesPositions(elvesSet)
             .Count()
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static int GetEmptyPointsCount(IReadOnlyCollection<V> points)

@@ -1,14 +1,14 @@
 namespace AoC2020.Day02;
 
-public class Day2
+public partial class Day02
 {
     private record Entry(int First, int Second, char Symbol, string Password);
 
     public static void Solve(IEnumerable<string> input)
     {
         var arr = input.ToArray();
-        FindValidPasswords(arr, Part1Rule).Count().Dump("Part1: ");
-        FindValidPasswords(arr, Part2Rule).Count().Dump("Part2: ");
+        FindValidPasswords(arr, Part1Rule).Count().Part1();
+        FindValidPasswords(arr, Part2Rule).Count().Part2();
     }
 
     private static IEnumerable<string> FindValidPasswords(IEnumerable<string> input, Func<Entry, bool> isValid)

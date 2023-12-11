@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace AoC2021.Day17;
 
-public class Day17
+public partial class Day17
 {
     private class Rectangle
     {
@@ -48,12 +48,12 @@ public class Day17
 
         launchResults
             .Max(x => x.Trajectory.Max(t => t.Y))
-            .Dump("Part1: ");
+            .Part1();
 
         launchResults
             .Distinct()
             .Count()
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static IEnumerable<V> Simulate(V start, Rectangle target, V velocity)

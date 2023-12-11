@@ -1,12 +1,12 @@
 namespace AoC2021.Day25;
 
-public class Day25
+public partial class Day25
 {
     public static void Solve(IEnumerable<string> input)
     {
         var array = input.Select(line => line.ToCharArray()).ToArray();
 
-        Simulate(array).Count().Dump("Part1: ");
+        Simulate(array).Count().Part1();
     }
 
     private static IEnumerable<(HashSet<V> East, HashSet<V> South, int MovedCount)> Simulate(char[][] map)

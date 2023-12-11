@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 
 namespace AoC2021.Day12;
 
-public class Day12
+public partial class Day12
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -15,8 +15,8 @@ public class Day12
             .Where(x => x.From != "end")
             .ToLookup(x => x.From, x => x.To);
 
-        FindPaths(paths, "start").Count().Dump("Part1: ");
-        FindPaths(paths, "start", canRevisitSmallOnce: true).Count().Dump("Part2: ");
+        FindPaths(paths, "start").Count().Part1();
+        FindPaths(paths, "start", canRevisitSmallOnce: true).Count().Part2();
     }
 
     private record State(string Current, ImmutableList<string> Visited, bool CanRevisitSmall);

@@ -1,6 +1,6 @@
 namespace AoC2021.Day03;
 
-public class Day3
+public partial class Day03
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -22,10 +22,10 @@ public class Day3
         (Convert.ToInt32(new string(gamma), 2)
          *
          Convert.ToInt32(new string(epsilon), 2))
-            .Dump("Part1: ");
+            .Part1();
 
         (FindOxygenGeneratorRating(array) * FindCO2ScrubberRating(array))
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static int FindOxygenGeneratorRating(string[] input)

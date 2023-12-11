@@ -1,19 +1,19 @@
-namespace Solution.Day02;
+namespace AoC2022.Day02;
 
-public class Day2
+public partial class Day02
 {
     public static void Solve(IEnumerable<string> input)
     {
         var lines = input.ToArray();
         lines.Sum(line => GetScore((Shape)(line[0] - 'A'), (Shape)line[2] - 'X'))
-            .Dump("Part1: ");
+            .Part1();
         
         lines.Sum(line =>
         {
             var elf = (Shape) line[0] - 'A';
             var outcome = (Outcome)(line[2] - 'X');
             return GetScore(Guess(elf, outcome), outcome);
-        }).Dump("Part2: ");
+        }).Part2();
     }
 
     private static int GetScore(Shape me, Outcome outcome) => (int)me + 1 + (int)outcome * 3;

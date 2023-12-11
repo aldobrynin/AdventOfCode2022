@@ -1,6 +1,6 @@
 namespace AoC2021.Day15;
 
-public class Day15
+public partial class Day15
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -9,13 +9,13 @@ public class Day15
         FindPath(start, map)
             .First(x => x.Position == new V(map.SizeX - 1, map.SizeY - 1))
             .RiskAmount
-            .Dump("Part1: ");
+            .Part1();
 
         var largeMap = EnlargeMap(map, factor: 5);
         FindPath(start, largeMap)
             .First(x => x.Position == new V(largeMap.SizeX - 1, largeMap.SizeY - 1))
             .RiskAmount
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static Map<int> EnlargeMap(Map<int> map, int factor)

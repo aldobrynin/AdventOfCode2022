@@ -1,6 +1,6 @@
-namespace Solution.Day01;
+namespace AoC2022.Day01;
 
-public class Day1
+public partial class Day01
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -10,7 +10,7 @@ public class Day1
             .OrderDescending()
             .ToArray();
         
-        elvesCalories.First().Dump("Part1: ");
-        elvesCalories.Take(3).Sum().Dump("Part2: ");
+        elvesCalories.First().Part1();
+        elvesCalories.Take(3).Sum().Part2();
     }
 }

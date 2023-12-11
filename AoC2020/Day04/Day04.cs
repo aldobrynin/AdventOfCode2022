@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace AoC2020.Day04;
 
-public class Day4
+public partial class Day04
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -15,10 +15,10 @@ public class Day4
             .ToArray();
 
         passports.Count(p => RequiredFields.All(p.ContainsKey))
-            .Dump("Part1: ");
+            .Part1();
 
         passports.Count(IsValid)
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static bool IsValid(Dictionary<string, string> passport)

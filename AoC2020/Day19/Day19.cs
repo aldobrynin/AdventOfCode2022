@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace AoC2020.Day19;
 
-public class Day19 {
+public partial class Day19 {
     public static void Solve(IEnumerable<string> input) {
         var rawRules = input.TakeWhile(x => !string.IsNullOrWhiteSpace(x))
             .Select(x => x.Split(": "))
@@ -14,7 +14,7 @@ public class Day19 {
         var compiledRule = new Regex($"^{CompileRule("0", rawRules)}$", RegexOptions.Compiled);
         messages
             .Count(message => compiledRule.IsMatch(message))
-            .Dump("Part1: ");
+            .Part1();
 
 
         var part2Rules = rawRules.SetItem("8", "42 | 42 8")
@@ -22,7 +22,7 @@ public class Day19 {
         var compiledRule2 = new Regex($"^{CompileRule("0", part2Rules)}$", RegexOptions.Compiled);
         messages
             .Count(message => compiledRule2.IsMatch(message))
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static string CompileRule(string ruleKey, IReadOnlyDictionary<string, string> rawRules) {

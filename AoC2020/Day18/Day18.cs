@@ -1,6 +1,6 @@
 namespace AoC2020.Day18;
 
-public class Day18 {
+public partial class Day18 {
     public static void Solve(IEnumerable<string> input) {
         var operationsPriority = new Dictionary<string, int> {
             ["+"] = 0,
@@ -9,7 +9,7 @@ public class Day18 {
         input.Select(tokens => ToRPN(tokens, operationsPriority))
             .Select(EvalRPN)
             .Sum()
-            .Dump("Part1: ");
+            .Part1();
 
         var advancedMathPriority = new Dictionary<string, int> {
             ["+"] = 0,
@@ -18,7 +18,7 @@ public class Day18 {
         input.Select(tokens => ToRPN(tokens, advancedMathPriority))
             .Select(EvalRPN)
             .Sum()
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static string[] NormalizeAndSplitToTokens(string expr) {

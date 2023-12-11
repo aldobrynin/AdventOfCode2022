@@ -1,17 +1,13 @@
 namespace AoC2021.Day24;
 
-public class Day24
-{
-    public static void Solve(IEnumerable<string> input)
-    {
-
+public partial class Day24 {
+    public static void Solve(IEnumerable<string> input) {
         var array = input.ToArray();
-        Run(array).Dump("Part1: ");
-        Run(array, min: true).Dump("Part2: ");
+        Run(array).Part1();
+        Run(array, min: true).Part2();
     }
 
-    private static long Run(IEnumerable<string> input, bool min = false)
-    {
+    private static long Run(IEnumerable<string> input, bool min = false) {
         var numbers = Enumerable.Range(1, 9).ToArray();
 
         var result = new int[14];
@@ -20,11 +16,9 @@ public class Day24
             .Chunk(18)
             .Select(chunk => (X: int.Parse(chunk[5].Split(' ')[2]), Y: int.Parse(chunk[15].Split(' ')[2])))
             .ToArray();
-        for (var i = 0; i < 14; i++)
-        {
+        for (var i = 0; i < 14; i++) {
             var (xAdd, yAdd) = args[i];
-            if (xAdd > 0)
-            {
+            if (xAdd > 0) {
                 stack.Push((yAdd, i));
                 continue;
             }

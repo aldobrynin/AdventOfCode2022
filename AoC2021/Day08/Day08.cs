@@ -1,6 +1,6 @@
 namespace AoC2021.Day08;
 
-public class Day8
+public partial class Day08
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -9,9 +9,9 @@ public class Day8
             .Select(line => line.Split(' '))
             .SelectMany(line => line.Where(s => s.Length is 2 or 3 or 4 or 7))
             .Count()
-            .Dump("Part1: ");
+            .Part1();
 
-        array.Sum(Decode).Dump("Part2: ");
+        array.Sum(Decode).Part2();
     }
 
     private static long Decode(string line)

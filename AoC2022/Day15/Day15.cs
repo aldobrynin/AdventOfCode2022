@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using Range = Common.Range;
 
-namespace Solution.Day15;
+namespace AoC2022.Day15;
 
 
 public record Sensor(V Pos, V ClosestBeacon) {
@@ -18,17 +18,17 @@ public record Sensor(V Pos, V ClosestBeacon) {
     }
 }
 
-public class Day15 {
+public partial class Day15 {
     public static void Solve(IEnumerable<string> fileInput) {
         var y = AoCContext.IsSample ? 10 : 2_000_000;
 
         var sensors = fileInput.Select(Sensor.Parse).ToArray();
         var coveredPositions = GetCoveredPositions(sensors, y).Sum(s => s.Length);
         var beacons = sensors.Select(x => x.ClosestBeacon).Where(x => x.Y == y).Distinct().Count();
-        (coveredPositions - beacons).Dump("Part1: ");
+        (coveredPositions - beacons).Part1();
 
         var beacon = GetUnknownBeaconPositions(sensors, Range.FromStartAndEndInclusive(0, y * 2)).Single();
-        (beacon.X * 4_000_000L + beacon.Y).Dump("Part2: ");
+        (beacon.X * 4_000_000L + beacon.Y).Part2();
     }
 
     private static IEnumerable<Range<int>> GetCoveredPositions(IEnumerable<Sensor> sensors, int y) {

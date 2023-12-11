@@ -1,9 +1,9 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Solution.Day19;
+namespace AoC2022.Day19;
 
-public class Day19
+public partial class Day19
 {
     private record Blueprint(int Id, Resources OreRobotPrice, Resources ClayRobotPrice, Resources ObsidianRobotPrice, Resources GeodeRobotPrice)
     {
@@ -108,14 +108,14 @@ public class Day19
         blueprints
             .AsParallel()
             .Sum(b => SearchOutcomes(b, maxTime: 24).Max(s => s.Resources.Geode) * b.Id)
-            .Dump("Part1: ");
+            .Part1();
         
         blueprints
             .AsParallel()
             .Take(3)
             .Select(b => SearchOutcomes(b, maxTime: 32).Max(s => s.Resources.Geode))
             .Product()
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static IEnumerable<State> SearchOutcomes(Blueprint blueprint, int maxTime)

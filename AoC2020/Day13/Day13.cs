@@ -1,6 +1,6 @@
 namespace AoC2020.Day13;
 
-public class Day13 {
+public partial class Day13 {
     public static void Solve(IEnumerable<string> input) {
         var inputArray = input.ToArray();
         var arrivalTimestamp = int.Parse(inputArray[0]);
@@ -15,8 +15,8 @@ public class Day13 {
             .Select(bus => (bus.Id, MinutesToWait: bus.Id - arrivalTimestamp % bus.Id))
             .MinBy(x => x.MinutesToWait);
 
-        (closestBus.Id * closestBus.MinutesToWait).Dump("Part1: ");
-        Part2(buses).Dump("Part2: ");
+        (closestBus.Id * closestBus.MinutesToWait).Part1();
+        Part2(buses).Part2();
     }
 
     private static long Part2(IReadOnlyList<(int Index, long Id)> buses) {

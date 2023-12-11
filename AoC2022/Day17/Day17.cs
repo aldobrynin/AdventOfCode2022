@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Solution.Day17;
+namespace AoC2022.Day17;
 
 public class Shape
 {
@@ -82,7 +82,7 @@ public class GameField
     }
 }
 
-public class Day17
+public partial class Day17
 {
     private static readonly Shape[] _shapes = new[]
     {
@@ -131,7 +131,7 @@ public class Day17
 
             heightDiffs.Add(maxY - maxYBeforeRock);
             if (heightDiffs.Count == 2022)
-                maxY.Dump("Part1: ");
+                maxY.Part1();
         }
 
         var (start, period) = FindSequencePeriod(heightDiffs);
@@ -143,7 +143,7 @@ public class Day17
         var total = headSum
                     + heightDiffs.Skip(start).Take(period).Sum(x => x) * periodsCount
                     + tailSum;
-        total.Dump("Part2: ");
+        total.Part2();
 
         bool TryMove(ref Shape shape, V dir)
         {

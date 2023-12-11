@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 
-namespace Solution.Day22;
+namespace AoC2022.Day22;
 
-public class Day22
+public partial class Day22
 {
     private record Instruction(char Direction, int Moves);
     private record State(V Position, V Direction)
@@ -49,11 +49,11 @@ public class Day22
 
         EnumeratePositions(map, initialState, instructions, Normalize)
             .Last()
-            .ToScore().Dump("Part1: ");
+            .ToScore().Part1();
 
         EnumeratePositions(map, initialState, instructions, Normalize2)
             .Last()
-            .ToScore().Dump("Part2: ");
+            .ToScore().Part2();
 
         State Normalize(State currentState) => currentState with { Position = currentState.Position.Mod(yMax, xMax) };
 

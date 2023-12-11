@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 
 namespace AoC2020.Day08;
 
-public class Day8
+public partial class Day08
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -13,7 +13,7 @@ public class Day8
                 return (Command: tokens[0], Arg: int.Parse(tokens[1]));
             })
             .ToImmutableArray();
-        Run(commands).Value.Dump("Part1: ");
+        Run(commands).Value.Part1();
 
         commands.Indices()
             .Where(i => commands[i].Command != "acc")
@@ -22,7 +22,7 @@ public class Day8
             .Select(Run)
             .First(x => x.Index == commands.Length)
             .Value
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static (int Index, int Value) Run(ImmutableArray<(string Command, int Argument)> commands)

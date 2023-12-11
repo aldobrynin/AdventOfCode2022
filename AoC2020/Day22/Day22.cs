@@ -1,13 +1,13 @@
 namespace AoC2020.Day22;
 
-public class Day22 {
+public partial class Day22 {
     public static void Solve(IEnumerable<string> input) {
         var players = input.SplitBy(string.IsNullOrWhiteSpace)
             .Select(x => x.Skip(1).Select(int.Parse).ToArray())
             .ToArray();
 
-        PlayCombat(players[0], players[1]).Dump("Part1: ");
-        PlayCombatRecursive(players[0], players[1]).Dump("Part2: ");
+        PlayCombat(players[0], players[1]).Score.Part1();
+        PlayCombatRecursive(players[0], players[1]).Score.Part2();
     }
 
     private static (int Winner, int Score) PlayCombatRecursive(
@@ -45,7 +45,7 @@ public class Day22 {
         return deck.Reverse().Select((num, ind) => num * (ind + 1)).Sum();
     }
 
-    private static (int, int) PlayCombat(IEnumerable<int> firstPlayer, IEnumerable<int> secondPlayer) {
+    private static (int Winner, int Score) PlayCombat(IEnumerable<int> firstPlayer, IEnumerable<int> secondPlayer) {
         var firstDeck = new Queue<int>(firstPlayer);
         var secondDeck = new Queue<int>(secondPlayer);
 

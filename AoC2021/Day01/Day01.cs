@@ -1,6 +1,6 @@
 namespace AoC2021.Day01;
 
-public class Day1
+public partial class Day01
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -9,7 +9,7 @@ public class Day1
         array.Skip(1)
             .Where((x, i) => x > array[i])
             .Count()
-            .Dump("Part1: ");
+            .Part1();
 
         const int windowSize = 3;
         var windowedSums = array.SkipLast(windowSize - 1)
@@ -18,7 +18,7 @@ public class Day1
         windowedSums.Skip(1)
             .Where((x, i) => x > windowedSums[i])
             .Count()
-            .Dump("Part2: ");
+            .Part2();
     }
 }
 

@@ -1,12 +1,12 @@
-namespace Solution.Day09;
+namespace AoC2022.Day09;
 
-public class Day9
+public partial class Day09
 {
     public static void Solve(IEnumerable<string> input)
     {
         var motions = input.Select(Motion.Parse).ToArray();
-        EnumerateTailPositions(motions, 2).Distinct().Count().Dump("Part1: ");
-        EnumerateTailPositions(motions, 10).Distinct().Count().Dump("Part2: ");
+        EnumerateTailPositions(motions, 2).Distinct().Count().Part1();
+        EnumerateTailPositions(motions, 10).Distinct().Count().Part2();
     }
 
     private static IEnumerable<V> EnumerateTailPositions(IEnumerable<Motion> motions, int knotsCount)

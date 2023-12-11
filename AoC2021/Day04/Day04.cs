@@ -1,6 +1,6 @@
 namespace AoC2021.Day04;
 
-public class Day4
+public partial class Day04
 {
 
     private class BingoBoard
@@ -63,8 +63,8 @@ public class Day4
             .Select(x => new BingoBoard(x))
             .ToArray();
 
-        Play(numbers, boards).First().Score().Dump("Part1: ");
-        Play(numbers, boards).Last().Score().Dump("Part2: ");
+        Play(numbers, boards).First().Score().Part1();
+        Play(numbers, boards).Last().Score().Part2();
     }
 
     private static IEnumerable<BingoBoard> Play(IEnumerable<int> numbers, BingoBoard[] boards)

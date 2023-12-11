@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Solution.Day13;
+namespace AoC2022.Day13;
 
 class Comparer : IComparer<JsonElement>
 {
@@ -21,7 +21,7 @@ class Comparer : IComparer<JsonElement>
     }
 }
 
-public class Day13
+public partial class Day13
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -31,8 +31,8 @@ public class Day13
             .Where(x => string.IsNullOrWhiteSpace(x) == false)
             .ToArray();
 
-        Solve1().Sum().Dump("Part1: ");
-        Solve2().Product().Dump("Part2: ");
+        Solve1().Sum().Part1();
+        Solve2().Product().Part2();
 
         IEnumerable<int> Solve1()
         {

@@ -1,6 +1,6 @@
 namespace AoC2023.Day02;
 
-public class Day2 {
+public static partial class Day02 {
     public static void Solve(IEnumerable<string> input) {
         var games = input.Select(line => {
                 var segments = line.Replace("Game ", string.Empty).Split(": ");
@@ -23,14 +23,14 @@ public class Day2 {
         games.Where(g => g.Rounds.All(IsValidRound))
             .Select(x => x.Id)
             .Sum()
-            .Dump("Part1: ");
+            .Part1();
 
         games.Select(g => g.Rounds.SelectMany(kv => kv)
                 .GroupBy(x => x.Key, x => x.Value)
                 .Product(x => x.Max())
             )
             .Sum()
-            .Dump("Part2: ");
+            .Part2();
 
         bool IsValidRound(IReadOnlyDictionary<string, int> round) {
             return limits.All(r => round.GetValueOrDefault(r.Color) <= r.Limit);

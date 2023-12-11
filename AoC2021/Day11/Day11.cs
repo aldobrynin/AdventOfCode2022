@@ -1,18 +1,18 @@
 namespace AoC2021.Day11;
 
-public class Day11
+public partial class Day11
 {
     public static void Solve(IEnumerable<string> input)
     {
         var array = input.Select(line => line.Select(c => c - '0').ToArray())
             .ToArray();
-        Simulate(new Map<int>(array)).Take(100).Sum().Dump("Part1: ");
+        Simulate(new Map<int>(array)).Take(100).Sum().Part1();
 
         Simulate(new Map<int>(array))
             .Select((f, i) => (FlashesCount: f, Step: i + 1))
             .First(x => x.FlashesCount == array.Length * array.Length)
             .Step
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static IEnumerable<int> Simulate(Map<int> map)

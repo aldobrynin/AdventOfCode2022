@@ -1,6 +1,6 @@
 namespace AoC2020.Day05;
 
-public class Day5
+public partial class Day05
 {
     public static void Solve(IEnumerable<string> input)
     {
@@ -9,12 +9,12 @@ public class Day5
             .OrderBy(x => x)
             .ToArray();
 
-        seats[^1].Dump("Part1: ");
+        seats[^1].Part1();
 
         (seats
                 .Where((seatId, ind) => ind < seats.Length - 1 && seatId + 1 != seats[ind + 1])
                 .First() + 1)
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private static int Decode(string code)

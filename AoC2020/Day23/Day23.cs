@@ -2,18 +2,18 @@ using System.Collections;
 
 namespace AoC2020.Day23;
 
-public class Day23 {
+public partial class Day23 {
     public static void Solve(IEnumerable<string> input) {
         var labels = input.Single().Select(c => c - '0').ToArray();
         Simulate(labels, limit: 100)
             .StringJoin("")
-            .Dump("Part1: ");
+            .Part1();
 
         var labels2 = labels.Concat(Enumerable.Range(labels.Max() + 1, 1_000_000 - labels.Length)).ToArray();
         Simulate(labels2, 10_000_000)
             .Take(2)
             .Product(x => (long)x)
-            .Dump("Part2: ");
+            .Part2();
     }
 
     private class ListNode : IEnumerable<ListNode> {
