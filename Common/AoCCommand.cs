@@ -6,11 +6,9 @@ using Spectre.Console.Cli;
 namespace Common;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
-{
+public class AoCCommand : AsyncCommand<AoCCommand.AoCCommandSettings> {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class AoCCommandSettings : CommandSettings
-    {
+    public class AoCCommandSettings : CommandSettings {
         [Description("Day to run. Defaults to last found solution")]
         [CommandOption("-d|--day")]
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
@@ -22,7 +20,7 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool Sample { get; init; }
 
-        
+
         [Description("Whether to run all solutions")]
         [CommandOption("-a|--all")]
         [DefaultValue(false)]
@@ -30,12 +28,11 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
         public bool All { get; init; }
     }
 
-    private static int GetDayNumber(string typeName)
-    {
+    private static int GetDayNumber(string typeName) {
         return int.TryParse(typeName.Replace("Day", string.Empty), out var day) ? day : -1;
     }
 
-    private static void RunSolution((TypeInfo Type, int Day) dayType, bool sample, int year) {
+    private static async Task RunSolution((TypeInfo Type, int Day) dayType, bool sample, int year) {
         AnsiConsole.MarkupLine(
             ":christmas_tree::christmas_tree::christmas_tree:Day [underline red]{0}[/] of AoC {1}:christmas_tree::christmas_tree::christmas_tree:",
             dayType.Day, year);
@@ -44,15 +41,25 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
         var method = dayType.Type.GetMethod("Solve", BindingFlags.Public | BindingFlags.Static)
                      ?? throw new Exception($"Solve method is not found in {dayType.Type.Name}");
         var dayDirectory = Path.Combine($"Day{dayType.Day:00}");
+
         var inputFile = Path.Combine(dayDirectory, sample ? "sample.txt" : "input.txt");
         AnsiConsole.MarkupLine("Using input from [underline navy]{0}[/]", inputFile);
+        if (!sample && !File.Exists(inputFile)) {
+            if (AnsiConsole.Confirm("File does not exist. Download it?")) {
+                AnsiConsole.MarkupLine("Downloading input...");
+                await Scaffolder.DownloadInput(year, dayType.Day, inputFile);
+            }
+            else return;
+        }
+
         var input = File.ReadLines(inputFile);
         var action = (Action<IEnumerable<string>>)Delegate.CreateDelegate(typeof(Action<IEnumerable<string>>), method);
         AoCContext.IsSample = sample;
-        action(input);
+        Measure.Time(() => action(input))
+            .Dump("Finished in ", t => t.ToHumanTimeString());
     }
 
-    public override int Execute(CommandContext context, AoCCommandSettings settings) {
+    public override async Task<int> ExecuteAsync(CommandContext context, AoCCommandSettings settings) {
         var entryAssembly = Assembly.GetEntryAssembly();
         var year = int.Parse(
             entryAssembly!.GetName().Name!.Replace("AoC", string.Empty, StringComparison.OrdinalIgnoreCase));
@@ -63,8 +70,7 @@ public class AoCCommand : Command<AoCCommand.AoCCommandSettings>
         }
 
         foreach (var tuple in puzzlesToRun) {
-            Measure.Time(() => RunSolution(tuple, settings.Sample, year))
-                .Dump("Finished in ", t => t.ToHumanTimeString());
+            await RunSolution(tuple, settings.Sample, year);
         }
 
         return 0;
