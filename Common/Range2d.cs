@@ -23,10 +23,10 @@ public record Range2d(Range<int> X, Range<int> Y) {
         if (intersect == null)
             return new[] { this };
         return new[] {
-                this with { Y = Y with { To = intersect.Y.From - 1 } },
-                this with { Y = Y with { From = intersect.Y.To + 1 } },
-                intersect with { X = X with { To = intersect.X.From - 1 } },
-                intersect with { X = X with { From = intersect.X.To + 1 } },
+                this with { Y = Y with { To = intersect.Y.From } },
+                this with { Y = Y with { From = intersect.Y.To } },
+                intersect with { X = X with { To = intersect.X.From } },
+                intersect with { X = X with { From = intersect.X.To } },
             }
             .Where(x => !x.IsEmpty())
             .ToArray();

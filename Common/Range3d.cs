@@ -30,12 +30,12 @@ public record Range3d(Range<int> X, Range<int> Y, Range<int> Z) {
             return new[] { this };
 
         return new[] {
-                this with { Z = Z with { To = intersect.Z.From - 1 } },
-                this with { Z = Z with { From = intersect.Z.To + 1 } },
-                new Range3d(X, Y with { To = intersect.Y.From - 1 }, intersect.Z),
-                new Range3d(X, Y with { From = intersect.Y.To + 1 }, intersect.Z),
-                new Range3d(X with { To = intersect.X.From - 1 }, intersect.Y, intersect.Z),
-                new Range3d(X with { From = intersect.X.To + 1 }, intersect.Y, intersect.Z),
+                this with { Z = Z with { To = intersect.Z.From } },
+                this with { Z = Z with { From = intersect.Z.To  } },
+                new Range3d(X, Y with { To = intersect.Y.From  }, intersect.Z),
+                new Range3d(X, Y with { From = intersect.Y.To  }, intersect.Z),
+                intersect with { X = X with { To = intersect.X.From  } },
+                intersect with { X = X with { From = intersect.X.To  } },
             }
             .Where(x => !x.IsEmpty())
             .ToArray();

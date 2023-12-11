@@ -4,7 +4,7 @@ using System.Numerics;
 namespace Common;
 
 public record Range<T>(T From, T To) : IEnumerable<T> where T : INumber<T> {
-    public T Length => To - From + T.One;
+    public T Length => To - From;
     public bool IsEmpty() => From >= To;
     public bool Contains(T value) => From <= value && value < To;
     public bool Contains(Range<T> other) => From <= other.From && other.To <= To;

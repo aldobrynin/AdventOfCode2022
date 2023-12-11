@@ -23,7 +23,7 @@ public class Day15 {
         var y = AoCContext.IsSample ? 10 : 2_000_000;
 
         var sensors = fileInput.Select(Sensor.Parse).ToArray();
-        var coveredPositions = GetCoveredPositions(sensors, y).Sum(s => s.Length - 1);
+        var coveredPositions = GetCoveredPositions(sensors, y).Sum(s => s.Length);
         var beacons = sensors.Select(x => x.ClosestBeacon).Where(x => x.Y == y).Distinct().Count();
         (coveredPositions - beacons).Dump("Part1: ");
 
