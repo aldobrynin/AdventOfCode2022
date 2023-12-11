@@ -38,15 +38,15 @@ public class Day24
         Func<int, IReadOnlySet<V>> getBlizzardsForecast)
     {
         var initialState = new State(initialMove, from);
-        return SearchHelpers.Bfs(getNextState: prevState =>
-            {
+        return SearchHelpers.Bfs(getNextState: prevState => {
                 var nextMove = prevState.Move + 1;
                 var nextMoveBlizzards = getBlizzardsForecast(nextMove);
                 return prevState.Position.Area5()
                     .Where(v => !nextMoveBlizzards.Contains(v))
                     .Where(v => v.IsInRange(map) && map.Get(v) != '#')
                     .Select(nextPos => new State(nextMove, nextPos));
-            }, initialState)
+            }, maxDistance: null, initialState)
+            .Select(x => x.State)
             .First(s => s.Position == to);
     }
 

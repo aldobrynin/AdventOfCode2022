@@ -1,14 +1,6 @@
 namespace Common;
 
 public static class SearchHelpers {
-    public static IEnumerable<TState> Bfs<TState>(
-        Func<TState, IEnumerable<TState>> getNextState,
-        params TState[] initialStates
-    ) {
-        return Bfs(getNextState, maxDistance: null, initialStates)
-            .Select(x => x.State);
-    }
-
     public static IEnumerable<SearchPathItem<TState>> Dfs<TState>(
         Func<TState, IEnumerable<TState>> getNextState,
         TState start
