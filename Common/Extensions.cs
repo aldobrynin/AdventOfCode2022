@@ -44,15 +44,11 @@ public static class Extensions {
         return map.Coordinates().Where(v => Equals(map[v], value));
     }
 
-    public static int Product(this IEnumerable<int> source) => source.Aggregate(1, (x, y) => x * y);
+    public static T Product<T>(this IEnumerable<T> source) where T : INumber<T> =>
+        source.Aggregate(T.One, (x, y) => x * y);
 
-    public static int Product<T>(this IEnumerable<T> source, Func<T, int> selector) =>
-        source.Aggregate(1, (x, y) => x * selector(y));
-
-    public static long Product<T>(this IEnumerable<T> source, Func<T, long> selector) =>
-        source.Aggregate(1L, (x, y) => x * selector(y));
-
-    public static long Product(this IEnumerable<long> source) => source.Aggregate(1L, (x, y) => x * y);
+    public static TK Product<T, TK>(this IEnumerable<T> source, Func<T, TK> selector) where TK : INumber<TK> =>
+        source.Aggregate(TK.One, (x, y) => x * selector(y));
 
     public static T Dump<T>(this T source, string? message = null, Func<T, object>? transform = null,
         string? separator = ",") {
@@ -204,5 +200,23 @@ public static class Extensions {
         var accumulator = enumerator.Current;
         while (enumerator.MoveNext()) accumulator = reducer(accumulator, enumerator.Current);
         return accumulator;
+    }
+
+    public static IEnumerable<(T A, T B)> Pairs<T>(this IEnumerable<T> source) {
+        var list = source.ToList();
+        return list.SelectMany((a, ind) => list.Skip(ind).Select(b => (a, b)));
+    }
+
+    public static IEnumerable<(T Element, int Index)> SelectIndexed<T>(this IEnumerable<T> source) {
+        return source.Select((x, i) => (x, i));
+    }
+
+    public static IEnumerable<TNumber> RunningSum<T, TNumber>(this IEnumerable<T> source, Func<T, TNumber> selector)
+        where TNumber : INumber<TNumber> {
+        var sum = TNumber.Zero;
+        foreach (var item in source) {
+            sum += selector(item);
+            yield return sum;
+        }
     }
 }
