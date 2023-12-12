@@ -62,8 +62,8 @@ public partial class Day23
 
     private static readonly V[][] Dirs =
     {
-        new[] { V.S, V.SE, V.SW },
         new[] { V.N, V.NE, V.NW },
+        new[] { V.S, V.SE, V.SW },
         new[] { V.W, V.NW, V.SW },
         new[] { V.E, V.NE, V.SE },
     };

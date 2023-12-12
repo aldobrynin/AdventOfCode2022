@@ -45,7 +45,7 @@ public partial class Day25
             var nextSouth = south;
 
             (nextEast, var movedEast) = MoveTo(nextEast, nextSouth, V.Right);
-            (nextSouth, var movedSouth) = MoveTo(nextSouth, nextEast, V.Up);
+            (nextSouth, var movedSouth) = MoveTo(nextSouth, nextEast, V.Down);
 
             return (nextEast, nextSouth, movedEast + movedSouth);
         }

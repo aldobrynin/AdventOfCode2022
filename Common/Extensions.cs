@@ -98,7 +98,6 @@ public static class Extensions {
     public static bool HasBit(this long v, int bitIndex) => (v & (1L << bitIndex)) != 0;
     public static long SetBit(this long v, int bitIndex) => v | (1L << bitIndex);
 
-
     public static IEnumerable<int> Indices<T>(this IEnumerable<T> source) {
         return source.Select((_, i) => i);
     }
@@ -119,7 +118,6 @@ public static class Extensions {
         for (var y = 0; y < map.Length; y++)
         for (var x = 0; x < map[y].Length; x++)
             yield return new V(x, y);
-
     }
 
     public static T[,] DumpMap<T>(this T[,] source, string? message = null, Func<T, object>? transform = null) {
@@ -146,9 +144,6 @@ public static class Extensions {
     public static string StringJoin<T>(this IEnumerable<T> source, string? separator = ",") {
         return string.Join(separator, source);
     }
-
-    public static int Mod(this int value, int divisor) => (value % divisor + divisor) % divisor;
-
 
     public static IEnumerable<T[]> Rows<T>(this T[][] source) {
         return source.Select((_, y) => source.ElementAt(y));
@@ -216,9 +211,9 @@ public static class Extensions {
                         : span.TotalDays.ToString(format) + " days";
     }
 
-    public static BigInteger ModEuclidean(this BigInteger value, BigInteger divisor) {
+    public static T Mod<T>(this T value, T divisor) where T : INumber<T> {
         var result = value % divisor;
-        return result < 0 ? result + divisor : result;
+        return T.IsNegative(result) ? result + divisor : result;
     }
 
     public static T Reduce<T>(this IEnumerable<T> source, Func<T, T, T> reducer) {

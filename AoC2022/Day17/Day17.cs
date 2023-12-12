@@ -124,7 +124,7 @@ public partial class Day17
             var fallingRock = currentRock + rockSpawnOffset;
 
             do TryMove(ref fallingRock, wind[move++ % wind.Length]);
-            while (TryMove(ref fallingRock, V.Down));
+            while (TryMove(ref fallingRock, V.Up));
 
             maxY = Math.Max(maxY, fallingRock.MaxY);
             gameMap.AddRock(fallingRock);

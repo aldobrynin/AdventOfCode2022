@@ -66,10 +66,10 @@ public partial class Day10 {
         new() {
             ['|'] = new[] { V.Up, V.Down, },
             ['-'] = new[] { V.Left, V.Right, },
-            ['L'] = new[] { V.Right, V.Down, },
-            ['J'] = new[] { V.Left, V.Down, },
-            ['F'] = new[] { V.Up, V.Right, },
-            ['7'] = new[] { V.Left, V.Up, },
+            ['L'] = new[] { V.Right, V.Up, },
+            ['J'] = new[] { V.Left, V.Up, },
+            ['F'] = new[] { V.Down, V.Right, },
+            ['7'] = new[] { V.Left, V.Down, },
             ['S'] = V.Directions4,
             ['.'] = Array.Empty<V>(),
         };

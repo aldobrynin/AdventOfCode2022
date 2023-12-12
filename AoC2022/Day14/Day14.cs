@@ -48,14 +48,14 @@ public partial class Day14
         
         V Move(V pos)
         {
-            var nextPos = MoveTowards(pos, V.Up, 1);
+            var nextPos = MoveTowards(pos, V.Down, 1);
             if (nextPos != pos)
                 return nextPos;
-            nextPos = MoveTowards(pos, V.Up + V.Left);
+            nextPos = MoveTowards(pos, V.Down + V.Left);
             if (nextPos != pos)
                 return nextPos;
             pos = nextPos;
-            return MoveTowards(pos, V.Up + V.Right);
+            return MoveTowards(pos, V.Down + V.Right);
         }
 
         V MoveTowards(V pos, V dir, int movesLimit = 1)

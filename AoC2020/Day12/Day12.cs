@@ -59,8 +59,8 @@ public partial class Day12 {
     }
 
     private static readonly Dictionary<char, V> CompassToV = new() {
-        ['N'] = V.N,
-        ['S'] = V.S,
+        ['N'] = V.S,
+        ['S'] = V.N,
         ['E'] = V.E,
         ['W'] = V.W,
     };

@@ -57,8 +57,8 @@ public partial class Day24
             {
                 var result = map.Get(v) switch
                 {
-                    '^' => V.Down,
-                    'v' => V.Up,
+                    '^' => V.Up,
+                    'v' => V.Down,
                     '>' => V.Right,
                     '<' => V.Left,
                     _ => null,

@@ -8,15 +8,15 @@ public partial class Day03
         var map = Map.From(arr);
         var start = V.Zero;
 
-        CountTrees(start, V.Right * 3 + V.Up).Part1();
+        CountTrees(start, V.Right * 3 + V.Down).Part1();
 
         new[]
             {
-                V.Right + V.Up,
-                3 * V.Right + V.Up,
-                5 * V.Right + V.Up,
-                7 * V.Right + V.Up,
-                V.Right + 2 * V.Up,
+                V.Right + V.Down,
+                3 * V.Right + V.Down,
+                5 * V.Right + V.Down,
+                7 * V.Right + V.Down,
+                V.Right + 2 * V.Down,
             }
             .Select(m => CountTrees(start, m))
             .Product()

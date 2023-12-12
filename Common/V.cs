@@ -4,13 +4,13 @@ public record V(int X, int Y)
 {
     public static readonly V Left = new(-1, 0);
     public static readonly V Right = new(1, 0);
-    public static readonly V Up = new(0, 1);
-    public static readonly V Down = new(0, -1);
+    public static readonly V Down = new(0, 1);
+    public static readonly V Up = new(0, -1);
 
     public static readonly V E = new(1, 0);
     public static readonly V W = new(-1, 0);
-    public static readonly V N = new(0, 1);
-    public static readonly V S = new(0, -1);
+    public static readonly V S = new(0, 1);
+    public static readonly V N = new(0, -1);
     public static readonly V NE = N + E;
     public static readonly V NW = N + W;
     public static readonly V SE = S + E;
