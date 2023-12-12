@@ -91,7 +91,7 @@ public static class Extensions {
             _ => format
         };
 
-        AnsiConsole.MarkupLine(format, part, answerString);
+        AnsiConsole.MarkupLine(format, part, Markup.Escape(answerString));
         return source;
     }
 
@@ -245,5 +245,9 @@ public static class Extensions {
             sum += selector(item);
             yield return sum;
         }
+    }
+    
+    public static IEnumerable<T> Repeat<T>(this IEnumerable<T> source, int times) {
+        return Enumerable.Range(0, times).SelectMany(_ => source);
     }
 }
