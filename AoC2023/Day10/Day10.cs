@@ -17,7 +17,19 @@ public partial class Day10 {
             .Where(x => x != 'S')
             .Single(tile => adjacentToStart.All(n => AreTilesConnected(map[n], tile, start - n)));
         map[start] = startTile;
+        CountPolygonInteriorPoints(pipe).Part2();
         FindIsolatedCells(map, pipe.ToHashSet()).Part2();
+    }
+
+    // Shoelace formula: https://en.wikipedia.org/wiki/Pick%27s_theorem
+    // + Pick's theorem: https://en.wikipedia.org/wiki/Pick%27s_theorem
+    private static long CountPolygonInteriorPoints(IReadOnlyList<V> polygon) {
+        var polygonArea = polygon
+            .Zip(polygon.Skip(1).Append(polygon[0]), (a, b) => a.X * b.Y - a.Y * b.X)
+            .Sum();
+        polygonArea = Math.Abs(polygonArea / 2);
+
+        return polygonArea - polygon.Count / 2 + 1;
     }
 
     private static int FindIsolatedCells(Map<char> map, HashSet<V> pipe) {
@@ -28,13 +40,12 @@ public partial class Day10 {
         var enlargedOuterCells = enlargedMap.Bfs((_, to) => !enlargedPipe.Contains(to), outer)
             .Select(x => x.State)
             .ToHashSet();
-        if (AoCContext.IsSample) PrintColored(enlargedMap, enlargedPipe, enlargedOuterCells);
 
         var outerCells = enlargedOuterCells
             .Where(v => v % factor == V.Zero)
             .Select(v => v / factor)
             .ToHashSet();
-        if (AoCContext.IsSample) PrintColored(map, pipe, outerCells);
+        // if (AoCContext.IsSample) PrintColored(map, pipe, outerCells);
 
         return map.SizeY * map.SizeX - pipe.Count - outerCells.Count;
     }
@@ -94,7 +105,7 @@ public partial class Day10 {
                 (true, _, _) => (PrintMap[map[v]], ConsoleColor.Green),
                 (_, true, _) => ("O", ConsoleColor.Yellow),
                 (_, _, true) => ("I", ConsoleColor.Red),
-                _ => (map[v].ToString(), null)
+                _ => (PrintMap[map[v]], null)
             };
     }
 }
