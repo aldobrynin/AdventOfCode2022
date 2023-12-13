@@ -211,10 +211,6 @@ public static class Extensions {
                         : span.TotalDays.ToString(format) + " days";
     }
 
-    public static T Mod<T>(this T value, T divisor) where T : INumber<T> {
-        var result = value % divisor;
-        return T.IsNegative(result) ? result + divisor : result;
-    }
 
     public static T Reduce<T>(this IEnumerable<T> source, Func<T, T, T> reducer) {
         using var enumerator = source.GetEnumerator();
@@ -229,7 +225,7 @@ public static class Extensions {
         return list.SelectMany((a, ind) => list.Skip(ind).Select(b => (a, b)));
     }
 
-    public static IEnumerable<(T Element, int Index)> SelectIndexed<T>(this IEnumerable<T> source) {
+    public static IEnumerable<(T Element, int Index)> WithIndex<T>(this IEnumerable<T> source) {
         return source.Select((x, i) => (x, i));
     }
 
@@ -241,17 +237,27 @@ public static class Extensions {
             yield return sum;
         }
     }
-    
+
     public static IEnumerable<T> Repeat<T>(this IEnumerable<T> source, int times) {
         return Enumerable.Range(0, times).SelectMany(_ => source);
     }
 
-    public static IEnumerable<T> RangeTo<T>(this T from, T endExclusive) where T : INumber<T> {
-        return RangeTo(from, endExclusive, T.One);
+    public static IEnumerable<T> RangeTo<T>(this T from, T endInclusive) where T : INumber<T> {
+        return RangeTo(from, endInclusive, from > endInclusive ? -T.One : T.One);
     }
 
-    public static IEnumerable<T> RangeTo<T>(this T from, T endExclusive, T step) where T : INumber<T> {
-        for (var i = from; i < endExclusive; i += step)
+    public static IEnumerable<T> RangeUntil<T>(this T from, T endExclusive) where T : INumber<T> {
+        var step = from > endExclusive ? -T.One : T.One;
+        return RangeTo(from, endExclusive + step, step);
+    }
+
+    public static IEnumerable<T> RangeTo<T>(this T from, T endInclusive, T step) where T : INumber<T> {
+        var isPositiveStep = T.IsPositive(step);
+        if (step == T.Zero) ArgumentOutOfRangeException.ThrowIfZero(step, nameof(step));
+        if (isPositiveStep) ArgumentOutOfRangeException.ThrowIfGreaterThan(from, endInclusive, nameof(from));
+        else ArgumentOutOfRangeException.ThrowIfLessThan(from, endInclusive, nameof(from));
+
+        for (var i = from; isPositiveStep ? i <= endInclusive : i >= endInclusive; i += step)
             yield return i;
     }
 }

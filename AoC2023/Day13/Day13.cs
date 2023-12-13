@@ -30,8 +30,8 @@ public partial class Day13 {
         map.RowIndices.Skip(1).Where(rowIndex => IsReflectionLine(map, rowIndex));
 
     private static bool IsReflectionLine(Map<char> map, int rowInd) {
-        var mirrorSize = Math.Min(rowInd, map.SizeY - rowInd);
-        return 0.RangeTo(mirrorSize)
+        var mirrorSize = Math.Min(rowInd, map.SizeY - rowInd) - 1;
+        return mirrorSize.RangeTo(0)
             .All(offset => AreRowsEqual(map, rowInd - offset - 1, rowInd + offset));
     }
 

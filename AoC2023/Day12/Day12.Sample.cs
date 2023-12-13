@@ -10,7 +10,7 @@ public partial class Day12 {
                                           ????.######..#####. 1,6,5
                                           ?###???????? 3,2,1
                                           """)
-            .WithPartOneAnswer("21")
-            .WithPartTwoAnswer("525152");
+            .WithPartOneAnswer(21)
+            .WithPartTwoAnswer(525152);
     }
 }

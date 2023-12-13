@@ -13,7 +13,7 @@ public static class Scaffolder {
             $$"""
               namespace AoC{{year}}.{{dayString}};
 
-              public partial class {{dayString}} {
+              public static partial class {{dayString}} {
                   public static void Solve(IEnumerable<string> input) {
                       input.Dump("Not implemented: ");
                       
@@ -26,7 +26,7 @@ public static class Scaffolder {
             $$"""
                   namespace AoC{{year}}.{{dayString}};
               
-                  public partial class {{dayString}} {
+                  public static partial class {{dayString}} {
                       public static IEnumerable<SampleInput> GetSamples() {
                          yield return SampleInput.ForInput("test");
                       }

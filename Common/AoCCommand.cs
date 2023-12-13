@@ -61,7 +61,7 @@ public class AoCCommand : AsyncCommand<AoCCommand.AoCCommandSettings> {
                               .Invoke(null, Array.Empty<object>())
                           ?? throw new Exception($"GetSamples method is not found in {dayType.Type.Name}");
 
-            foreach (var (sampleInput, index) in samples.SelectIndexed()) {
+            foreach (var (sampleInput, index) in samples.WithIndex()) {
                 AoCContext.Answers = (sampleInput.PartOneAnswer, sampleInput.PartTwoAnswer);
                 AnsiConsole.MarkupLine($"[underline navy]Sample input #{index}:[/]");
                 action(sampleInput.MultilineInput());

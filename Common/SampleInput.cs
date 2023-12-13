@@ -4,7 +4,10 @@ public record SampleInput(string Input, string? PartOneAnswer = null, string? Pa
     public IEnumerable<string> MultilineInput() => Input.Split(Environment.NewLine);
 
     public static SampleInput ForInput(string input) => new(input);
-    
-    public SampleInput WithPartOneAnswer(string answer) => this with { PartOneAnswer = answer };
-    public SampleInput WithPartTwoAnswer(string answer) => this with { PartTwoAnswer = answer };
+
+    public SampleInput WithPartOneAnswer<T>(T answer) where T : notnull =>
+        this with { PartOneAnswer = answer.ToString() };
+
+    public SampleInput WithPartTwoAnswer<T>(T answer) where T : notnull =>
+        this with { PartTwoAnswer = answer.ToString() };
 }
