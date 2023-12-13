@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace Common;
+namespace Common.AoC;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class AoCCommand : AsyncCommand<AoCCommand.AoCCommandSettings> {

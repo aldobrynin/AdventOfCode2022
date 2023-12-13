@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Common.AoC;
 using Range = Common.Range;
 
 namespace AoC2020.Day16;

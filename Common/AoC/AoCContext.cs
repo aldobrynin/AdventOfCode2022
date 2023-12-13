@@ -1,4 +1,4 @@
-namespace Common;
+namespace Common.AoC;
 
 public static class AoCContext {
     public static int Year { get; set; }

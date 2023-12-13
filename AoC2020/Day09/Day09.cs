@@ -1,3 +1,5 @@
+using Common.AoC;
+
 namespace AoC2020.Day09;
 
 public partial class Day09

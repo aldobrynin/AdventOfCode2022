@@ -1,3 +1,5 @@
+using Common.AoC;
+
 namespace AoC2023.Day11;
 
 public partial class Day11 {

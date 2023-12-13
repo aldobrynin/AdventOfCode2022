@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace Common;
+namespace Common.AoC;
 
 public static class AoCClient {
     public static async Task DownloadInput(int year, int day, string destinationFile) {

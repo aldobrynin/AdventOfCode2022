@@ -1,3 +1,4 @@
+// ReSharper disable once CheckNamespace
 namespace Common;
 
 public record SampleInput(string Input, string? PartOneAnswer = null, string? PartTwoAnswer = null) {

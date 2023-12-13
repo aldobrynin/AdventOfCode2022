@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Numerics;
+using Common.AoC;
 using Spectre.Console;
 
 namespace Common;

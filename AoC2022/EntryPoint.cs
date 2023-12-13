@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using Common.AoC;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 try
