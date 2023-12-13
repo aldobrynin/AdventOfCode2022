@@ -7,6 +7,9 @@ public class Map<T>
     public int SizeX { get; }
 
     public int SizeY { get; }
+    
+    public Range<int> RowIndices => Range<int>.FromStartAndLength(0, SizeY);
+    public Range<int> ColumnIndices => Range<int>.FromStartAndLength(0, SizeX);
 
     public Map(int sizeX, int sizeY)
     {
@@ -83,7 +86,7 @@ public class Map<T>
         return Rotate180().Rotate90();
     }
     
-    public Map<T> Flip() {
+    public Map<T> Transpose() {
         var newMap = new Map<T>(SizeY, SizeX);
         foreach (var coordinate in Coordinates()) {
             var newCoordinate = new V(coordinate.Y, coordinate.X);

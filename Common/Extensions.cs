@@ -245,4 +245,13 @@ public static class Extensions {
     public static IEnumerable<T> Repeat<T>(this IEnumerable<T> source, int times) {
         return Enumerable.Range(0, times).SelectMany(_ => source);
     }
+
+    public static IEnumerable<T> RangeTo<T>(this T from, T endExclusive) where T : INumber<T> {
+        return RangeTo(from, endExclusive, T.One);
+    }
+
+    public static IEnumerable<T> RangeTo<T>(this T from, T endExclusive, T step) where T : INumber<T> {
+        for (var i = from; i < endExclusive; i += step)
+            yield return i;
+    }
 }

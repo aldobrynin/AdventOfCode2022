@@ -148,10 +148,10 @@ public partial class Day20 {
         m => m.Rotate90(),
         m => m.Rotate180(),
         m => m.Rotate270(),
-        m => m.Flip(),
-        m => m.Flip().Rotate90(),
-        m => m.Flip().Rotate180(),
-        m => m.Flip().Rotate270(),
+        m => m.Transpose(),
+        m => m.Transpose().Rotate90(),
+        m => m.Transpose().Rotate180(),
+        m => m.Transpose().Rotate270(),
     };
 
     private static string NormalizeBorder(string s) {
