@@ -1,31 +1,27 @@
 namespace Common;
 
-public class Map<T>
-{
+public class Map<T> {
     private readonly T[][] _arr;
 
     public int SizeX { get; }
 
     public int SizeY { get; }
-    
+
     public Range<int> RowIndices => Range<int>.FromStartAndLength(0, SizeY);
     public Range<int> ColumnIndices => Range<int>.FromStartAndLength(0, SizeX);
 
-    public Map(int sizeX, int sizeY)
-    {
+    public Map(int sizeX, int sizeY) {
         SizeX = sizeX;
         SizeY = sizeY;
         _arr = new T[SizeY][];
         for (var y = 0; y < SizeY; y++) _arr[y] = new T[SizeX];
     }
 
-    public Map(T[][] arr)
-    {
+    public Map(T[][] arr) {
         SizeX = arr[0].Length;
         SizeY = arr.Length;
         _arr = new T[SizeY][];
-        for (var y = 0; y < SizeY; y++)
-        {
+        for (var y = 0; y < SizeY; y++) {
             _arr[y] = new T[SizeX];
             Array.Copy(arr[y], _arr[y], arr[y].Length);
         }
@@ -36,25 +32,23 @@ public class Map<T>
     public IEnumerable<V> BorderCoordinates() => _arr.Coordinates()
         .Where(v => v.X == 0 || v.X == SizeX - 1 || v.Y == 0 || v.Y == SizeY - 1);
 
-    public T this[V key]
-    {
+    public T this[V key] {
         get => _arr.Get(key);
         set => _arr.Set(key, value);
     }
 
-    public T this[int row, int col]
-    {
+    public T this[int row, int col] {
         get => _arr[row][col];
         set => _arr[row][col] = value;
     }
 
-    public IEnumerable<V> Area4(V v)
-    {
+    public T GetValueOrDefault(V key, T defaultValue) => key.IsInRange(this) ? _arr.Get(key) : defaultValue;
+
+    public IEnumerable<V> Area4(V v) {
         return v.Area4().Where(x => x.IsInRange(_arr));
     }
-    
-    public IEnumerable<V> Area8(V v)
-    {
+
+    public IEnumerable<V> Area8(V v) {
         return v.Area8().Where(x => x.IsInRange(_arr));
     }
 
@@ -77,15 +71,15 @@ public class Map<T>
 
         return newMap;
     }
-    
+
     public Map<T> Rotate180() {
         return Rotate90().Rotate90();
     }
-    
+
     public Map<T> Rotate270() {
         return Rotate180().Rotate90();
     }
-    
+
     public Map<T> Transpose() {
         var newMap = new Map<T>(SizeY, SizeX);
         foreach (var coordinate in Coordinates()) {
@@ -95,12 +89,9 @@ public class Map<T>
 
         return newMap;
     }
-    
 
-    public void Print()
-    {
-        foreach (var row in _arr)
-        {
+    public void Print() {
+        foreach (var row in _arr) {
             foreach (var el in row) Console.Write(el);
             Console.WriteLine();
         }
@@ -118,6 +109,15 @@ public class Map<T>
     }
 
     public Map<T> Clone() => new(_arr);
+
+    public override int GetHashCode() {
+        var hash = new HashCode();
+        foreach (var row in _arr)
+        foreach (var el in row)
+            hash.Add(el);
+
+        return hash.ToHashCode();
+    }
 }
 
 public static class Map {
