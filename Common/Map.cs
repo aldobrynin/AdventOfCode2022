@@ -29,6 +29,11 @@ public class Map<T> {
 
     public IEnumerable<V> Coordinates() => _arr.Coordinates();
 
+    public IEnumerable<V> TopBorder() => ColumnIndices.Select(x => new V(x, 0));
+    public IEnumerable<V> BottomBorder() => ColumnIndices.Select(x => new V(x, SizeY - 1));
+    public IEnumerable<V> LeftBorder() => RowIndices.Select(y => new V(0, y));
+    public IEnumerable<V> RightBorder() => RowIndices.Select(y => new V(SizeX - 1, y));
+
     public IEnumerable<V> BorderCoordinates() => _arr.Coordinates()
         .Where(v => v.X == 0 || v.X == SizeX - 1 || v.Y == 0 || v.Y == SizeY - 1);
 
@@ -107,6 +112,8 @@ public class Map<T> {
             if (v.X == SizeX - 1) Console.WriteLine();
         }
     }
+
+    public bool Contains(V v) => v.IsInRange(this);
 
     public Map<T> Clone() => new(_arr);
 

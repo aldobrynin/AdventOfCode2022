@@ -261,11 +261,13 @@ public static class Extensions {
         for (var i = from; isPositiveStep ? i <= endInclusive : i >= endInclusive; i += step)
             yield return i;
     }
-    
+
     public static IEnumerable<T> Pipe<T>(this IEnumerable<T> source, Action<T> action) {
         foreach (var item in source) {
             action(item);
             yield return item;
         }
     }
+
+    public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) => source.SelectMany(x => x);
 }
