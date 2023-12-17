@@ -59,14 +59,41 @@ public static class SearchHelpers {
         Func<SearchPathItem<TState>, IEnumerable<SearchPathItem<TState>>> getNextState,
         params TState[] initialStates
     ) {
-        var priorityQueue = new PriorityQueue<SearchPathItem<TState>, int>();
+        var priorityQueue =
+            new PriorityQueue<SearchPathItem<TState>, int>(initialStates.Select(x => (SearchPathItem.Start(x), 0)));
         var visited = initialStates.ToHashSet();
-        priorityQueue.EnqueueRange(initialStates.Select(x => (SearchPathItem.Start(x), 0)));
         while (priorityQueue.TryDequeue(out var currentState, out _)) {
             yield return currentState;
             foreach (var nextState in getNextState(currentState).Where(x => visited.Add(x.State)))
                 priorityQueue.Enqueue(nextState, nextState.Distance);
         }
+    }
+
+
+    public static void Visualize<T, TS>(this Map<T> map, SearchPathItem<TS> pathItem,
+        Func<TS, V> stateToCoordinate, Func<TS, (string, ConsoleColor?)> getPathStateFormat) {
+        var path = pathItem.FromStart().ToArray();
+        Console.Clear();
+        foreach (var y in map.RowIndices) {
+            foreach (var x in map.ColumnIndices)
+                Console.Write(map[new V(x, y)]);
+            Console.WriteLine();
+        }
+
+        Console.CursorVisible = false;
+
+        foreach (var p in path) {
+            var coordinate = stateToCoordinate(p);
+            Console.SetCursorPosition(coordinate.X, coordinate.Y);
+            var (text, color) = getPathStateFormat(p);
+            if (color != null) Console.ForegroundColor = color.Value;
+            Console.Write(text);
+            Console.ResetColor();
+        }
+
+        Console.CursorVisible = true;
+        Console.WriteLine();
+        path.Dump("Full path:\n", separator: " => ");
     }
 }
 

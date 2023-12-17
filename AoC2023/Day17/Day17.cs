@@ -7,14 +7,14 @@ public static partial class Day17 {
 
     public static void Solve(IEnumerable<string> input) {
         var map = Map.From(input.Select(line => line.Select(c => c - '0')));
-        var initialState = new State(V.Zero, V.Zero, int.MaxValue);
+        var start = new State(V.Zero, V.Zero, int.MaxValue);
         var end = new V(map.LastColumnIndex, map.LastRowIndex);
 
         FindShortestDistance(minSteps: 1, maxSteps: 3).Part1();
         FindShortestDistance(minSteps: 4, maxSteps: 10).Part2();
 
         int FindShortestDistance(int minSteps, int maxSteps) {
-            return SearchHelpers.Dijkstra(GetNextStates, initialStates: initialState)
+            return SearchHelpers.Dijkstra(GetNextStates, start)
                 .First(x => x.State.Steps >= minSteps && x.State.Position == end)
                 .Distance;
 
