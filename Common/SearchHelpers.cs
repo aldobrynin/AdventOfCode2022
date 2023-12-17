@@ -54,6 +54,20 @@ public static class SearchHelpers {
             }, maxDistance: null, initialStates: initial
         );
     }
+
+    public static IEnumerable<SearchPathItem<TState>> Dijkstra<TState>(
+        Func<SearchPathItem<TState>, IEnumerable<SearchPathItem<TState>>> getNextState,
+        params TState[] initialStates
+    ) {
+        var priorityQueue = new PriorityQueue<SearchPathItem<TState>, int>();
+        var visited = initialStates.ToHashSet();
+        priorityQueue.EnqueueRange(initialStates.Select(x => (SearchPathItem.Start(x), 0)));
+        while (priorityQueue.TryDequeue(out var currentState, out _)) {
+            yield return currentState;
+            foreach (var nextState in getNextState(currentState).Where(x => visited.Add(x.State)))
+                priorityQueue.Enqueue(nextState, nextState.Distance);
+        }
+    }
 }
 
 public record SearchPathItem<TState>(TState State, int Distance, SearchPathItem<TState>? Prev) {

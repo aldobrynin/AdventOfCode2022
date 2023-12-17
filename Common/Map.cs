@@ -6,6 +6,9 @@ public class Map<T> {
     public int SizeX { get; }
 
     public int SizeY { get; }
+    
+    public int LastRowIndex => SizeY - 1;
+    public int LastColumnIndex => SizeX - 1;
 
     public Range<int> RowIndices => Range<int>.FromStartAndLength(0, SizeY);
     public Range<int> ColumnIndices => Range<int>.FromStartAndLength(0, SizeX);
