@@ -29,12 +29,12 @@ public static partial class Day18 {
             "D" => V.Down,
             _ => throw new ArgumentException($"Invalid direction: {segments[0]}")
         };
-        return (dir * segments[1].ToInt());
+        return dir * segments[1].ToInt();
     }
 
     private static V Parse2(string line) {
         var segments = line.Split(' ').Last().Trim('(', ')', '#');
         List<V> dirs = [V.Right, V.Down, V.Left, V.Up];
-        return (dirs[segments[^1] - '0'] * Convert.ToInt32(segments[..^1], fromBase: 16));
+        return dirs[segments[^1] - '0'] * Convert.ToInt32(segments[..^1], fromBase: 16);
     }
 }

@@ -4,8 +4,7 @@ public partial class Day03
 {
     public static void Solve(IEnumerable<string> input)
     {
-        var arr = input.Select(line => line.ToCharArray()).ToArray();
-        var map = Map.From(arr);
+        var map = Map.From(input);
         var start = V.Zero;
 
         CountTrees(start, V.Right * 3 + V.Down).Part1();

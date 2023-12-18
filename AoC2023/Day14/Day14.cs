@@ -17,7 +17,7 @@ public static partial class Day14 {
         map.GetLoad().Part1();
 
         const int cycles = 1_000_000_000;
-        var loadsPerCycle = new List<int>();
+        var loadsPerCycle = new List<long>();
         var simulationSequence = RunSimulation()
             .Pipe(x => loadsPerCycle.Add(x.Load))
             .Select(item => item.StateKey);
@@ -36,7 +36,7 @@ public static partial class Day14 {
             }
         }
 
-        IEnumerable<(int StateKey, int Load)> RunSimulation(int limit = int.MaxValue) {
+        IEnumerable<(int StateKey, long Load)> RunSimulation(int limit = int.MaxValue) {
             while (limit-- > 0) {
                 yield return (map.GetHashCode(), map.GetLoad());
                 foreach (var dir in dirs) TiltPlatform(dir);
@@ -64,5 +64,5 @@ public static partial class Day14 {
             yield return current;
     }
 
-    private static int GetLoad(this Map<char> map) => map.FindAll('O').Sum(v => map.SizeY - v.Y);
+    private static long GetLoad(this Map<char> map) => map.FindAll('O').Sum(v => map.SizeY - v.Y);
 }

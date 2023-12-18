@@ -23,7 +23,7 @@ public partial class Day14
             .Part2();
     }
     
-    static IEnumerable<V> DropSand(V sandSource, int maxY, IEnumerable<V[]> blockLines)
+    static IEnumerable<V> DropSand(V sandSource, long maxY, IEnumerable<V[]> blockLines)
     {
         var map = new HashSet<V>();
         

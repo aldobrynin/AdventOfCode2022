@@ -5,7 +5,7 @@ public partial class Day20 {
         public static Tile Parse(IReadOnlyList<string> input) {
             return new Tile(
                 long.Parse(input[0].Split(new[] { ' ', ':' }, StringSplitOptions.RemoveEmptyEntries)[1]),
-                Common.Map.From(input.Skip(1).Select(s => s.ToCharArray()).ToArray())
+                Common.Map.From(input.Skip(1))
             );
         }
 
@@ -70,17 +70,16 @@ public partial class Day20 {
                     continue;
                 var seaRow = gridCoord.Y * (tileSize - 2) + tileCoord.Y - 1;
                 var seaCol = gridCoord.X * (tileSize - 2) + tileCoord.X - 1;
-                seaMap[seaRow, seaCol] = tile.Map[tileCoord];
+                seaMap[new V(seaCol, seaRow)] = tile.Map[tileCoord];
             }
         }
 
-        var monster = new[] {
+        var monsterRaw = new[] {
                 "                  # ",
                 "#    ##    ##    ###",
                 " #  #  #  #  #  #   ",
-            }
-            .Select(x => x.ToCharArray())
-            .ToArray();
+            };
+        var monster = Map.From(monsterRaw);
         var cellsInMonster = monster.FindAll('#').Count();
         var totalCells = seaMap.FindAll('#').Count();
         var monstersCount = FindMonster(seaMap, monster).Length;
@@ -120,7 +119,7 @@ public partial class Day20 {
         }
     }
 
-    private static V[] FindMonster(Map<char> map, char[][] monster) {
+    private static V[] FindMonster(Map<char> map, Map<char> monster) {
         var monsters = new List<V>();
         foreach (var transformedMap in Transformations.Select(t => t(map))) {
             foreach (var start in transformedMap.Coordinates()) {
@@ -136,10 +135,9 @@ public partial class Day20 {
         bool IsMonster(V start, Map<char> sea) {
             return
                 monster.Coordinates()
-                    .Where(v => monster.Get(v) != ' ')
+                    .Where(v => monster[v] != ' ')
                     .Select(mCoordinate => (monsterCoordinate: mCoordinate, seaCoordinate: start + mCoordinate))
-                    .All(x => x.seaCoordinate.IsInRange(sea) &&
-                              monster.Get(x.monsterCoordinate) == sea[x.seaCoordinate]);
+                    .All(x => x.seaCoordinate.IsInRange(sea) && monster[x.monsterCoordinate] == sea[x.seaCoordinate]);
         }
     }
 

@@ -2,23 +2,16 @@ namespace AoC2021.Day25;
 
 public partial class Day25
 {
-    public static void Solve(IEnumerable<string> input)
-    {
-        var array = input.Select(line => line.ToCharArray()).ToArray();
-
-        Simulate(array).Count().Part1();
+    public static void Solve(IEnumerable<string> input) {
+        Simulate(Map.From(input)).Count().Part1();
     }
 
-    private static IEnumerable<(HashSet<V> East, HashSet<V> South, int MovedCount)> Simulate(char[][] map)
+    private static IEnumerable<(HashSet<V> East, HashSet<V> South, int MovedCount)> Simulate(Map<char> map)
     {
-        var yLength = map.Length;
-        var xLength = map[0].Length;
-        var east = map.Coordinates()
-            .Where(v => map.Get(v) == '>')
-            .ToHashSet();
-        var south = map.Coordinates()
-            .Where(v => map.Get(v) == 'v')
-            .ToHashSet();
+        var yLength = map.SizeY;
+        var xLength = map.SizeX;
+        var east = map.FindAll('>').ToHashSet();
+        var south = map.FindAll('v').ToHashSet();
 
         int movedCount;
         do yield return (east, south, movedCount) = SimulateRound();

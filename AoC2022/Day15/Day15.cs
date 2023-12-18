@@ -9,7 +9,7 @@ public record Sensor(V Pos, V ClosestBeacon) {
     private static readonly Regex Regex = new(
         "Sensor at x=(?<x>[\\d\\-]+), y=(?<y>[\\d\\-]+): closest beacon is at x=(?<bx>[\\d\\-]+), y=(?<by>[\\d\\-]+)");
 
-    public int Distance => Pos.DistTo(ClosestBeacon);
+    public long Distance => Pos.DistTo(ClosestBeacon);
 
     public static Sensor Parse(string input) {
         var match = Regex.Match(input);
@@ -21,7 +21,7 @@ public record Sensor(V Pos, V ClosestBeacon) {
 
 public partial class Day15 {
     public static void Solve(IEnumerable<string> fileInput) {
-        var y = AoCContext.IsSample ? 10 : 2_000_000;
+        var y = AoCContext.IsSample ? 10 : 2_000_000L;
 
         var sensors = fileInput.Select(Sensor.Parse).ToArray();
         var coveredPositions = GetCoveredPositions(sensors, y).Sum(s => s.Length);
@@ -32,14 +32,14 @@ public partial class Day15 {
         (beacon.X * 4_000_000L + beacon.Y).Part2();
     }
 
-    private static IEnumerable<Range<int>> GetCoveredPositions(IEnumerable<Sensor> sensors, int y) {
+    private static IEnumerable<Range<long>> GetCoveredPositions(IEnumerable<Sensor> sensors, long y) {
         return sensors
             .Select(x => Range.FromStartAndEndInclusive(x.Pos.X, x.Pos.X).Grow(x.Distance - Math.Abs(x.Pos.Y - y)))
             .Where(x => !x.IsEmpty())
             .Merge();
     }
 
-    private static ParallelQuery<V> GetUnknownBeaconPositions(Sensor[] sensors, Range<int> yRange) {
+    private static ParallelQuery<V> GetUnknownBeaconPositions(Sensor[] sensors, Range<long> yRange) {
         return yRange
             .AsParallel()
             .Select(y => (y, ranges: GetCoveredPositions(sensors, y)))

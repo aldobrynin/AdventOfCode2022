@@ -6,7 +6,7 @@ public partial class Day11 {
     private const char Occupied = '#';
 
     public static void Solve(IEnumerable<string> input) {
-        var map = Map.From(input.Select(s => s.ToCharArray()).ToArray());
+        var map = Map.From(input);
 
         Simulate(map.Clone())
             .Select(s => s.Coordinates().Count(v => s[v] == Occupied))

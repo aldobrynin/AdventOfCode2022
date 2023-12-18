@@ -6,13 +6,10 @@ public partial class Day24
 
     private record Blizzard(V Pos, V Dir);
 
-    public static void Solve(IEnumerable<string> input)
-    {
-        var map = input
-            .Select(x => x.ToCharArray())
-            .ToArray();
+    public static void Solve(IEnumerable<string> input) {
+        var map = Map.From(input);
         var start = FindNonWallCoord(map, 0);
-        var end = FindNonWallCoord(map, map.Length - 1);
+        var end = FindNonWallCoord(map, map.LastRowIndex);
 
         var blizzards = LoadBlizzards(map);
         var blizzardsPerMove = new Dictionary<int, HashSet<V>>(1_000);
@@ -26,12 +23,12 @@ public partial class Day24
             if (blizzardsPerMove.TryGetValue(move, out var nextMoveBlizzards))
                 return nextMoveBlizzards;
             return blizzardsPerMove[move] = blizzards
-                .Select(b => GetBlizzardPosition(b, map[0].Length, map.Length, move))
+                .Select(b => GetBlizzardPosition(b, map.SizeX, map.SizeY, move))
                 .ToHashSet();
         }
     }
 
-    private static State Search(char[][] map,
+    private static State Search(Map<char> map,
         V from,
         V to,
         int initialMove,
@@ -43,20 +40,18 @@ public partial class Day24
                 var nextMoveBlizzards = getBlizzardsForecast(nextMove);
                 return prevState.Position.Area5()
                     .Where(v => !nextMoveBlizzards.Contains(v))
-                    .Where(v => v.IsInRange(map) && map.Get(v) != '#')
+                    .Where(v => v.IsInRange(map) && map[v] != '#')
                     .Select(nextPos => new State(nextMove, nextPos));
             }, maxDistance: null, initialState)
             .Select(x => x.State)
             .First(s => s.Position == to);
     }
 
-    private static Blizzard[] LoadBlizzards(char[][] map)
+    private static Blizzard[] LoadBlizzards(Map<char> map)
     {
         return map.Coordinates()
-            .Select(v =>
-            {
-                var result = map.Get(v) switch
-                {
+            .Select(v => {
+                var result = map[v] switch {
                     '^' => V.Up,
                     'v' => V.Down,
                     '>' => V.Right,
@@ -69,16 +64,13 @@ public partial class Day24
             .ToArray();
     }
 
-    private static V GetBlizzardPosition(Blizzard blizzard, int xLength, int yLength, int move)
-    {
+    private static V GetBlizzardPosition(Blizzard blizzard, int xLength, int yLength, int move) {
         var (pos, dir) = blizzard;
         var nextPos = pos + dir * move - new V(1, 1);
         return nextPos.Mod(yLength - 2, xLength - 2) + new V(1, 1);
     }
 
-    private static V FindNonWallCoord(char[][] map, int y)
-    {
-        var x = Array.IndexOf(map.ElementAt(y), '.');
-        return new V(x, y);
+    private static V FindNonWallCoord(Map<char> map, int y) {
+        return map.Coordinates().Where(v => v.Y == y).First(v => map[v] == '.');
     }
 }

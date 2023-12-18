@@ -84,7 +84,7 @@ public static class SearchHelpers {
 
         foreach (var p in path) {
             var coordinate = stateToCoordinate(p);
-            Console.SetCursorPosition(coordinate.X, coordinate.Y);
+            Console.SetCursorPosition((int)coordinate.X, (int)coordinate.Y);
             var (text, color) = getPathStateFormat(p);
             if (color != null) Console.ForegroundColor = color.Value;
             Console.Write(text);

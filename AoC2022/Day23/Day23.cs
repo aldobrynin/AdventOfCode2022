@@ -2,12 +2,9 @@ namespace AoC2022.Day23;
 
 public partial class Day23
 {
-    public static void Solve(IEnumerable<string> input)
-    {
-        var map = input
-            .Select(x => x.ToCharArray())
-            .ToArray();
-        var elvesSet = map.Coordinates().Where(v => map.Get(v) == '#').ToHashSet();
+    public static void Solve(IEnumerable<string> input) {
+        var map = Map.From(input);
+        var elvesSet = map.FindAll('#').ToHashSet();
 
         SimulateElvesPositions(elvesSet)
             .Skip(9)
@@ -20,7 +17,7 @@ public partial class Day23
             .Part2();
     }
 
-    private static int GetEmptyPointsCount(IReadOnlyCollection<V> points)
+    private static long GetEmptyPointsCount(IReadOnlyCollection<V> points)
     {
         var (min, max) = GetBorders(points);
         var totalPoints = (max.X - min.X + 1) * (max.Y - min.Y + 1);

@@ -6,7 +6,7 @@ public class Map<T> {
     public int SizeX { get; }
 
     public int SizeY { get; }
-    
+
     public int LastRowIndex => SizeY - 1;
     public int LastColumnIndex => SizeX - 1;
 
@@ -30,15 +30,15 @@ public class Map<T> {
         }
     }
 
-    public IEnumerable<V> Coordinates() => _arr.Coordinates();
+    public IEnumerable<V> Coordinates() => RowIndices.SelectMany(y => ColumnIndices.Select(x => new V(x, y)));
 
     public IEnumerable<V> TopBorder() => ColumnIndices.Select(x => new V(x, 0));
     public IEnumerable<V> BottomBorder() => ColumnIndices.Select(x => new V(x, SizeY - 1));
     public IEnumerable<V> LeftBorder() => RowIndices.Select(y => new V(0, y));
     public IEnumerable<V> RightBorder() => RowIndices.Select(y => new V(SizeX - 1, y));
 
-    public IEnumerable<V> BorderCoordinates() => _arr.Coordinates()
-        .Where(v => v.X == 0 || v.X == SizeX - 1 || v.Y == 0 || v.Y == SizeY - 1);
+    public IEnumerable<V> BorderCoordinates() => Coordinates()
+        .Where(v => v.X == 0 || v.X == LastColumnIndex || v.Y == 0 || v.Y == LastRowIndex);
 
     public T this[V key] {
         get => _arr.Get(key);
@@ -50,23 +50,19 @@ public class Map<T> {
         set => _arr[row][col] = value;
     }
 
-    public T GetValueOrDefault(V key, T defaultValue) => key.IsInRange(this) ? _arr.Get(key) : defaultValue;
+    public T GetValueOrDefault(V key, T defaultValue) => Contains(key) ? _arr.Get(key) : defaultValue;
 
-    public IEnumerable<V> Area4(V v) {
-        return v.Area4().Where(x => x.IsInRange(_arr));
-    }
+    public IEnumerable<V> Area4(V v) => v.Area4().Where(Contains);
 
-    public IEnumerable<V> Area8(V v) {
-        return v.Area8().Where(x => x.IsInRange(_arr));
-    }
+    public IEnumerable<V> Area8(V v) => v.Area8().Where(Contains);
 
     public IEnumerable<T[]> Rows() => _arr.Rows();
 
     public IEnumerable<T[]> Columns() => _arr.Columns();
 
     public IEnumerable<T[]> Borders() {
-        var rows = Rows().Where((_, i) => i == 0 || i == SizeY - 1).ToArray();
-        var columns = Columns().Where((_, i) => i == 0 || i == SizeX - 1).ToArray();
+        var rows = Rows().Where((_, i) => i == 0 || i == LastRowIndex).ToArray();
+        var columns = Columns().Where((_, i) => i == 0 || i == LastColumnIndex).ToArray();
         return new[] { columns[0], rows[0], columns[1], rows[1] };
     }
 
@@ -80,13 +76,9 @@ public class Map<T> {
         return newMap;
     }
 
-    public Map<T> Rotate180() {
-        return Rotate90().Rotate90();
-    }
+    public Map<T> Rotate180() => Rotate90().Rotate90();
 
-    public Map<T> Rotate270() {
-        return Rotate180().Rotate90();
-    }
+    public Map<T> Rotate270() => Rotate180().Rotate90();
 
     public Map<T> Transpose() {
         var newMap = new Map<T>(SizeY, SizeX);
@@ -112,11 +104,11 @@ public class Map<T> {
             Console.ForegroundColor = color ?? before;
             Console.Write(text);
             Console.ForegroundColor = before;
-            if (v.X == SizeX - 1) Console.WriteLine();
+            if (v.X == LastColumnIndex) Console.WriteLine();
         }
     }
 
-    public bool Contains(V v) => v.IsInRange(this);
+    public bool Contains(V v) => 0 <= v.Y && v.Y < SizeY && 0 <= v.X && v.X < SizeX;
 
     public Map<T> Clone() => new(_arr);
 

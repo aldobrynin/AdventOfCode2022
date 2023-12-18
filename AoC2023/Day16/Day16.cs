@@ -29,8 +29,8 @@ public static partial class Day16 {
         IEnumerable<V> GetNextDirections(State state) => (map[state.Position], state.Direction) switch {
             ('.', _) or ('-', { Y: 0 }) or ('|', { X: 0 }) => new[] { state.Direction },
             ('-' or '|', _) => new[] { state.Direction.Rotate(90), state.Direction.Rotate(270) },
-            ('/', _) => new[] { state.Direction.Rotate(state.Direction.X * 180 + 90) },
-            ('\\', _) => new[] { state.Direction.Rotate(state.Direction.Y * 180 + 90) },
+            ('/', _) => new[] { state.Direction.Rotate((int)state.Direction.X * 180 + 90) },
+            ('\\', _) => new[] { state.Direction.Rotate((int)state.Direction.Y * 180 + 90) },
             _ => throw new Exception($"Unexpected state: {state}"),
         };
     }

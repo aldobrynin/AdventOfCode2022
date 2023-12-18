@@ -6,17 +6,9 @@ using Spectre.Console;
 namespace Common;
 
 public static class Extensions {
-    public static V Find<T>(this T[][] map, T value) => map.FindAll(value).First();
-
     public static T Get<T>(this T[][] map, V pos) {
         if (pos.IsInRange(map))
             return map[pos.Y][pos.X];
-        throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
-    }
-
-    public static T Get<T>(this T[,] map, V pos) {
-        if (pos.IsInRange(map))
-            return map[pos.Y, pos.X];
         throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
     }
 
@@ -27,24 +19,10 @@ public static class Extensions {
             throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
     }
 
-    public static void Set<T>(this T[,] map, V pos, T value) {
-        if (pos.IsInRange(map))
-            map[pos.Y, pos.X] = value;
-        else
-            throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
-    }
+    public static IEnumerable<V> FindAll<T>(this Map<T> map, T value) =>
+        map.Coordinates().Where(v => Equals(map[v], value));
 
-    public static IEnumerable<V> FindAll<T>(this T[][] map, T value) {
-        for (var y = 0; y < map.Length; y++)
-        for (var x = 0; x < map[y].Length; x++) {
-            if (Equals(map[y][x], value))
-                yield return new(x, y);
-        }
-    }
-
-    public static IEnumerable<V> FindAll<T>(this Map<T> map, T value) {
-        return map.Coordinates().Where(v => Equals(map[v], value));
-    }
+    public static V FindFirst<T>(this Map<T> map, T value) => map.Coordinates().First(v => Equals(map[v], value));
 
     public static T Product<T>(this IEnumerable<T> source) where T : INumber<T> =>
         source.Aggregate(T.One, (x, y) => x * y);
@@ -113,27 +91,6 @@ public static class Extensions {
         }
 
         return copy;
-    }
-
-    public static IEnumerable<V> Coordinates<T>(this T[][] map) {
-        for (var y = 0; y < map.Length; y++)
-        for (var x = 0; x < map[y].Length; x++)
-            yield return new V(x, y);
-    }
-
-    public static T[,] DumpMap<T>(this T[,] source, string? message = null, Func<T, object>? transform = null) {
-        if (message != null)
-            Console.WriteLine(message);
-        for (int i = 0; i < source.GetLength(0); i++) {
-            for (int j = 0; j < source.GetLength(1); j++) {
-                var print = transform == null ? source[i, j] : transform(source[i, j]);
-                Console.Write(print);
-            }
-
-            Console.WriteLine();
-        }
-
-        return source;
     }
 
     private static IEnumerable<string?> Stringify(IEnumerable enumerable) {
@@ -285,7 +242,7 @@ public static class Extensions {
     }
 
     public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) => source.SelectMany(x => x);
-    
+
     public static IEnumerable<TResult> ZipWithNext<T, TResult>(this IEnumerable<T> source,
         Func<T, T, TResult> selector) {
         using var enumerator = source.GetEnumerator();

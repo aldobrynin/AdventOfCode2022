@@ -1,4 +1,5 @@
 using System.Text;
+using Range = Common.Range;
 
 namespace AoC2022.Day17;
 
@@ -11,11 +12,11 @@ public class Shape
 
     public HashSet<V> Points { get; }
 
-    public int MinY => Points.Min(v => v.Y);
-    public int MaxY => Points.Max(v => v.Y);
+    public long MinY => Points.Min(v => v.Y);
+    public long MaxY => Points.Max(v => v.Y);
 
-    public int MinX => Points.Min(v => v.X);
-    public int MaxX => Points.Max(v => v.X);
+    public long MinX => Points.Min(v => v.X);
+    public long MaxX => Points.Max(v => v.X);
 
     public static Shape Parse(string input)
     {
@@ -34,9 +35,8 @@ public class Shape
     public override string ToString()
     {
         var sb = new StringBuilder();
-        for (var y = MaxY; y >= MinY; y--)
-        {
-            var row = Enumerable.Range(MinX, MaxX - MinX + 1)
+        for (var y = MaxY; y >= MinY; y--) {
+            var row = Range.FromStartAndEndInclusive(MinX, MaxX)
                 .Select(x => new V(x, y))
                 .Select(v => Points.Contains(v) ? '#' : '.')
                 .ToArray();
@@ -71,9 +71,8 @@ public class GameField
         var maxY = _rockCells.Max(x => x.Y) + 7;
         var currentShape = fallingRock?.Points ?? new HashSet<V>();
         Console.WriteLine(new string('=', _caveWidth));
-        for (var y = maxY; y >= minY; y--)
-        {
-            var row = Enumerable.Range(minX, maxX - minX + 1)
+        for (var y = maxY; y >= minY; y--) {
+            var row = minX.RangeTo(maxX)
                 .Select(x => new V(x, y))
                 .Select(v => _rockCells.Contains(v) ? '#' : currentShape.Contains(v) ? '@' : '.')
                 .ToArray();
@@ -112,10 +111,10 @@ public partial class Day17
         var move = 0;
 
         var maxRocksCount = Math.Max(wind.Length, 2022);
-        var heightDiffs = new List<int>(maxRocksCount);
+        var heightDiffs = new List<long>(maxRocksCount);
         var gameMap = new GameField(maxRocksCount, caveWidth);
         var newRockSpawnOffset = new V(2, 4);
-        var maxY = 0;
+        var maxY = 0L;
 
         foreach (var currentRock in Enumerable.Range(0, maxRocksCount).Select(i => _shapes[i % _shapes.Length]))
         {
@@ -154,7 +153,7 @@ public partial class Day17
         }
     }
 
-    private static (int Start, int Period) FindSequencePeriod(IEnumerable<int> list)
+    private static (int Start, int Period) FindSequencePeriod(IEnumerable<long> list)
     {
         var span = new ReadOnlySpan<char>(list.Select(x => (char)(x + 48)).ToArray());
         var patternStart = span.Length - 30;

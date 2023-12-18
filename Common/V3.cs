@@ -42,7 +42,7 @@ public record V3(int X, int Y, int Z)
                                    + Math.Abs(Z - other.Z);
     public V3 Abs() => new(Math.Abs(X), Math.Abs(Y), Math.Abs(Z));
 
-    public int CDistTo(V other) => Math.Max(Math.Abs(other.X - X), Math.Abs(other.Y - Y));
+    public long CDistTo(V other) => Math.Max(Math.Abs(other.X - X), Math.Abs(other.Y - Y));
 
     public override string ToString() =>
         $"[{X},{Y},{Z}]";

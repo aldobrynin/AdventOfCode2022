@@ -21,10 +21,9 @@ public partial class Day15
     private static Map<int> EnlargeMap(Map<int> map, int factor)
     {
         var newMap = new Map<int>(map.SizeX * factor, map.SizeY * factor);
-        foreach (var v in newMap.Coordinates())
-        {
+        foreach (var v in newMap.Coordinates()) {
             var value = map[v.Mod(map.SizeY, map.SizeX)] + v.Y / map.SizeY + v.X / map.SizeX;
-            newMap[v] = (value - 1) % 9 + 1;
+            newMap[v] = ((int)value - 1) % 9 + 1;
         }
 
         return newMap;
