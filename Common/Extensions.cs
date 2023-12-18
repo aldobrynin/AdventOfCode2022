@@ -230,13 +230,28 @@ public static class Extensions {
         return source.Select((x, i) => (x, i));
     }
 
+    public static IEnumerable<TResult> Running<T, TResult>(this IEnumerable<T> source, TResult initial,
+        Func<TResult, T, TResult> selector) {
+        var current = initial;
+        foreach (var item in source) {
+            current = selector(current, item);
+            yield return current;
+        }
+    }
+
+    public static IEnumerable<TResult> RunningFold<T, TResult>(this IEnumerable<T> source, TResult initial,
+        Func<TResult, T, TResult> selector) {
+        var current = initial;
+        yield return current;
+        foreach (var item in source) {
+            current = selector(current, item);
+            yield return current;
+        }
+    }
+
     public static IEnumerable<TNumber> RunningSum<T, TNumber>(this IEnumerable<T> source, Func<T, TNumber> selector)
         where TNumber : INumber<TNumber> {
-        var sum = TNumber.Zero;
-        foreach (var item in source) {
-            sum += selector(item);
-            yield return sum;
-        }
+        return source.Running(TNumber.Zero, (acc, value) => acc + selector(value));
     }
 
     public static IEnumerable<T> Repeat<T>(this IEnumerable<T> source, int times) {
@@ -270,4 +285,15 @@ public static class Extensions {
     }
 
     public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) => source.SelectMany(x => x);
+    
+    public static IEnumerable<TResult> ZipWithNext<T, TResult>(this IEnumerable<T> source,
+        Func<T, T, TResult> selector) {
+        using var enumerator = source.GetEnumerator();
+        if (!enumerator.MoveNext()) yield break;
+        var prev = enumerator.Current;
+        while (enumerator.MoveNext()) {
+            yield return selector(prev, enumerator.Current);
+            prev = enumerator.Current;
+        }
+    }
 }
