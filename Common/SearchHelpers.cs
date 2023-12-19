@@ -39,14 +39,6 @@ public static class SearchHelpers {
         }
     }
 
-    public static IEnumerable<SearchPathItem<V>> Bfs<T>(this T[][] map, CanMove canMove, params V[] initial) {
-        return Bfs(getNextState: state => {
-                var pos = state;
-                return pos.Area4().Where(v => v.IsInRange(map) && canMove(pos, v));
-            }, maxDistance: null, initialStates: initial
-        );
-    }
-
     public static IEnumerable<SearchPathItem<V>> Bfs<T>(this Map<T> map, CanMove canMove, params V[] initial) {
         return Bfs(getNextState: state => {
                 var pos = state;
