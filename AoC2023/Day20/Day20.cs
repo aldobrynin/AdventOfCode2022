@@ -118,19 +118,10 @@ public static partial class Day20 {
     }
 
 
-    private static void PrintGraph(IDictionary<string, Module> modules) {
-        Console.WriteLine("digraph G {");
-        foreach (var module in modules.Values) {
-            var shape = module switch {
-                FlipFlop => "box",
-                Conjunction => "diamond",
-                _ => "ellipse",
-            };
-            Console.WriteLine($"  {module.Name} [shape={shape}]");
-            Console.WriteLine($"  {module.Name} -> {module.Out.StringJoin()}");
-        }
-
-        Console.WriteLine("}");
+    private static void PrintGraph(IReadOnlyDictionary<string, Module> modules) {
+        SearchHelpers.BuildGraphViz(["broadcaster"],
+                node => modules.GetValueOrDefault(node)?.Out ?? Enumerable.Empty<string>())
+            .Dump();
     }
 
     #endregion

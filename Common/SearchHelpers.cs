@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Common;
 
 public static class SearchHelpers {
@@ -86,6 +88,23 @@ public static class SearchHelpers {
         Console.CursorVisible = true;
         Console.WriteLine();
         path.Dump("Full path:\n", separator: " => ");
+    }
+
+    public static string BuildGraphViz<TNode>(TNode[] start, Func<TNode, IEnumerable<TNode>> getNextState) {
+        var sb = new StringBuilder();
+        sb.AppendLine("digraph G {");
+        var visited = new HashSet<TNode>();
+        var queue = new Queue<TNode>(start);
+        while (queue.TryDequeue(out var current)) {
+            if (!visited.Add(current)) continue;
+            foreach (var next in getNextState(current)) {
+                sb.AppendLine($"\t{current} -> {next};");
+                queue.Enqueue(next);
+            }
+        }
+
+        sb.AppendLine("}");
+        return sb.ToString();
     }
 }
 
