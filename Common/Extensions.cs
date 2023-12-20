@@ -138,8 +138,13 @@ public static class Extensions {
         return set;
     }
 
-    public static Dictionary<T, int> CountFrequency<T>(this IEnumerable<T> source) where T : notnull {
-        return source.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
+    public static Dictionary<T, long> CountFrequency<T>(this IEnumerable<T> source) where T : notnull {
+        return source.GroupBy(x => x).ToDictionary(x => x.Key, x => x.LongCount());
+    }
+
+    public static Dictionary<TValue, long> CountFrequency<TSource, TValue>(this IEnumerable<TSource> source,
+        Func<TSource, TValue> selector) where TValue : notnull {
+        return source.GroupBy(selector).ToDictionary(x => x.Key, x => x.LongCount());
     }
 
     public static int ToInt(this string source) => int.Parse(source);

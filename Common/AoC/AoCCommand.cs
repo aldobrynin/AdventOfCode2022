@@ -98,7 +98,7 @@ public class AoCCommand : AsyncCommand<AoCCommand.AoCCommandSettings> {
         AnsiConsole.WriteLine("Downloading answers!");
         var page = await AoCClient.DownloadPage(year, dayType.Day);
         // Your puzzle answer was <code>9556896</code>.
-        var regex = new Regex("Your puzzle answer was <code>(?<answer>.+)</code>.");
+        var regex = new Regex("Your puzzle answer was <code>(?<answer>.*?)</code>\\.");
         var answers = regex.Matches(page).Select(x => x.Groups["answer"].Value).ToArray();
         foreach (var index in answers.Indices()) {
             var fileName = $"answer.part{index + 1}.txt";
