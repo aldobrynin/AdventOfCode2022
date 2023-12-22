@@ -94,7 +94,7 @@ public partial class Day21
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Players.Aggregate(17, (cur, p) => cur * 23 + p.GetHashCode()), PlayerIndex);
+            return HashCode.Combine(Players.Aggregate(17L, (cur, p) => cur * 23 + p.GetHashCode()), PlayerIndex);
         }
     }
 }

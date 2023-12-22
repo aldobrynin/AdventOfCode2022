@@ -20,6 +20,8 @@ public record Range3d(Range<int> X, Range<int> Y, Range<int> Z) {
 
     public bool Intersects(Range3d other) =>
         X.HasIntersection(other.X) && Y.HasIntersection(other.Y) && Z.HasIntersection(other.Z);
+    
+    public bool HasXYIntersection(Range3d other) => Y.HasIntersection(other.Y) && X.HasIntersection(other.X);
 
     public Range3d[] Subtract(Range3d other) {
         if (other.Contains(this))
@@ -31,13 +33,19 @@ public record Range3d(Range<int> X, Range<int> Y, Range<int> Z) {
 
         return new[] {
                 this with { Z = Z with { To = intersect.Z.From } },
-                this with { Z = Z with { From = intersect.Z.To  } },
-                new Range3d(X, Y with { To = intersect.Y.From  }, intersect.Z),
-                new Range3d(X, Y with { From = intersect.Y.To  }, intersect.Z),
-                intersect with { X = X with { To = intersect.X.From  } },
-                intersect with { X = X with { From = intersect.X.To  } },
+                this with { Z = Z with { From = intersect.Z.To } },
+                new Range3d(X, Y with { To = intersect.Y.From }, intersect.Z),
+                new Range3d(X, Y with { From = intersect.Y.To }, intersect.Z),
+                intersect with { X = X with { To = intersect.X.From } },
+                intersect with { X = X with { From = intersect.X.To } },
             }
             .Where(x => !x.IsEmpty())
             .ToArray();
+    }
+
+    public static Range3d FromMinMax(V3 min, V3 max) {
+        return new Range3d(Range.FromStartAndEndInclusive(min.X, max.X),
+            Range.FromStartAndEndInclusive(min.Y, max.Y),
+            Range.FromStartAndEndInclusive(min.Z, max.Z));
     }
 }

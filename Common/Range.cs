@@ -6,6 +6,7 @@ namespace Common;
 public record Range<T>(T From, T To) : IEnumerable<T> where T : INumber<T> {
     public static Range<T> Empty => FromStartAndLength(T.Zero, T.Zero);
     public T Length => To - From;
+    public T ToInclusive => To - T.One;
     public bool IsEmpty() => From >= To;
     public bool Contains(T value) => From <= value && value < To;
     public bool Contains(Range<T> other) => From <= other.From && other.To <= To;
@@ -22,7 +23,8 @@ public record Range<T>(T From, T To) : IEnumerable<T> where T : INumber<T> {
     }
 
     public bool HasIntersection(Range<T> other) {
-        return Contains(other.From) || Contains(other.To) || other.Contains(From) || other.Contains(To);
+        return Contains(other.From) || Contains(other.ToInclusive) ||
+               other.Contains(From) || other.Contains(ToInclusive);
     }
 
     public static Range<T> FromStartAndLength(T start, T length) => new(start, start + length);
@@ -47,6 +49,7 @@ public record Range<T>(T From, T To) : IEnumerable<T> where T : INumber<T> {
     }
 
     public static Range<T> operator +(Range<T> r, T offset) => new(r.From + offset, r.To + offset);
+    public static Range<T> operator -(Range<T> r, T offset) => new(r.From - offset, r.To - offset);
 
     public override string ToString() => $"[{From};{To})";
 
