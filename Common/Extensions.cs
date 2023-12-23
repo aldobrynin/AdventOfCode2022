@@ -258,4 +258,20 @@ public static class Extensions {
             prev = enumerator.Current;
         }
     }
+
+    public static T MaxOrDefault<T>(this IEnumerable<T> source, T defaultValue) where T : IComparable<T> {
+        using var enumerator = source.GetEnumerator();
+        if (!enumerator.MoveNext()) return defaultValue;
+        var max = enumerator.Current;
+        while (enumerator.MoveNext()) {
+            if (enumerator.Current.CompareTo(max) > 0) max = enumerator.Current;
+        }
+
+        return max;
+    }
+
+    public static TValue MaxOrDefault<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector,
+        TValue defaultValue) where TValue : IComparable<TValue> {
+        return source.Select(selector).MaxOrDefault(defaultValue);
+    }
 }

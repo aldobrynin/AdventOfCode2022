@@ -102,4 +102,12 @@ public record V(long X, long Y) {
     public V Signum() => new(Math.Sign(X), Math.Sign(Y));
 
     public V Mod(long height, long width) => new V(X.Mod(width), Y.Mod(height));
+
+    public static V FromArrow(char c) => c switch {
+        '^' => Up,
+        'v' => Down,
+        '<' => Left,
+        '>' => Right,
+        _ => throw new ArgumentOutOfRangeException(nameof(c), c, null)
+    };
 }
