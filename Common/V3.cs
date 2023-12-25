@@ -11,7 +11,7 @@ public record V3(int X, int Y, int Z)
 
     public static V3 Parse(string s)
     {
-        var tokens = s.Split(new []{',', ' '}, 3);
+        var tokens = s.Split(new []{',', ' '}, 3, StringSplitOptions.RemoveEmptyEntries);
         return new V3(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]));
     }
 
