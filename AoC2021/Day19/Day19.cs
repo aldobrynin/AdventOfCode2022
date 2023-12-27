@@ -2,7 +2,7 @@ namespace AoC2021.Day19;
 
 public partial class Day19
 {
-    private record Scanner3D(string Id, V3[] Beacons)
+    private record Scanner3D(string Id, V3<int>[] Beacons)
     {
         public static Scanner3D Parse(string s)
         {
@@ -25,9 +25,9 @@ public partial class Day19
             .Split("\n\n")
             .Select(Scanner3D.Parse)
             .ToArray();
-        var scanners = new List<V3>
+        var scanners = new List<V3<int>>
         {
-            V3.Zero,
+            V3<int>.Zero,
         };
         var locatedScanners = data.Take(1).Select(x => x.Id).ToHashSet();
         var knownBeacons = data.Take(1).SelectMany(x => x.Beacons).ToHashSet();
@@ -53,7 +53,7 @@ public partial class Day19
 
     }
 
-    private static (V3 Offset, V3[] Beacons)? FindTransform(V3[] beacons, IReadOnlySet<V3> knownBeacons)
+    private static (V3<int> Offset, V3<int>[] Beacons)? FindTransform(V3<int>[] beacons, IReadOnlySet<V3<int>> knownBeacons)
     {
         for (var rotation = 0; rotation < 24; rotation++)
         {
@@ -71,7 +71,7 @@ public partial class Day19
         return null;
     }
 
-    private static V3 Rotate(V3 v, int direction)
+    private static V3<int> Rotate(V3<int> v, int direction)
     {
         return direction switch
         {

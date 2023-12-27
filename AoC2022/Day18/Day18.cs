@@ -13,8 +13,8 @@ public partial class Day18 {
             .Sum(cube => cube.Neighbors6().Count(d => !lavaSet.Contains(d)))
             .Part1();
 
-        var maxOuterV = new V3(lavaCubes.Max(v => v.X) + 1, lavaCubes.Max(v => v.Y) + 1, lavaCubes.Max(v => v.Z) + 1);
-        var minOuterV = new V3(lavaCubes.Min(v => v.X) - 1, lavaCubes.Min(v => v.Y) - 1, lavaCubes.Min(v => v.Z) - 1);
+        var maxOuterV = new V3<int>(lavaCubes.Max(v => v.X) + 1, lavaCubes.Max(v => v.Y) + 1, lavaCubes.Max(v => v.Z) + 1);
+        var minOuterV = new V3<int>(lavaCubes.Min(v => v.X) - 1, lavaCubes.Min(v => v.Y) - 1, lavaCubes.Min(v => v.Z) - 1);
         var maxDistance = maxOuterV.DistTo(minOuterV);
         var outerRange = new Range3d(
             Range.FromStartAndEndInclusive(minOuterV.X, maxOuterV.X),

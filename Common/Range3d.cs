@@ -5,7 +5,7 @@ public record Range3d(Range<int> X, Range<int> Y, Range<int> Z) {
         Z.SelectMany(z => Y.SelectMany(y => X.Select(x => new V3(x, y, z))));
 
     public Range3d Grow(int n) => new(X.Grow(n), Y.Grow(n), Z.Grow(n));
-    public bool Contains(V3 v) => X.Contains(v.X) && Y.Contains(v.Y) && Z.Contains(v.Z);
+    public bool Contains(V3<int> v) => X.Contains(v.X) && Y.Contains(v.Y) && Z.Contains(v.Z);
     public bool Contains(Range3d r) => X.Contains(r.X) && Y.Contains(r.Y) && Z.Contains(r.Z);
     public bool IsEmpty() => X.IsEmpty() || Y.IsEmpty() || Z.IsEmpty();
 
@@ -43,7 +43,7 @@ public record Range3d(Range<int> X, Range<int> Y, Range<int> Z) {
             .ToArray();
     }
 
-    public static Range3d FromMinMax(V3 min, V3 max) {
+    public static Range3d FromMinMax(V3<int> min, V3<int> max) {
         return new Range3d(Range.FromStartAndEndInclusive(min.X, max.X),
             Range.FromStartAndEndInclusive(min.Y, max.Y),
             Range.FromStartAndEndInclusive(min.Z, max.Z));
