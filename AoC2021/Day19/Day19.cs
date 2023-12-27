@@ -11,7 +11,7 @@ public partial class Day19
                 .Replace(' ', '\0')
                 .Replace("scanner", string.Empty);
 
-            var beacons = lines.Skip(1).Select(V3.Parse).ToArray();
+            var beacons = lines.Skip(1).Select(V3<int>.Parse).ToArray();
 
             return new Scanner3D(id, beacons);
         }

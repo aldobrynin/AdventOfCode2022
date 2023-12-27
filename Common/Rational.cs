@@ -9,12 +9,17 @@ public readonly struct Rational : INumber<Rational> {
     }
 
     public Rational(BigInteger numerator, BigInteger denominator) {
-        if (denominator == 0) throw new ArgumentException("Denominator cannot be zero", nameof(denominator));
+        ArgumentOutOfRangeException.ThrowIfZero(denominator, nameof(denominator));
         if (numerator == 0) {
             Numerator = BigInteger.Zero;
             Denominator = BigInteger.One;
         }
         else {
+            if (denominator < 0) {
+                numerator = -numerator;
+                denominator = -denominator;
+            }
+
             var gcd = BigInteger.GreatestCommonDivisor(numerator, denominator);
             Numerator = numerator / gcd;
             Denominator = denominator / gcd;
@@ -28,9 +33,7 @@ public readonly struct Rational : INumber<Rational> {
         return new Rational(a.Numerator * b.Denominator + b.Numerator * a.Denominator, a.Denominator * b.Denominator);
     }
 
-    public double ToDouble() {
-        return (double)(Numerator / Denominator);
-    }
+    public double ToDouble() => (double)Numerator / (double)Denominator;
 
     public static Rational operator -(Rational a, Rational b) {
         return new Rational(a.Numerator * b.Denominator - b.Numerator * a.Denominator, a.Denominator * b.Denominator);
@@ -61,9 +64,9 @@ public readonly struct Rational : INumber<Rational> {
         return Numerator == other.Numerator && Denominator == other.Denominator;
     }
 
-    public string ToString(string? format, IFormatProvider? formatProvider) {
-        return $"{Numerator}/{Denominator}";
-    }
+    public string ToString(string? format, IFormatProvider? formatProvider) => $"{Numerator}/{Denominator}";
+
+    public override string ToString() => ToString(null, null);
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format,
         IFormatProvider? provider) {

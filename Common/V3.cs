@@ -3,8 +3,6 @@ using System.Numerics;
 
 namespace Common;
 
-public record V3(int X, int Y, int Z) : V3<int>(X, Y, Z);
-
 public record V3<T>(T X, T Y, T Z) where T : INumberBase<T> {
     public static readonly V3<T> Left = new(-T.One, T.Zero, T.Zero);
     public static readonly V3<T> Right = new(T.One, T.Zero, T.Zero);
@@ -15,9 +13,10 @@ public record V3<T>(T X, T Y, T Z) where T : INumberBase<T> {
 
     public static V3<T> Parse(string s) {
         var tokens = s.Split(new[] { ',', ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-        return new V3<T>(T.Parse(tokens[0], CultureInfo.InvariantCulture),
-            T.Parse(tokens[1], CultureInfo.InvariantCulture),
-            T.Parse(tokens[2], CultureInfo.InvariantCulture));
+        return new V3<T>(tokens.Select(x => T.Parse(x, CultureInfo.InvariantCulture)).ToArray());
+    }
+
+    public V3(IReadOnlyList<T> coordinates) : this(coordinates[0], coordinates[1], coordinates[2]) {
     }
 
     public static V3<T>[] Directions4 => new[] {

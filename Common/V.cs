@@ -28,32 +28,19 @@ public record V(long X, long Y) {
     }
 
     public static V Parse(string s) {
-        var tokens = s.Split(new[] { ',', ' ' }, 2);
+        var tokens = s.Split([',', ' '], 2);
         return new V(int.Parse(tokens[0]), int.Parse(tokens[1]));
     }
 
-    public static V[] Directions4 => new[] {
-        Left,
-        Up,
-        Right,
-        Down,
-    };
+    public static V[] Directions4 => [Left, Up, Right, Down];
 
-    public static V[] Directions5 => new[] {
-        Left,
-        Up,
-        Right,
-        Down,
-        Zero,
-    };
+    public static V[] Directions5 => [Left, Up, Right, Down, Zero];
+    
+    public static V[] Directions8 => [E, NE, N, NW, W, SW, S, SE];
 
     public IEnumerable<V> Area5() => Directions5.Select(dir => this + dir);
     public IEnumerable<V> Area4() => Directions4.Select(dir => this + dir);
     public IEnumerable<V> Area8() => Directions8.Select(dir => this + dir);
-
-    public static V[] Directions8 => new[] {
-        E, NE, N, NW, W, SW, S, SE
-    };
 
     public static V Zero => new(0, 0);
 

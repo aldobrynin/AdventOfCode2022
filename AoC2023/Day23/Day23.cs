@@ -29,8 +29,16 @@ public static partial class Day23 {
 
         int LongestPathToEnd(int current, long visited = 0L) {
             if (current == endIdx) return 0;
-            return indexedMap[current].Where(x => !visited.HasBit(x.Next))
-                .MaxOrDefault(x => x.Distance + LongestPathToEnd(x.Next, visited.SetBit(x.Next)), int.MinValue);
+
+            var res = -1;
+            foreach (var (next, distance) in indexedMap[current]) {
+                if (visited.HasBit(next)) continue;
+                var pathFromNext = LongestPathToEnd(next, visited.SetBit(next));
+                if (pathFromNext >= 0 && distance + pathFromNext > res)
+                    res = distance + pathFromNext;
+            }
+
+            return res;
         }
     }
 

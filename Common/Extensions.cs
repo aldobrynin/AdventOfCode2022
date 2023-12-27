@@ -226,7 +226,7 @@ public static class Extensions {
 
     public static IEnumerable<T> RangeUntil<T>(this T from, T endExclusive) where T : INumber<T> {
         var step = from > endExclusive ? -T.One : T.One;
-        return RangeTo(from, endExclusive + step, step);
+        return RangeTo(from, endExclusive - step, step);
     }
 
     public static IEnumerable<T> RangeTo<T>(this T from, T endInclusive, T step) where T : INumber<T> {

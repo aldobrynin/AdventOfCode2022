@@ -17,23 +17,37 @@ public static partial class Day16 {
             .Part2();
 
         int CountEnergizedTiles(State initialState) {
-            var current = new List<State> { initialState };
-            var visited = current.ToHashSet();
-            while (current.Count > 0) current = current.SelectMany(GetNextStates).Where(visited.Add).ToList();
+            var queue = new List<State> { initialState };
+            var visited = queue.ToHashSet();
+            var i = 0;
+            while (i < queue.Count) {
+                var state = queue[i++];
+                queue.AddRange(GetNextStates(state).Where(next => map.Contains(next.Position) && visited.Add(next)));
+            }
+
             return visited.DistinctBy(x => x.Position).Count();
         }
 
-        IEnumerable<State> GetNextStates(State state) =>
-            GetNextDirections(state).Select(dir => state.TurnAndMove(dir)).Where(s => map.Contains(s.Position));
-
-        IEnumerable<V> GetNextDirections(State state) => (map[state.Position], state.Direction) switch {
-            ('.', _) or ('-', { Y: 0 }) or ('|', { X: 0 }) => new[] { state.Direction },
-            ('-' or '|', _) => new[] { state.Direction.Rotate(90), state.Direction.Rotate(270) },
-            ('/', _) => new[] { state.Direction.Rotate((int)state.Direction.X * 180 + 90) },
-            ('\\', _) => new[] { state.Direction.Rotate((int)state.Direction.Y * 180 + 90) },
+        IReadOnlyCollection<State> GetNextStates(State state) => (map[state.Position], state.Direction) switch {
+            ('.', _) or ('-', { Y: 0 }) or ('|', { X: 0 }) => [state.Step()],
+            ('-' or '|', _) => [state.TurnClockwise(), state.TurnCounterClockwise()],
+            ('/', { Y: 0 }) => [state.TurnCounterClockwise()],
+            ('/', { X: 0 }) => [state.TurnClockwise()],
+            ('\\', { Y: 0 }) => [state.TurnClockwise()],
+            ('\\', { X: 0 }) => [state.TurnCounterClockwise()],
             _ => throw new Exception($"Unexpected state: {state}"),
         };
     }
 
-    private static State TurnAndMove(this State state, V direction) => (state.Position + direction, direction);
+    private static State Step(this State state) => (state.Position + state.Direction, state.Direction);
+
+    private static State TurnClockwise(this State state) {
+        var direction = V.Directions4[(Array.IndexOf(V.Directions4, state.Direction) + 1).Mod(V.Directions4.Length)];
+        return (state.Position + direction, direction);
+    }
+
+    private static State TurnCounterClockwise(this State state) {
+        var direction = V.Directions4[(Array.IndexOf(V.Directions4, state.Direction) - 1).Mod(V.Directions4.Length)];
+        return (state.Position + direction, direction);
+    }
 }

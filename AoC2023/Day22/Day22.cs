@@ -1,4 +1,5 @@
 namespace AoC2023.Day22;
+using V3 = V3<int>;
 
 public static partial class Day22 {
     record Brick(int Index, Range3d Range) {

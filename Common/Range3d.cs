@@ -1,8 +1,8 @@
 namespace Common;
 
 public record Range3d(Range<int> X, Range<int> Y, Range<int> Z) {
-    public IEnumerable<V3> All() =>
-        Z.SelectMany(z => Y.SelectMany(y => X.Select(x => new V3(x, y, z))));
+    public IEnumerable<V3<int>> All() =>
+        Z.SelectMany(z => Y.SelectMany(y => X.Select(x => new V3<int>(x, y, z))));
 
     public Range3d Grow(int n) => new(X.Grow(n), Y.Grow(n), Z.Grow(n));
     public bool Contains(V3<int> v) => X.Contains(v.X) && Y.Contains(v.Y) && Z.Contains(v.Z);

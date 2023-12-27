@@ -5,7 +5,7 @@ namespace AoC2022.Day18;
 public partial class Day18 {
     public static void Solve(IEnumerable<string> fileInput) {
         var lavaCubes = fileInput
-            .Select(V3.Parse)
+            .Select(V3<int>.Parse)
             .ToArray();
         var lavaSet = lavaCubes.ToHashSet();
 

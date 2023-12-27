@@ -18,13 +18,16 @@ public static partial class Day17 {
                 .First(x => x.State.Steps >= minSteps && x.State.Position == end)
                 .Distance;
 
-            IEnumerable<SearchPathItem<State>> GetNextStates(SearchPathItem<State> current) =>
-                V.Directions4
-                    .Where(dir => dir != -current.State.Dir)
-                    .Select(dir => current.State.Next(dir))
-                    .Where(s => map.Contains(s.Position) && s.Steps <= maxSteps)
-                    .Where(s => s.Dir == current.State.Dir || current.State.Steps >= minSteps)
-                    .Select(s => current.Next(s, distanceCost: map[s.Position]));
+            IEnumerable<SearchPathItem<State>> GetNextStates(SearchPathItem<State> current) {
+                foreach (var dir in V.Directions4) {
+                    if (dir == -current.State.Dir) continue;
+                    if (dir != current.State.Dir && current.State.Steps < minSteps) continue;
+                    var next = current.State.Next(dir);
+                    if (next.Steps <= maxSteps && map.Contains(next.Position)) {
+                        yield return current.Next(next, distanceCost: map[next.Position]);
+                    }
+                }
+            }
         }
     }
 }

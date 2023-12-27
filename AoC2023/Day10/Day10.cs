@@ -18,7 +18,7 @@ public partial class Day10 {
             .Single(tile => adjacentToStart.All(n => AreTilesConnected(map[n], tile, start - n)));
         map[start] = startTile;
         CountPolygonInteriorPoints(pipe).Part2();
-        FindIsolatedCells(map, pipe.ToHashSet()).Part2();
+        // FindIsolatedCells(map, pipe.ToHashSet()).Part2();
     }
 
     // Shoelace formula: https://en.wikipedia.org/wiki/Pick%27s_theorem
