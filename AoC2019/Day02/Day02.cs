@@ -11,7 +11,7 @@ public static partial class Day02 {
         if (AoCContext.IsSample) result.StringJoin().Part1();
         else result[0].Part1();
 
-        0.RangeTo(99).SelectMany(noun => 0.RangeTo(99).Select(verb => (noun, verb)))
+        0.RangeUntil(100).SelectMany(noun => 0.RangeTo(99).Select(verb => (noun, verb)))
             .Where(x => Evaluate(program, x.noun, x.verb)[0] == 19690720)
             .Select(x => x.noun * 100 + x.verb)
             .SingleOrDefault()
