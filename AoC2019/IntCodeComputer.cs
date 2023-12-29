@@ -1,9 +1,11 @@
 namespace AoC2019;
 
 public class IntCodeComputer(long[] program, long[]? input = null) {
-    private readonly long[] _program = program.ToArray();
+    private readonly Dictionary<long, long> _program =
+        program.WithIndex().ToDictionary(x => (long)x.Index, x => x.Element);
     private readonly Queue<long> _input = new(input ?? Array.Empty<long>());
     private int _i;
+    private long _relativeBase;
     private Action<long>? _onOutput;
 
     public void AddInput(long input) => _input.Enqueue(input);
@@ -26,29 +28,26 @@ public class IntCodeComputer(long[] program, long[]? input = null) {
     public void PipeOutputTo(Action<long>? onOutput) => _onOutput = onOutput;
 
     public bool RunToNextOutput() {
-        while (_i < _program.Length) {
-            var opcode = ReadNext(isImmediateMode: true);
+        while (true) {
+            var opcode = ReadNext();
             var (modes, op) = Math.DivRem(opcode, 100);
-            var mode1 = modes % 10 == 1;
-            var mode2 = modes / 10 % 10 == 1;
+            var mode1 = modes % 10;
+            var mode2 = modes / 10 % 10;
+            var mode3 = modes / 100 % 10;
             switch (op) {
                 case 1: {
-                    var firstOperand = ReadNext(mode1);
-                    var secondOperand = ReadNext(mode2);
-                    _program[ReadNext()] = firstOperand + secondOperand;
+                    WriteNext(ReadNext(mode1) + ReadNext(mode2), mode3);
                     break;
                 }
                 case 2: {
-                    var firstOperand = ReadNext(mode1);
-                    var secondOperand = ReadNext(mode2);
-                    _program[ReadNext()] = firstOperand * secondOperand;
+                    WriteNext(ReadNext(mode1) * ReadNext(mode2), mode3);
                     break;
                 }
                 case 3:
-                    _program[ReadNext()] = _input.Dequeue();
+                    WriteNext(_input.Dequeue(), mode1);
                     break;
                 case 4:
-                    Output = _program[ReadNext()];
+                    Output = ReadNext(mode1);
                     _onOutput?.Invoke(Output);
                     return true;
                 case 5: {
@@ -64,17 +63,16 @@ public class IntCodeComputer(long[] program, long[]? input = null) {
                     break;
                 }
                 case 7: {
-                    var firstOperand = ReadNext(mode1);
-                    var secondOperand = ReadNext(mode2);
-                    _program[ReadNext()] = firstOperand < secondOperand ? 1 : 0;
+                    WriteNext(ReadNext(mode1) < ReadNext(mode2) ? 1 : 0, mode3);
                     break;
                 }
                 case 8: {
-                    var firstOperand = ReadNext(mode1);
-                    var secondOperand = ReadNext(mode2);
-                    _program[ReadNext()] = firstOperand == secondOperand ? 1 : 0;
+                    WriteNext(ReadNext(mode1) == ReadNext(mode2) ? 1 : 0, mode3);
                     break;
                 }
+                case 9:
+                    _relativeBase += ReadNext(mode1);
+                    break;
                 case 99:
                     IsHalted = true;
                     return false;
@@ -82,12 +80,25 @@ public class IntCodeComputer(long[] program, long[]? input = null) {
                     throw new Exception($"Unexpected opcode {op} at position {_i}");
             }
         }
-
-        throw new Exception("Unexpected end of program");
+    }
+    
+    private void WriteNext(long value, long mode = 1) {
+        var address = ReadNext();
+        var addressValue = mode switch {
+            0 => address,
+            2 => _relativeBase + address,
+            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+        };
+        _program[addressValue] = value;
     }
 
-    private long ReadNext(bool isImmediateMode = true) {
-        var value = _program[_i++];
-        return isImmediateMode ? value : _program[value];
+    private long ReadNext(long mode = 1) {
+        var value = _program.GetValueOrDefault(_i++);
+        return mode switch {
+            0 => _program.GetValueOrDefault(value),
+            1 => value,
+            2 => _program.GetValueOrDefault(_relativeBase + value),
+            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+        };
     }
 }
