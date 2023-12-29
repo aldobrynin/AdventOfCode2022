@@ -274,4 +274,13 @@ public static class Extensions {
         TValue defaultValue) where TValue : IComparable<TValue> {
         return source.Select(selector).MaxOrDefault(defaultValue);
     }
+
+    public static IEnumerable<T[]> Permutations<T>(this IReadOnlyCollection<T> input) {
+        if (input.Count == 1) yield return input.ToArray();
+        else {
+            foreach (var x in input)
+            foreach (var y in Permutations(input.Except(new[] { x }).ToArray()))
+                yield return y.Prepend(x).ToArray();
+        }
+    }
 }
