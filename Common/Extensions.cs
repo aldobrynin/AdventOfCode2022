@@ -283,4 +283,6 @@ public static class Extensions {
                 yield return y.Prepend(x).ToArray();
         }
     }
+    
+    public static T Lcm<T>(this IEnumerable<T> source) where T : INumber<T> => source.Aggregate(MathHelpers.Lcm);
 }
