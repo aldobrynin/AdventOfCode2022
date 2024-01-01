@@ -1,12 +1,21 @@
 namespace AoC2019;
 
-public class IntCodeComputer(long[] program, long[]? input = null) {
-    private readonly Dictionary<long, long> _program =
-        program.WithIndex().ToDictionary(x => (long)x.Index, x => x.Element);
-    private readonly Queue<long> _input = new(input ?? Array.Empty<long>());
+public class IntCodeComputer {
+    private readonly Dictionary<long, long> _program;
+    private readonly Queue<long> _input;
     private int _i;
     private long _relativeBase;
     private Action<long>? _onOutput;
+
+    public IntCodeComputer(long[] program, long[]? input = null) {
+        _program = program.WithIndex().ToDictionary(x => (long)x.Index, x => x.Element);
+        _input = new(input ?? Array.Empty<long>());
+        OnInput = () => _input.Dequeue();
+    }
+
+    public delegate long InputProvider();
+
+    public InputProvider OnInput { get; init; }
 
     public void AddInput(long input) => _input.Enqueue(input);
 
@@ -44,7 +53,7 @@ public class IntCodeComputer(long[] program, long[]? input = null) {
                     break;
                 }
                 case 3:
-                    WriteNext(_input.Dequeue(), mode1);
+                    WriteNext(OnInput(), mode1);
                     break;
                 case 4:
                     Output = ReadNext(mode1);
@@ -80,6 +89,11 @@ public class IntCodeComputer(long[] program, long[]? input = null) {
                     throw new Exception($"Unexpected opcode {op} at position {_i}");
             }
         }
+    }
+    
+    public IEnumerable<long> ReadAllOutputs() {
+        while (RunToNextOutput())
+            yield return Output;
     }
     
     private void WriteNext(long value, long mode = 1) {
