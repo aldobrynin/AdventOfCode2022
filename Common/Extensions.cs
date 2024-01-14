@@ -112,14 +112,14 @@ public static class Extensions {
             yield return source.Rows().Select(r => r[x]).ToArray();
     }
 
-    public static IEnumerable<IReadOnlyList<string>> SplitBy(
-        this IEnumerable<string> source,
-        Func<string, bool> isSeparator) {
-        var list = new List<string>();
+    public static IEnumerable<IReadOnlyList<T>> SplitBy<T>(
+        this IEnumerable<T> source,
+        Func<T, bool> isSeparator) {
+        var list = new List<T>();
         foreach (var s in source) {
             if (isSeparator(s)) {
                 yield return list;
-                list = new List<string>();
+                list = new List<T>();
             }
             else list.Add(s);
         }
