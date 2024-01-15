@@ -76,6 +76,7 @@ public static class Extensions {
 
     public static bool HasBit(this long v, int bitIndex) => (v & (1L << bitIndex)) != 0;
     public static long SetBit(this long v, int bitIndex) => v | (1L << bitIndex);
+    public static long UnsetBit(this long v, int bitIndex) => v & ~(1L << bitIndex);
 
     public static IEnumerable<int> Indices<T>(this IEnumerable<T> source) {
         return source.Select((_, i) => i);
