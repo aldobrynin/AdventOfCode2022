@@ -37,8 +37,8 @@ public static partial class Day11 {
         bool ReadNext(out (int Color, int Turn) instruction) {
             instruction = (-1, -1);
             computer.AddInput(visited.GetValueOrDefault(current));
-            if (!computer.RunToNextOutput()) return false;
-            instruction = ((int)computer.Output, (int)computer.GetNextOutput());
+            if (!computer.RunToNextOutput().GetAwaiter().GetResult()) return false;
+            instruction = ((int)computer.Output, (int)computer.GetNextOutput().GetAwaiter().GetResult());
             return true;
         }
     }

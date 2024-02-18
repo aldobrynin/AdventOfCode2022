@@ -40,7 +40,7 @@ public static partial class Day15 {
 
         bool MoveTo(V nextPos) {
             computer.AddInput(DirectionToInput(nextPos - current.State));
-            var output = computer.GetNextOutput();
+            var output = computer.GetNextOutput().GetAwaiter().GetResult();
             map[nextPos] = output switch {
                 0 => '#',
                 1 => '.',

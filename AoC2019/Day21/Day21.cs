@@ -35,7 +35,7 @@ public static partial class Day21 {
 
     private static long Run(long[] intCodeProgram, string instructions) {
         var computer = new IntCodeComputer(intCodeProgram, instructions.Select(x => (long)x).ToArray());
-        return computer.ReadAllOutputs().Last();
+        return computer.ReadAllOutputs().ToBlockingEnumerable().Last();
         // foreach (var output in computer.ReadAllOutputs()) {
         //     if (output > char.MaxValue) return output;
         //     Console.Out.Write((char)output);

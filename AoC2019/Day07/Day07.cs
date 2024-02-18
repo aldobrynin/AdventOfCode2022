@@ -4,7 +4,7 @@ public static partial class Day07 {
     public static void Solve(IEnumerable<string> input) {
         var program = input.Single().ToLongArray();
         new[] { 0, 1, 2, 3, 4 }.Permutations()
-            .Max(p => p.Aggregate(0L, (acc, phase) => new IntCodeComputer(program, [phase, acc]).GetNextOutput()))
+            .Max(p => p.Aggregate(0L, (acc, phase) => new IntCodeComputer(program, [phase, acc]).GetNextOutput().GetAwaiter().GetResult()))
             .Part1();
 
         new[] { 5, 6, 7, 8, 9 }.Permutations().Max(p => Calculate(program, p)).Part2();
@@ -16,7 +16,7 @@ public static partial class Day07 {
             first.PipeOutputTo(second.AddInput);
         }
 
-        while (computers.All(c => c.RunToNextOutput())) {
+        while (computers.All(c => c.RunToNextOutput().GetAwaiter().GetResult())) {
         }
 
         return computers[^1].Output;

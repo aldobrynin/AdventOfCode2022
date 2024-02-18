@@ -23,6 +23,6 @@ public static partial class Day19 {
 
         (current.X * 10000 + current.Y + diff.Y).Part2();
 
-        bool IsBeam(V v) => new IntCodeComputer(program, [v.X, v.Y]).GetNextOutput() == 1;
+        bool IsBeam(V v) => new IntCodeComputer(program, [v.X, v.Y]).GetNextOutput().GetAwaiter().GetResult() == 1;
     }
 }

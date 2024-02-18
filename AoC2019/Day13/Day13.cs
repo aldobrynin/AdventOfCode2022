@@ -11,7 +11,10 @@ public static partial class Day13 {
         var ballX = 0L;
         var paddleX = 0L;
 
-        new IntCodeComputer(freePlayProgram) { OnInput = () => Math.Sign(ballX - paddleX) }
+        var computer = new IntCodeComputer(freePlayProgram);
+        computer.ComputerInput.OnInput += () => Math.Sign(ballX - paddleX);
+
+        computer
             .ReadGameOutput()
             .Pipe(s => {
                 if (s.TileId == 3) paddleX = s.X;
@@ -22,6 +25,6 @@ public static partial class Day13 {
     }
 
     private static IEnumerable<(long X, long Y, long TileId)> ReadGameOutput(this IntCodeComputer computer) {
-        return computer.ReadAllOutputs().Chunk(3).Select(block => (block[0], block[1], block[2]));
+        return computer.ReadAllOutputs().ToBlockingEnumerable().Chunk(3).Select(block => (block[0], block[1], block[2]));
     }
 }

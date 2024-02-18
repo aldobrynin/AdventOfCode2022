@@ -5,6 +5,7 @@ public static partial class Day17 {
         var program = input.Single().ToLongArray();
         var computer = new IntCodeComputer(program);
         var map = Map.From(computer.ReadAllOutputs()
+            .ToBlockingEnumerable()
             .Select(o => (char)o)
             .SplitBy(o => o == '\n')
             .Where(x => x.Count > 0));
@@ -33,7 +34,7 @@ public static partial class Day17 {
         var programInput = string.Concat(inputs.Select(s => s + "\n")).Select(x => (long)x).ToArray();
 
         program[0] = 2;
-        new IntCodeComputer(program, programInput).ReadAllOutputs().Last().Part2();
+        new IntCodeComputer(program, programInput).ReadAllOutputs().ToBlockingEnumerable().Last().Part2();
     }
 
     private static List<string>? FindPatterns(string s, int maxPatterns = 3) {

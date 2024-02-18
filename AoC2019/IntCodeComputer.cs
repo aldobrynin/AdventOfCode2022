@@ -2,33 +2,33 @@ namespace AoC2019;
 
 public class IntCodeComputer {
     private readonly Dictionary<long, long> _program;
-    private readonly Queue<long> _input;
     private int _i;
     private long _relativeBase;
     private Action<long>? _onOutput;
+    public ComputerInput ComputerInput { get; }
 
     public IntCodeComputer(long[] program, long[]? input = null) {
         _program = program.WithIndex().ToDictionary(x => (long)x.Index, x => x.Element);
-        _input = new(input ?? Array.Empty<long>());
-        OnInput = () => _input.Dequeue();
+        ComputerInput = new(input ?? []);
     }
 
-    public delegate long InputProvider();
+    public void AddInput(long input) => ComputerInput.Add(input);
+    public void AddInput(params long[] input) {
+        foreach (var value in input) ComputerInput.Add(value);
+    }
 
-    public InputProvider OnInput { get; init; }
-
-    public void AddInput(long input) => _input.Enqueue(input);
+    public bool IsWaitingForInput => ComputerInput.IsWaiting;
 
     public long Output { get; private set; }
     public bool IsHalted { get; private set; }
 
-    public long GetNextOutput() {
-        if (!RunToNextOutput()) throw new Exception("Unexpected end of program");
+    public async Task<long> GetNextOutput() {
+        if (!await RunToNextOutput()) throw new Exception("Unexpected end of program");
         return Output;
     }
 
-    public long RunToEnd() {
-        while (RunToNextOutput()) {
+    public async Task<long> RunToEnd() {
+        while (await RunToNextOutput()) {
         }
 
         return Output;
@@ -36,7 +36,7 @@ public class IntCodeComputer {
 
     public void PipeOutputTo(Action<long>? onOutput) => _onOutput = onOutput;
 
-    public bool RunToNextOutput() {
+    public async Task<bool> RunToNextOutput() {
         while (true) {
             var opcode = ReadNext();
             var (modes, op) = Math.DivRem(opcode, 100);
@@ -53,7 +53,8 @@ public class IntCodeComputer {
                     break;
                 }
                 case 3:
-                    WriteNext(OnInput(), mode1);
+                    var input = await ComputerInput.GetNext();
+                    WriteNext(input, mode1);
                     break;
                 case 4:
                     Output = ReadNext(mode1);
@@ -91,8 +92,8 @@ public class IntCodeComputer {
         }
     }
     
-    public IEnumerable<long> ReadAllOutputs() {
-        while (RunToNextOutput())
+    public async IAsyncEnumerable<long> ReadAllOutputs() {
+        while (await RunToNextOutput())
             yield return Output;
     }
     
@@ -114,5 +115,37 @@ public class IntCodeComputer {
             2 => _program.GetValueOrDefault(_relativeBase + value),
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
         };
+    }
+}
+
+public class ComputerInput {
+    private readonly Queue<long> _inputQueue;
+    private TaskCompletionSource<long>? _waitTaskCompletionSource;
+
+    public ComputerInput(params long[] values) {
+        _inputQueue = new Queue<long>(values);
+    }
+    
+    public event Func<long>? OnInput;
+
+    public bool IsWaiting => _waitTaskCompletionSource is not null;
+    
+    public void Add(long value) {
+        if (_waitTaskCompletionSource is null) {
+            _inputQueue.Enqueue(value);
+        }
+        else {
+            var tcs = _waitTaskCompletionSource;
+            _waitTaskCompletionSource = null;
+            tcs.SetResult(value);
+        }
+    }
+    
+    public async Task<long> GetNext() {
+        if (_inputQueue.Count > 0) return _inputQueue.Dequeue();
+        if (OnInput is not null) return OnInput();
+        if (_waitTaskCompletionSource is not null) throw new Exception("Unexpected state");
+        _waitTaskCompletionSource = new();
+        return await _waitTaskCompletionSource.Task;
     }
 }
