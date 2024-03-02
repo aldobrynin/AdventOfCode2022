@@ -9,6 +9,6 @@ public static partial class Day24 {
                                           ..#..
                                           #....
                                           """)
-            .WithPartOneAnswer(2129920);
+            .WithPartOneAnswer(2129920).WithPartTwoAnswer(1922);
     }
 }
