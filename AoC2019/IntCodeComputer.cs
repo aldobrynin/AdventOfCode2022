@@ -17,6 +17,11 @@ public class IntCodeComputer {
         foreach (var value in input) ComputerInput.Add(value);
     }
 
+    public void AddAsciiInput(string input) {
+        Console.WriteLine(input);
+        foreach (var value in input.Append('\n')) AddInput(value);
+    }
+
     public bool IsWaitingForInput => ComputerInput.IsWaiting;
 
     public long Output { get; private set; }
@@ -91,12 +96,12 @@ public class IntCodeComputer {
             }
         }
     }
-    
+
     public async IAsyncEnumerable<long> ReadAllOutputs() {
         while (await RunToNextOutput())
             yield return Output;
     }
-    
+
     private void WriteNext(long value, long mode = 1) {
         var address = ReadNext();
         var addressValue = mode switch {
@@ -125,11 +130,11 @@ public class ComputerInput {
     public ComputerInput(params long[] values) {
         _inputQueue = new Queue<long>(values);
     }
-    
+
     public event Func<long>? OnInput;
 
     public bool IsWaiting => _waitTaskCompletionSource is not null;
-    
+
     public void Add(long value) {
         if (_waitTaskCompletionSource is null) {
             _inputQueue.Enqueue(value);
@@ -140,7 +145,7 @@ public class ComputerInput {
             tcs.SetResult(value);
         }
     }
-    
+
     public async Task<long> GetNext() {
         if (_inputQueue.Count > 0) return _inputQueue.Dequeue();
         if (OnInput is not null) return OnInput();
