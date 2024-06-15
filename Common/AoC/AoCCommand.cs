@@ -97,6 +97,10 @@ public class AoCCommand : AsyncCommand<AoCCommand.AoCCommandSettings> {
 
         AnsiConsole.WriteLine("Downloading answers!");
         var page = await AoCClient.DownloadPage(year, dayType.Day);
+        if (page.Contains("To play, please identify yourself via one of these services:")) {
+            throw new Exception("Please provide a valid session cookie in AOC_SESSION environment variable");
+        }
+
         // Your puzzle answer was <code>9556896</code>.
         var regex = new Regex("Your puzzle answer was <code>(?<answer>.*?)</code>\\.");
         var answers = regex.Matches(page).Select(x => x.Groups["answer"].Value).ToArray();

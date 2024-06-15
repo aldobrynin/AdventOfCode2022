@@ -76,6 +76,7 @@ public static class Extensions {
 
     public static bool HasBit(this long v, int bitIndex) => (v & (1L << bitIndex)) != 0;
     public static long SetBit(this long v, int bitIndex) => v | (1L << bitIndex);
+    public static long UnsetBit(this long v, int bitIndex) => v & ~(1L << bitIndex);
 
     public static IEnumerable<int> Indices<T>(this IEnumerable<T> source) {
         return source.Select((_, i) => i);
@@ -112,14 +113,14 @@ public static class Extensions {
             yield return source.Rows().Select(r => r[x]).ToArray();
     }
 
-    public static IEnumerable<IReadOnlyList<string>> SplitBy(
-        this IEnumerable<string> source,
-        Func<string, bool> isSeparator) {
-        var list = new List<string>();
+    public static IEnumerable<IReadOnlyList<T>> SplitBy<T>(
+        this IEnumerable<T> source,
+        Func<T, bool> isSeparator) {
+        var list = new List<T>();
         foreach (var s in source) {
             if (isSeparator(s)) {
                 yield return list;
-                list = new List<string>();
+                list = new List<T>();
             }
             else list.Add(s);
         }
@@ -274,4 +275,15 @@ public static class Extensions {
         TValue defaultValue) where TValue : IComparable<TValue> {
         return source.Select(selector).MaxOrDefault(defaultValue);
     }
+
+    public static IEnumerable<T[]> Permutations<T>(this IReadOnlyCollection<T> input) {
+        if (input.Count == 1) yield return input.ToArray();
+        else {
+            foreach (var x in input)
+            foreach (var y in Permutations(input.Except(new[] { x }).ToArray()))
+                yield return y.Prepend(x).ToArray();
+        }
+    }
+    
+    public static T Lcm<T>(this IEnumerable<T> source) where T : INumber<T> => source.Aggregate(MathHelpers.Lcm);
 }

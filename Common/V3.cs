@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Common;
 
-public record V3<T>(T X, T Y, T Z) where T : INumberBase<T> {
+public record V3<T>(T X, T Y, T Z) where T : INumber<T> {
     public static readonly V3<T> Left = new(-T.One, T.Zero, T.Zero);
     public static readonly V3<T> Right = new(T.One, T.Zero, T.Zero);
     public static readonly V3<T> Up = new(T.Zero, T.One, T.Zero);
@@ -41,6 +41,8 @@ public record V3<T>(T X, T Y, T Z) where T : INumberBase<T> {
 
     public T DistTo(V3<T> other) => T.Abs(X - other.X) + T.Abs(Y - other.Y) + T.Abs(Z - other.Z);
     public V3<T> Abs() => new(T.Abs(X), T.Abs(Y), T.Abs(Z));
+    
+    public T MLen => T.Abs(X) + T.Abs(Y) + T.Abs(Z);
 
     public override string ToString() => $"[{X},{Y},{Z}]";
 
@@ -50,4 +52,8 @@ public record V3<T>(T X, T Y, T Z) where T : INumberBase<T> {
     public static V3<T> operator *(V3<T> a, T k) => new(k * a.X, k * a.Y, k * a.Z);
     public static V3<T> operator *(T k, V3<T> a) => new(k * a.X, k * a.Y, k * a.Z);
     public static V3<T> operator /(V3<T> a, T k) => new(a.X / k, a.Y / k, a.Z / k);
+
+    public V3<T> Signum() {
+        return new V3<T>(T.CreateChecked(T.Sign(X)), T.CreateChecked(T.Sign(Y)), T.CreateChecked(T.Sign(Z)));
+    }
 }
