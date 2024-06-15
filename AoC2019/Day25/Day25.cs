@@ -13,7 +13,6 @@ public static partial class Day25 {
         var game = new Game(computer);
 
         foreach (var line in ReadLine(computer).ToBlockingEnumerable()) {
-            Console.WriteLine(line);
             if (game.ReadState == ReadState.None) {
                 if (line.StartsWith("==")) {
                     var prevRoom = game.CurrentRoomName;

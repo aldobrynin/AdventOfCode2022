@@ -18,7 +18,6 @@ public class IntCodeComputer {
     }
 
     public void AddAsciiInput(string input) {
-        Console.WriteLine(input);
         foreach (var value in input.Append('\n')) AddInput(value);
     }
 
