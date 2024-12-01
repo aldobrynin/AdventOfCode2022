@@ -12,6 +12,11 @@ public partial class Day01 {
             .Sum()
             .Part1();
 
+        var counts = right.CountFrequency();
+
+        left.Sum(x => x * counts.GetValueOrDefault(x))
+            .Part2();
+
     }
 
 }

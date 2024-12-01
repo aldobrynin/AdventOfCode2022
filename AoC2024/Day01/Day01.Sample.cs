@@ -10,7 +10,8 @@ public static partial class Day01 {
                                           3   9
                                           3   3
                                           """)
-            .WithPartOneAnswer("11");
+            .WithPartOneAnswer("11")
+            .WithPartTwoAnswer("31");
 
     }
 }
