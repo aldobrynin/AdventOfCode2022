@@ -22,7 +22,8 @@ public static class Extensions {
     public static IEnumerable<V> FindAll<T>(this Map<T> map, T value) =>
         map.Coordinates().Where(v => Equals(map[v], value));
 
-    public static V FindFirst<T>(this Map<T> map, T value) => map.Coordinates().First(v => Equals(map[v], value));
+    public static V FindFirst<T>(this Map<T> map, T value) => map.FindFirst(v => Equals(v, value));
+    public static V FindFirst<T>(this Map<T> map, Func<T, bool> predicate) => map.Coordinates().First(v => predicate(map[v]));
 
     public static T Product<T>(this IEnumerable<T> source) where T : INumber<T> =>
         source.Aggregate(T.One, (x, y) => x * y);
@@ -284,6 +285,6 @@ public static class Extensions {
                 yield return y.Prepend(x).ToArray();
         }
     }
-    
+
     public static T Lcm<T>(this IEnumerable<T> source) where T : INumber<T> => source.Aggregate(MathHelpers.Lcm);
 }
