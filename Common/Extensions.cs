@@ -19,8 +19,10 @@ public static class Extensions {
             throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
     }
 
-    public static IEnumerable<V> FindAll<T>(this Map<T> map, T value) =>
-        map.Coordinates().Where(v => Equals(map[v], value));
+    public static IEnumerable<V> FindAll<T>(this Map<T> map, T value) => map.FindAll(v => Equals(v, value));
+
+    public static IEnumerable<V> FindAll<T>(this Map<T> map, Func<T, bool> predicate) => map.Coordinates()
+        .Where(v => predicate(map[v]));
 
     public static V FindFirst<T>(this Map<T> map, T value) => map.FindFirst(v => Equals(v, value));
     public static V FindFirst<T>(this Map<T> map, Func<T, bool> predicate) => map.Coordinates().First(v => predicate(map[v]));
@@ -188,6 +190,13 @@ public static class Extensions {
     public static IEnumerable<(T A, T B)> Pairs<T>(this IEnumerable<T> source) {
         var list = source.ToList();
         return list.SelectMany((a, ind) => list.Skip(ind).Select(b => (a, b)));
+    }
+
+    public static IEnumerable<T[]> Combinations<T>(this IEnumerable<T> source, int k) {
+        var list = source.ToList();
+        if (k == 0) return [];
+        if (k == 1) return list.Select(x => new[] {x});
+        return list.SelectMany((e, i) => list.Skip(i + 1).Combinations(k - 1).Select(c => c.Prepend(e).ToArray()));
     }
 
     public static IEnumerable<(T Element, int Index)> WithIndex<T>(this IEnumerable<T> source) {
