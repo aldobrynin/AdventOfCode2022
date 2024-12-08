@@ -187,18 +187,6 @@ public static class Extensions {
         return accumulator;
     }
 
-    public static IEnumerable<(T A, T B)> Pairs<T>(this IEnumerable<T> source) {
-        var list = source.ToList();
-        return list.SelectMany((a, ind) => list.Skip(ind).Select(b => (a, b)));
-    }
-
-    public static IEnumerable<T[]> Combinations<T>(this IEnumerable<T> source, int k) {
-        var list = source.ToList();
-        if (k == 0) return [];
-        if (k == 1) return list.Select(x => new[] {x});
-        return list.SelectMany((e, i) => list.Skip(i + 1).Combinations(k - 1).Select(c => c.Prepend(e).ToArray()));
-    }
-
     public static IEnumerable<(T Element, int Index)> WithIndex<T>(this IEnumerable<T> source) {
         return source.Select((x, i) => (x, i));
     }
@@ -284,15 +272,6 @@ public static class Extensions {
     public static TValue MaxOrDefault<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector,
         TValue defaultValue) where TValue : IComparable<TValue> {
         return source.Select(selector).MaxOrDefault(defaultValue);
-    }
-
-    public static IEnumerable<T[]> Permutations<T>(this IReadOnlyCollection<T> input) {
-        if (input.Count == 1) yield return input.ToArray();
-        else {
-            foreach (var x in input)
-            foreach (var y in Permutations(input.Except(new[] { x }).ToArray()))
-                yield return y.Prepend(x).ToArray();
-        }
     }
 
     public static T Lcm<T>(this IEnumerable<T> source) where T : INumber<T> => source.Aggregate(MathHelpers.Lcm);
