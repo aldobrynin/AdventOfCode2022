@@ -3,23 +3,30 @@ namespace AoC2024.Day10;
 public static partial class Day10 {
     public static void Solve(IEnumerable<string> input) {
         var map = Map.From(input);
+        var heads = map.FindAll('0').ToArray();
 
-        var trailEnds = map
-            .FindAll('0')
-            .SelectMany(head => VisitAll(head).Where(v => map[v] == '9').CountBy(x => x))
-            .ToArray();
+        heads
+            .Sum(head => map.Bfs(CanMove, head).Count(x => map[x.State] == '9'))
+            .Part1();
 
-        trailEnds.Length.Part1();
-        trailEnds.Sum(x => x.Value).Part2();
+        var counts = CountTrails(heads);
+        map.FindAll('9')
+            .Sum(counts.GetValueOrDefault)
+            .Part2();
 
-        IEnumerable<V> VisitAll(V start) {
-            var queue = new Queue<V>([start]);
+        Dictionary<V, int> CountTrails(params V[] start) {
+            var queue = new Queue<V>(start);
+            var visits = start.ToDictionary(x => x, _ => 1);
             while (queue.TryDequeue(out var current)) {
-                yield return current;
-                foreach (var next in map.Area4(current).Where(next => map[next] - map[current] == 1)) {
-                    queue.Enqueue(next);
+                foreach (var next in map.Area4(current).Where(next => CanMove(current, next))) {
+                    if (!visits.TryGetValue(next, out var nextCount)) queue.Enqueue(next);
+
+                    visits[next] = nextCount + visits[current];
                 }
             }
+            return visits;
         }
+
+        bool CanMove(V from, V to) => map[to] - map[from] == 1;
     }
 }
