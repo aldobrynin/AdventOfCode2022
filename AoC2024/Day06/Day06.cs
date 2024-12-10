@@ -2,7 +2,7 @@ namespace AoC2024.Day06;
 
 public static partial class Day06 {
     public record State(V Pos, V Dir) {
-        public State TurnRight() => this with { Dir = new V(Dir.Y, -Dir.X) };
+        public State TurnRight() => this with { Dir = new V(-Dir.Y, Dir.X) };
         public State Forward() => this with { Pos = Pos + Dir };
     }
 
