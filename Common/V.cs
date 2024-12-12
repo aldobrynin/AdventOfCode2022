@@ -35,7 +35,7 @@ public record V(long X, long Y) {
     public static V[] Directions4 => [Left, Up, Right, Down];
 
     public static V[] Directions5 => [Left, Up, Right, Down, Zero];
-    
+
     public static V[] Directions8 => [E, NE, N, NW, W, SW, S, SE];
 
     public IEnumerable<V> Area5() => Directions5.Select(dir => this + dir);
@@ -75,6 +75,9 @@ public record V(long X, long Y) {
         var translatedThis = this - pivot;
         return translatedThis.Rotate(degrees) + pivot;
     }
+
+    public V ProjectToX() => this with { Y = 0 };
+    public V ProjectToY() => this with { X = 0 };
 
     public override string ToString() => $"[{X},{Y}]";
 

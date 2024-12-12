@@ -17,10 +17,10 @@ public static partial class Day12 {
         regions.Sum(CalculatePrice).Part1();
         regions.Sum(CalculatePrice2).Part2();
 
-        int CalculatePrice(IReadOnlyCollection<V> region) {
+        int CalculatePrice(IReadOnlySet<V> region) {
             var area = region.Count;
-            var perimeter = region.SelectMany(x => x.Area4())
-                .Count(x => map.GetValueOrDefault(x) != map[region.First()]);
+            var group = map[region.First()];
+            var perimeter = region.Sum(v => v.Area4().Count(x => map.GetValueOrDefault(x) != group));
             return area * perimeter;
         }
 
@@ -49,10 +49,16 @@ public static partial class Day12 {
     }
 
     private static bool IsAngle(IReadOnlySet<V> region, V point, V direction) {
-        var xProjection = point + direction with { Y = 0 };
-        var yProjection = point + direction with { X = 0 };
-        return (!region.Contains(yProjection) && !region.Contains(xProjection))
-               ||
-               (region.Contains(yProjection) && region.Contains(xProjection) && !region.Contains(point + direction));
+        return IsOuterAngle(region, point, direction) || IsInnerAngle(region, point, direction);
+    }
+
+    private static bool IsOuterAngle(IReadOnlySet<V> region, V point, V direction) {
+        return !region.Contains(point + direction.ProjectToY()) && !region.Contains(point + direction.ProjectToX());
+    }
+
+    private static bool IsInnerAngle(IReadOnlySet<V> region, V point, V direction) {
+        return region.Contains(point + direction.ProjectToY()) &&
+               region.Contains(point + direction.ProjectToX()) &&
+               !region.Contains(point + direction);
     }
 }
