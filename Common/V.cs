@@ -93,6 +93,7 @@ public record V(long X, long Y) {
     public V Signum() => new(Math.Sign(X), Math.Sign(Y));
 
     public V Mod(long height, long width) => new V(X.Mod(width), Y.Mod(height));
+    public V Mod(V v) => new V(X.Mod(v.X), Y.Mod(v.Y));
 
     public static V FromArrow(char c) => c switch {
         '^' => Up,
