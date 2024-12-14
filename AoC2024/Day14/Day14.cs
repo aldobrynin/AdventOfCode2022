@@ -5,6 +5,8 @@ namespace AoC2024.Day14;
 
 public static partial class Day14 {
     public record Robot(V Position, V Velocity) {
+        public Robot Move(int time, V mapSize) => this with { Position = (Position + Velocity * time).Mod(mapSize) };
+
         public static Robot Parse(string line) {
             var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             var position = V.Parse(parts[0][2..]);
@@ -28,46 +30,14 @@ public static partial class Day14 {
             return;
         }
 
-        string[] pattern = [
-            "###############################",
-        ];
-
-        var patternMap = Map.From(pattern);
-        var coordinatesToCheck = fullRange
-            .All()
-            .Where(v => fullRange.Contains(v + new V(patternMap.LastRowIndex, patternMap.LastRowIndex)))
-            .ToArray();
-
-        var treeTime = Enumerable.Range(0, 100_000)
-            .Select(time => (Time: time, State: GetStateAtTime(robots, time)))
-            .First(x => ContainsPattern(x.State))
-            .Time
+        Enumerable.Range(0, 10_000)
+            .First(time => ContainsPattern(GetStateAtTime(robots, time)))
             .Part2();
-
-        if (AoCContext.IsSample) {
-            BuildMap(treeTime).Dump();
-        }
-
-        IEnumerable<Robot> GetStateAtTime(Robot[] initial, int time) {
-            return initial
-                .Select(robot => robot with { Position = (robot.Position + robot.Velocity * time).Mod(size) });
-        }
+        IEnumerable<Robot> GetStateAtTime(Robot[] initial, int time) => initial.Select(x => x.Move(time, size));
 
         bool ContainsPattern(IEnumerable<Robot> currentState) {
             var positions = currentState.Select(x => x.Position).ToHashSet();
-            return coordinatesToCheck
-                .AsParallel()
-                .Any(start => patternMap.Coordinates().All(offset => positions.Contains(start + offset)));
-        }
-
-        Map<char> BuildMap(int time) {
-            var freq = GetStateAtTime(robots, time).Select(x => x.Position).ToHashSet();
-            var map = new Map<char>((int)size.X, (int)size.Y);
-            foreach (var v in map.Coordinates()) {
-                map[v] = freq.Contains(v) ? '#' : '.';
-            }
-
-            return map;
+            return positions.Count(x => x.Area4().Count(positions.Contains) > 2) > robots.Length / 4;
         }
     }
 
