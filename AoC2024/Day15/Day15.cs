@@ -20,20 +20,21 @@ public static partial class Day15 {
     private static Map<char> MoveBoxes(Map<char> map, char[] moves) {
         map = map.Clone();
         var robot = map.FindFirst('@');
-        var useConsoleInput = true;
+        var useConsoleInput = false;
         var moveSequence = useConsoleInput ? ReadMovesFromConsole() : moves;
         if (useConsoleInput) PrintMap(map);
 
         foreach (var move in moveSequence.Select(V.FromArrow)) {
-            var updates = FindPiecesToMove(move, map, robot)
-                .Select(v => (OldPosition: v, NewPosition: v + move, Value: map[v]))
+            var piecesToMove = FindPiecesToMove(move, map, robot);
+
+            var updates = piecesToMove
+                .Select(v => (NewPosition: v + move, Value: map[v]))
                 .ToArray();
-            if (updates.Any(u => map[u.NewPosition] == '#')) continue;
 
-            foreach (var (oldPosition, _, _) in updates) map[oldPosition] = '.';
-            foreach (var (_, newPosition, value) in updates) map[newPosition] = value;
+            foreach (var oldPosition in piecesToMove) map[oldPosition] = '.';
+            foreach (var (newPosition, value) in updates) map[newPosition] = value;
 
-            robot += move;
+            if (piecesToMove.Length != 0) robot += move;
             if (useConsoleInput) PrintMap(map);
         }
 
@@ -41,25 +42,23 @@ public static partial class Day15 {
     }
 
     private static V[] FindPiecesToMove(V move, Map<char> map, V robot) {
-        var result = new List<V>();
-        var currentLayer = new[] { robot };
-        while (currentLayer.Any(IsNotEmptyOrWall)) {
-            result.AddRange(currentLayer);
-            currentLayer = currentLayer
-                .Select(x => x + move)
+        var result = new List<V[]>();
+        var piecesToMove = new[] { robot };
+        while (piecesToMove.Length != 0 && piecesToMove.All(IsNotWall)) {
+            result.Add(piecesToMove);
+            piecesToMove = piecesToMove
                 .SelectMany<V, V>(v =>
-                    (map[v], move) switch {
-                        ('[', { X: 0 }) => [v, v + V.Right],
-                        (']', { X: 0 }) => [v + V.Left, v],
+                    (map[v + move], move) switch {
+                        ('[', { X: 0 }) => [v + move, v + move + V.Right],
+                        (']', { X: 0 }) => [v + move + V.Left, v + move],
                         ('.', _) => [],
-                        _ => [v],
+                        _ => [v + move],
                     })
                 .ToArray();
         }
+        return piecesToMove.All(IsNotWall) ? result.Flatten().ToArray() : [];
 
-        return result.ToArray();
-
-        bool IsNotEmptyOrWall(V v) => map[v] is not '.' and not '#';
+        bool IsNotWall(V v) => map[v] is not '#';
     }
 
     private static Map<char> Scale(Map<char> map) {
