@@ -3,7 +3,46 @@ using Common.AoC;
 namespace AoC2024.Day17;
 
 public static partial class Day17 {
-    public record Computer(long A, long B, long C, long[] Program);
+    public record Computer(long A, long B, long C, long[] Program, int Pointer = 0) {
+        public bool IsRunning => Pointer < Program.Length;
+
+        public Instruction Instruction => (Instruction)Program[Pointer];
+        public long LiteralOperand => Program[Pointer + 1];
+        public long ComboOperand => LiteralOperand switch {
+            <= 3 => LiteralOperand,
+            4 => A,
+            5 => B,
+            6 => C,
+            _ => throw new ArgumentOutOfRangeException(nameof(LiteralOperand), LiteralOperand, "Invalid operand")
+        };
+
+        public Computer Next() {
+            var instruction = (Instruction)Program[Pointer];
+            return instruction switch {
+                Instruction.Adv => this with { A = A >> (int)ComboOperand, Pointer = Pointer + 2 },
+                Instruction.Bxl => this with { B = B ^ LiteralOperand, Pointer = Pointer + 2 },
+                Instruction.Bst => this with { B = ComboOperand & 0b111, Pointer = Pointer + 2 },
+                Instruction.Jnz when A is 0 => this with { Pointer = Pointer + 2 },
+                Instruction.Jnz when A is not 0 => this with { Pointer = (int)LiteralOperand },
+                Instruction.Bxc => this with { B = B ^ C, Pointer = Pointer + 2 },
+                Instruction.Out => this with { Pointer = Pointer + 2 },
+                Instruction.Bdv => this with { B = A >> (int)ComboOperand, Pointer = Pointer + 2 },
+                Instruction.Cdv => this with { C = A >> (int)ComboOperand, Pointer = Pointer + 2 },
+                _ => throw new ArgumentOutOfRangeException(nameof(instruction), instruction, "Invalid instruction"),
+            };
+        }
+    }
+
+    public enum Instruction {
+        Adv = 0,
+        Bxl = 1,
+        Bst = 2,
+        Jnz = 3,
+        Bxc = 4,
+        Out = 5,
+        Bdv = 6,
+        Cdv = 7,
+    }
 
     public static void Solve(IEnumerable<string> input) {
         var lines = input.ToArray();
@@ -20,36 +59,10 @@ public static partial class Day17 {
     }
 
     private static IEnumerable<long> Run(Computer computer) {
-        var pointer = 0;
-        while (pointer < computer.Program.Length) {
-            var instruction = computer.Program[pointer];
-            var literalOperand = computer.Program[pointer + 1];
-            var comboOperand = literalOperand switch {
-                <= 3 => literalOperand,
-                4 => computer.A,
-                5 => computer.B,
-                6 => computer.C,
-                _ => throw new ArgumentOutOfRangeException("Invalid operand: " + literalOperand)
-            };
-
-            computer = instruction switch {
-                0 => computer with { A = computer.A >> (int)comboOperand },
-                1 => computer with { B = computer.B ^ literalOperand },
-                2 => computer with { B = comboOperand % 8 },
-                3 => computer,
-                4 => computer with { B = computer.B ^ computer.C },
-                5 => computer,
-                6 => computer with { B = computer.A >> (int)comboOperand },
-                7 => computer with { C = computer.A >> (int)comboOperand },
-                _ => throw new ArgumentOutOfRangeException("Invalid instruction: " + instruction)
-            };
-
-            pointer = instruction == 3 && computer.A != 0
-                ? (int)literalOperand
-                : pointer + 2;
-
-            if (instruction == 5)
-                yield return comboOperand % 8;
+        while (computer.IsRunning) {
+            if (computer.Instruction is Instruction.Out)
+                yield return computer.ComboOperand & 0b111;
+            computer = computer.Next();
         }
     }
 
