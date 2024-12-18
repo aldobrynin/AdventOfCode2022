@@ -20,14 +20,10 @@ public static partial class Day18 {
         var part1FallenBytes = AoCContext.IsSample ? 12 : 1024;
         FindDistance(part1FallenBytes).Part1();
 
-        int left = 0, right = bytes.Length;
-        while (left < right - 1) {
-            var mid = left + (right - left) / 2;
-            if (FindDistance(mid) == -1) right = mid;
-            else left = mid;
-        }
+        var index = SearchHelpers.BinarySearchUpperBound(part1FallenBytes, bytes.Length, IsExitReachable);
+        $"{bytes[index].X},{bytes[index].Y}".Part2();
 
-        $"{bytes[left].X},{bytes[left].Y}".Part2();
+        bool IsExitReachable(int fallenBytesCount) => FindDistance(fallenBytesCount) > 0;
 
         int FindDistance(int fallenBytesCount) {
             var fallenBytes = bytes.Take(fallenBytesCount).ToHashSet();
