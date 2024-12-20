@@ -7,31 +7,22 @@ public static partial class Day19 {
 
         var designs = sections[1];
 
-        designs.Count(x => CountWays(x) > 0).Part1();
-        designs.Sum(CountWays).Part2();
+        var trie = Trie.FromWords(towels);
+        var counts = designs.Select(CountWays).ToArray();
+        counts.Count(x => x > 0).Part1();
+        counts.Sum().Part2();
 
         long CountWays(string design) {
             var dp = new long[design.Length + 1];
             dp[0] = 1;
-            for (var i = 1; i <= design.Length; i++) {
-                foreach (var towel in towels) {
-                    if (ContainsPattern(design, towel, i - towel.Length)) {
-                        dp[i] += dp[i - towel.Length];
-                    }
+            for (var i = 0; i < design.Length; i++) {
+                if (dp[i] == 0) continue;
+                foreach (var match in trie.FindPrefixes(design[i..])) {
+                    dp[i + match.Length] += dp[i];
                 }
             }
 
             return dp[^1];
-        }
-
-        bool ContainsPattern(string design, string pattern, int startIndex) {
-            if (startIndex < 0) return false;
-            for (var i = 0; i < pattern.Length; i++) {
-                if (design[startIndex + i] != pattern[i])
-                    return false;
-            }
-
-            return true;
         }
     }
 }
