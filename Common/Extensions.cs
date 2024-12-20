@@ -67,10 +67,10 @@ public static class Extensions {
         var hasCorrectAnswer = !string.IsNullOrWhiteSpace(answer);
         var isCorrectAnswer = answer == answerString.Trim();
         var format = "Part{0}: {1}";
-        format = hasCorrectAnswer switch {
-            true when !isCorrectAnswer => $"[red]{format} ❌[/]",
-            true when isCorrectAnswer => $"[green]{format} ✅[/]",
-            _ => format
+        format = (hasCorrectAnswer, isCorrectAnswer) switch {
+            (false, _) => format,
+            (_, false) => $"[red]{format} ❌  (expected: {answer})[/]",
+            (_, true) => $"[green]{format} ✅[/]",
         };
 
         AnsiConsole.MarkupLine(format, part, Markup.Escape(answerString));
