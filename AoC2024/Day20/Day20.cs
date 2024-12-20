@@ -1,51 +1,51 @@
 using Common.AoC;
-using Range = Common.Range;
 
 namespace AoC2024.Day20;
 
 public static partial class Day20 {
+    public record Cheat(V From, V To);
+
     public static void Solve(IEnumerable<string> input) {
         var map = Map.From(input);
         var start = map.FindFirst('S');
         var end = map.FindFirst('E');
 
-        var distancesFromStart = map
-            .Bfs((_, to) => IsWalkable(map[to]), start)
-            .ToDictionary(x => x.State, x => x);
-        var distanceWithoutCheat = distancesFromStart[end].Distance;
+        var distancesFromStart = map.Bfs(CanMove, start)
+            .ToDictionary(x => x.State, x => x.Distance);
+        var distancesFromEnd = map.Bfs(CanMove, end)
+            .ToDictionary(x => x.State, x => x.Distance);
+        var distanceWithoutCheat = distancesFromStart[end];
         var minSaveByCheating = AoCContext.IsSample ? 64 : 100;
 
         GetCheats(2)
-            .Select(DistanceWithCheat)
-            .Count(x => distanceWithoutCheat - x >= minSaveByCheating)
+            .Count(cheat => DistanceCutByCheat(cheat) >= minSaveByCheating)
             .Part1();
 
         GetCheats(20)
-            .Select(DistanceWithCheat)
-            .Count(x => distanceWithoutCheat - x >= minSaveByCheating)
+            .Count(cheat => DistanceCutByCheat(cheat) >= minSaveByCheating)
             .Part2();
 
-        long DistanceWithCheat((V From, V To) cheat) {
-            var distanceToCheat = distancesFromStart[cheat.From].Distance;
-            var distanceFromCheat = distanceWithoutCheat - distancesFromStart[cheat.To].Distance;
-            var cheatDistance = cheat.From.DistTo(cheat.To);
-            return distanceToCheat + distanceFromCheat + cheatDistance;
-        }
+        long DistanceCutByCheat(Cheat cheat) => distanceWithoutCheat - DistanceWithCheat(cheat);
 
-        IEnumerable<(V From, V To)> GetCheats(int distance) {
-            return map
-                .FindAll(IsWalkable)
-                .SelectMany(from => WithinDistance(from, distance).Where(to => IsWalkable(map[to])).Select(to => (from, to)));
-        }
+        long DistanceWithCheat(Cheat cheat) =>
+            distancesFromStart[cheat.From] + distancesFromEnd[cheat.To] + cheat.From.DistTo(cheat.To);
 
-        IEnumerable<V> WithinDistance(V from, int distance) {
-            var range = Range.FromStartAndEndInclusive<long>(-distance, distance);
-            return Range2d.From(range + from.X, range + from.Y)
-                .All()
-                .Where(map.Contains)
-                .Where(x => x.DistTo(from) <= distance);
-        }
+        IEnumerable<Cheat> GetCheats(int distance) =>
+            distancesFromStart.Keys.SelectMany(from => CheatTo(from, distance).Select(to => new Cheat(from, to)));
+
+        IEnumerable<V> CheatTo(V from, int distance) =>
+            WithinDistance(from, distance)
+                .Where(to => to != from)
+                .Where(distancesFromStart.ContainsKey);
 
         bool IsWalkable(char c) => c is not '#';
+
+        bool CanMove(V from, V to) => IsWalkable(map[to]);
+    }
+
+    private static IEnumerable<V> WithinDistance(V from, int distance) {
+        for (var dy = -distance; dy <= distance; dy++)
+        for (var dx = -distance + Math.Abs(dy); dx <= distance - Math.Abs(dy); dx++)
+            yield return from + new V(dx, dy);
     }
 }
