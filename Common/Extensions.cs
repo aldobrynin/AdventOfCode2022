@@ -275,4 +275,12 @@ public static class Extensions {
     }
 
     public static T Lcm<T>(this IEnumerable<T> source) where T : INumber<T> => source.Aggregate(MathHelpers.Lcm);
+
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory) {
+        if (!dictionary.TryGetValue(key, out var value)) {
+            dictionary[key] = value = valueFactory(key);
+        }
+
+        return value;
+    }
 }

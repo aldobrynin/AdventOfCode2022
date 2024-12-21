@@ -102,4 +102,12 @@ public record V(long X, long Y) {
         '>' => Right,
         _ => throw new ArgumentOutOfRangeException(nameof(c), c, null)
     };
+
+    public char ToArrow() => this switch {
+        { X: 0, Y: -1 } => '^',
+        { X: 0, Y: 1 } => 'v',
+        { X: -1, Y: 0 } => '<',
+        { X: 1, Y: 0 } => '>',
+        _ => throw new ArgumentOutOfRangeException($"Invalid direction: {this}"),
+    };
 }
