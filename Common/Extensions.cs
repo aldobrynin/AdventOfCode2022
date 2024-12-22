@@ -283,4 +283,24 @@ public static class Extensions {
 
         return value;
     }
+
+    public static IEnumerable<T[]> SlidingWindow<T>(this IEnumerable<T> source, int windowSize) {
+        var window = new Queue<T>(windowSize);
+        foreach (var item in source) {
+            window.Enqueue(item);
+            if (window.Count == windowSize) {
+                yield return window.ToArray();
+                window.Dequeue();
+            }
+        }
+    }
+
+    public static IEnumerable<T> GenerateSequence<T>(this T seed, Func<T, T> generator) {
+        var current = seed;
+        while (true) {
+            yield return current;
+            current = generator(current);
+        }
+        // ReSharper disable once IteratorNeverReturns
+    }
 }
