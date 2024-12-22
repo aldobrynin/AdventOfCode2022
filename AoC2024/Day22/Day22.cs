@@ -9,8 +9,8 @@ public static partial class Day22 {
             .Part1();
 
         FindTotalProfit()
-            .Max(v => v.Value)
             .Part2();
+
         long Next(long current) {
             const int mod = 16777216;
             current = ((current << 6) ^ current) % mod;
@@ -19,28 +19,32 @@ public static partial class Day22 {
             return current;
         }
 
-        Dictionary<long, long> FindTotalProfit() {
-            var totalProfit = new Dictionary<long, long>();
+        long FindTotalProfit() {
+            var visited = new int[20 * 20 * 20 * 20];
+            var totalProfit = new int[20 * 20 * 20 * 20];
+            var max = 0L;
             foreach (var secret in secrets) {
-                var firstPrice = new Dictionary<long, long>();
-                var sequences = secret.GenerateSequence(Next)
+                var sequences = secret
+                    .GenerateSequence(Next)
                     .Take(2001)
-                    .Select(x => x % 10)
+                    .Select(x => (int)(x % 10))
                     .ZipWithNext((prev, next) => (Price: next, Diff: next - prev))
-                    .SlidingWindow(4);
+                    .SlidingWindow(4)
+                    .Select(x => (Key: CalcKey(x), x[^1].Price));
 
-                foreach (var sequence in sequences) {
-                    var key = CalcKey(sequence);
-                    var price = sequence[^1].Price;
-                    if (firstPrice.TryAdd(key, price)) {
-                        totalProfit[key] = price + totalProfit.GetValueOrDefault(key);
-                    }
+                foreach (var (key, price) in sequences) {
+                    if (visited[key] == secret) continue;
+
+                    totalProfit[key] += price;
+                    visited[key] = (int)secret;
+                    max = Math.Max(max, totalProfit[key]);
                 }
             }
 
-            return totalProfit;
+            return max;
         }
 
-        long CalcKey((long Price, long Diff)[] sequence) => sequence.Aggregate(0L, (acc, x) => acc * 100 + x.Diff + 10);
+        long CalcKey((int Price, int Diff)[] sequence) =>
+            sequence.Aggregate(0L, (acc, x) => acc * 19 + x.Diff + 9);
     }
 }
