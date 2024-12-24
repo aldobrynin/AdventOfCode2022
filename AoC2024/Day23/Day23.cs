@@ -1,3 +1,6 @@
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+
 namespace AoC2024.Day23;
 
 public static partial class Day23 {
@@ -27,34 +30,38 @@ public static partial class Day23 {
         where graph[a].Contains(c) && string.Compare(b, c, StringComparison.Ordinal) < 0
         select new[] { a, b, c };
 
-    private static HashSet<string> FindLargestClique(Dictionary<string, HashSet<string>> graph) {
-        var cliques = BronKerbosch([], graph.Keys.ToHashSet(), [], graph);
-
-        return cliques.MaxBy(clique => clique.Count)!;
+    private static IReadOnlySet<string> FindLargestClique(Dictionary<string, HashSet<string>> graph) {
+        return BronKerbosch([], graph.Keys.ToImmutableHashSet(), [], graph)
+            .MaxBy(clique => clique.Count)!;
     }
 
-    private static List<HashSet<string>> BronKerbosch(
-        HashSet<string> current,
-        HashSet<string> candidates,
-        HashSet<string> visited,
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    private static IEnumerable<IReadOnlySet<string>> BronKerbosch(
+        ImmutableHashSet<string> R,
+        ImmutableHashSet<string> P,
+        ImmutableHashSet<string> X,
         Dictionary<string, HashSet<string>> graph) {
 
-        if (candidates.Count == 0 && visited.Count == 0) {
-            return [current];
+        if (P.Count == 0 && X.Count == 0) {
+            yield return R;
+            yield break;
         }
 
-        var cliques = new List<HashSet<string>>();
+        var pivot = P.Union(X).MaxBy(v => graph[v].Count)!;
+        var candidates = P.Except(graph[pivot]);
+
         foreach (var candidate in candidates) {
-            var next = current.Append(candidate).ToHashSet();
-            var nextCandidates = candidates.Intersect(graph[candidate]).ToHashSet();
-            var nextVisited = visited.Intersect(graph[candidate]).ToHashSet();
+            foreach (var next in BronKerbosch(
+                         R: R.Add(candidate),
+                         P: P.Intersect(graph[candidate]),
+                         X: X.Intersect(graph[candidate]),
+                         graph
+                     )
+                    )
+                yield return next;
 
-            cliques.AddRange(BronKerbosch(next, nextCandidates, nextVisited, graph));
-
-            candidates.Remove(candidate);
-            visited.Add(candidate);
+            P = P.Remove(candidate);
+            X = X.Add(candidate);
         }
-
-        return cliques;
     }
 }
