@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Common;
 
 public class Map<T> {
@@ -51,6 +53,7 @@ public class Map<T> {
     }
 
     public T GetValueOrDefault(V key, T defaultValue) => Contains(key) ? _arr.Get(key) : defaultValue;
+    public T? GetValueOrDefault(V key) => Contains(key) ? _arr.Get(key) : default;
 
     public IEnumerable<V> Area4(V v) => v.Area4().Where(Contains);
 
@@ -119,6 +122,16 @@ public class Map<T> {
             hash.Add(el);
 
         return hash.ToHashCode();
+    }
+
+    public override string ToString() {
+        var sb = new StringBuilder();
+        foreach (var row in _arr) {
+            foreach (var el in row) sb.Append(el);
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
     }
 }
 

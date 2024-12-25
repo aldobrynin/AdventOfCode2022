@@ -27,20 +27,25 @@ public class AoCCommand : AsyncCommand<AoCCommand.AoCCommandSettings> {
         [DefaultValue(false)]
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool All { get; init; }
-        
+
         [Description("Whether to run check answers")]
         [CommandOption("-c|--check")]
         [DefaultValue(false)]
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool CheckAnswers { get; init; }
+
+        [Description("File for input")]
+        [CommandOption("-f|--file")]
+        [DefaultValue("input.txt")]
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public required string File { get; init; }
     }
 
     private static int GetDayNumber(string typeName) {
         return int.TryParse(typeName.Replace("Day", string.Empty), out var day) ? day : -1;
     }
 
-    private static async Task RunSolution((TypeInfo Type, int Day) dayType, bool sample, int year,
-        bool allowDownloadAnswers) {
+    private static async Task RunSolution((TypeInfo Type, int Day) dayType, int year, AoCCommandSettings settings) {
         AnsiConsole.MarkupLine(
             ":christmas_tree::christmas_tree::christmas_tree:Day [underline red]{0}[/] of AoC {1}:christmas_tree::christmas_tree::christmas_tree:",
             dayType.Day, year);
@@ -53,12 +58,12 @@ public class AoCCommand : AsyncCommand<AoCCommand.AoCCommandSettings> {
         var action = (Action<IEnumerable<string>>)Delegate.CreateDelegate(typeof(Action<IEnumerable<string>>), method);
         AoCContext.Year = year;
         AoCContext.Day = dayType.Day;
-        AoCContext.IsSample = sample;
-        if (sample) {
+        AoCContext.IsSample = settings.Sample;
+        if (settings.Sample) {
             var samples = (IEnumerable<SampleInput>?)
                           dayType.Type
                               .GetMethod("GetSamples", BindingFlags.Public | BindingFlags.Static)?
-                              .Invoke(null, Array.Empty<object>())
+                              .Invoke(null, [])
                           ?? throw new Exception($"GetSamples method is not found in {dayType.Type.Name}");
 
             foreach (var (sampleInput, index) in samples.WithIndex()) {
@@ -68,14 +73,14 @@ public class AoCCommand : AsyncCommand<AoCCommand.AoCCommandSettings> {
             }
         }
         else {
-            var inputFile = Path.Combine(dayDirectory, "input.txt");
+            var inputFile = Path.Combine(dayDirectory, settings.File);
             if (!File.Exists(inputFile)) {
                 AnsiConsole.MarkupLine("Downloading input...");
                 await AoCClient.DownloadInput(year, dayType.Day, inputFile);
             }
 
             AnsiConsole.MarkupLine("Using input from [underline navy]{0}[/]", inputFile);
-            AoCContext.Answers = await DownloadAnswers(dayType, year, dayDirectory, allowDownloadAnswers);
+            AoCContext.Answers = await DownloadAnswers(dayType, year, dayDirectory, settings.CheckAnswers);
             var input = File.ReadLines(inputFile);
             Measure.Time(() => action(input))
                 .Dump("Finished in ", t => t.ToHumanTimeString());
@@ -123,7 +128,7 @@ public class AoCCommand : AsyncCommand<AoCCommand.AoCCommandSettings> {
         }
 
         foreach (var tuple in puzzlesToRun) {
-            await RunSolution(tuple, settings.Sample, year, settings.CheckAnswers);
+            await RunSolution(tuple, year, settings);
         }
 
         return 0;

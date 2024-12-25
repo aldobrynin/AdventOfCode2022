@@ -19,10 +19,13 @@ public static class Extensions {
             throw new ArgumentOutOfRangeException(nameof(pos), pos, "Index out of range");
     }
 
-    public static IEnumerable<V> FindAll<T>(this Map<T> map, T value) =>
-        map.Coordinates().Where(v => Equals(map[v], value));
+    public static IEnumerable<V> FindAll<T>(this Map<T> map, T value) => map.FindAll(v => Equals(v, value));
 
-    public static V FindFirst<T>(this Map<T> map, T value) => map.Coordinates().First(v => Equals(map[v], value));
+    public static IEnumerable<V> FindAll<T>(this Map<T> map, Func<T, bool> predicate) => map.Coordinates()
+        .Where(v => predicate(map[v]));
+
+    public static V FindFirst<T>(this Map<T> map, T value) => map.FindFirst(v => Equals(v, value));
+    public static V FindFirst<T>(this Map<T> map, Func<T, bool> predicate) => map.Coordinates().First(v => predicate(map[v]));
 
     public static T Product<T>(this IEnumerable<T> source) where T : INumber<T> =>
         source.Aggregate(T.One, (x, y) => x * y);
@@ -64,10 +67,10 @@ public static class Extensions {
         var hasCorrectAnswer = !string.IsNullOrWhiteSpace(answer);
         var isCorrectAnswer = answer == answerString.Trim();
         var format = "Part{0}: {1}";
-        format = hasCorrectAnswer switch {
-            true when !isCorrectAnswer => $"[red]{format} ❌[/]",
-            true when isCorrectAnswer => $"[green]{format} ✅[/]",
-            _ => format
+        format = (hasCorrectAnswer, isCorrectAnswer) switch {
+            (false, _) => format,
+            (_, false) => $"[red]{format} ❌  (expected: {answer})[/]",
+            (_, true) => $"[green]{format} ✅[/]",
         };
 
         AnsiConsole.MarkupLine(format, part, Markup.Escape(answerString));
@@ -184,11 +187,6 @@ public static class Extensions {
         return accumulator;
     }
 
-    public static IEnumerable<(T A, T B)> Pairs<T>(this IEnumerable<T> source) {
-        var list = source.ToList();
-        return list.SelectMany((a, ind) => list.Skip(ind).Select(b => (a, b)));
-    }
-
     public static IEnumerable<(T Element, int Index)> WithIndex<T>(this IEnumerable<T> source) {
         return source.Select((x, i) => (x, i));
     }
@@ -276,14 +274,33 @@ public static class Extensions {
         return source.Select(selector).MaxOrDefault(defaultValue);
     }
 
-    public static IEnumerable<T[]> Permutations<T>(this IReadOnlyCollection<T> input) {
-        if (input.Count == 1) yield return input.ToArray();
-        else {
-            foreach (var x in input)
-            foreach (var y in Permutations(input.Except(new[] { x }).ToArray()))
-                yield return y.Prepend(x).ToArray();
+    public static T Lcm<T>(this IEnumerable<T> source) where T : INumber<T> => source.Aggregate(MathHelpers.Lcm);
+
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory) {
+        if (!dictionary.TryGetValue(key, out var value)) {
+            dictionary[key] = value = valueFactory(key);
+        }
+
+        return value;
+    }
+
+    public static IEnumerable<T[]> SlidingWindow<T>(this IEnumerable<T> source, int windowSize) {
+        var window = new Queue<T>(windowSize);
+        foreach (var item in source) {
+            window.Enqueue(item);
+            if (window.Count == windowSize) {
+                yield return window.ToArray();
+                window.Dequeue();
+            }
         }
     }
-    
-    public static T Lcm<T>(this IEnumerable<T> source) where T : INumber<T> => source.Aggregate(MathHelpers.Lcm);
+
+    public static IEnumerable<T> GenerateSequence<T>(this T seed, Func<T, T> generator) {
+        var current = seed;
+        while (true) {
+            yield return current;
+            current = generator(current);
+        }
+        // ReSharper disable once IteratorNeverReturns
+    }
 }

@@ -15,22 +15,24 @@ public static class Scaffolder {
               public static partial class {{dayString}} {
                   public static void Solve(IEnumerable<string> input) {
                       input.Dump("Not implemented: ");
-                      
+
                       // 1.Part1();
                       // 2.Part1();
                   }
               }
               """);
         await File.WriteAllTextAsync(Path.Combine(dayDirectory, $"{dayString}.Sample.cs"),
-            $$"""
+            $$""""
               namespace AoC{{year}}.{{dayString}};
 
               public static partial class {{dayString}} {
                   public static IEnumerable<SampleInput> GetSamples() {
-                      yield return SampleInput.ForInput("test");
+                      yield return SampleInput.ForInput("""
+                                                        test
+                                                        """);
                   }
               }
-              """);
+              """");
     }
 
     private static IEnumerable<string> EnumerateParentDirectories(string directory) {

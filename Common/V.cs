@@ -35,7 +35,7 @@ public record V(long X, long Y) {
     public static V[] Directions4 => [Left, Up, Right, Down];
 
     public static V[] Directions5 => [Left, Up, Right, Down, Zero];
-    
+
     public static V[] Directions8 => [E, NE, N, NW, W, SW, S, SE];
 
     public IEnumerable<V> Area5() => Directions5.Select(dir => this + dir);
@@ -76,6 +76,9 @@ public record V(long X, long Y) {
         return translatedThis.Rotate(degrees) + pivot;
     }
 
+    public V ProjectToX() => this with { Y = 0 };
+    public V ProjectToY() => this with { X = 0 };
+
     public override string ToString() => $"[{X},{Y}]";
 
     public static V operator +(V a, V b) => new(a.X + b.X, a.Y + b.Y);
@@ -90,6 +93,7 @@ public record V(long X, long Y) {
     public V Signum() => new(Math.Sign(X), Math.Sign(Y));
 
     public V Mod(long height, long width) => new V(X.Mod(width), Y.Mod(height));
+    public V Mod(V v) => new V(X.Mod(v.X), Y.Mod(v.Y));
 
     public static V FromArrow(char c) => c switch {
         '^' => Up,
@@ -97,5 +101,13 @@ public record V(long X, long Y) {
         '<' => Left,
         '>' => Right,
         _ => throw new ArgumentOutOfRangeException(nameof(c), c, null)
+    };
+
+    public char ToArrow() => this switch {
+        { X: 0, Y: -1 } => '^',
+        { X: 0, Y: 1 } => 'v',
+        { X: -1, Y: 0 } => '<',
+        { X: 1, Y: 0 } => '>',
+        _ => throw new ArgumentOutOfRangeException($"Invalid direction: {this}"),
     };
 }

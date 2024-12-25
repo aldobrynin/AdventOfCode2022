@@ -35,15 +35,7 @@ public static partial class Day14 {
 
         long FindFuelQuantity() {
             const long target = 1000000000000L;
-            var min = 0L;
-            var max = target;
-            while (min < max) {
-                var mid = min + (max - min + 1) / 2;
-                if (FindOreCount(mid) > target) max = mid - 1;
-                else min = mid;
-            }
-
-            return max;
+            return SearchHelpers.BinarySearchUpperBound(0, target, x => FindOreCount(x) <= target);
         }
     }
 }

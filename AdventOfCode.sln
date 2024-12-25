@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Tests", "Common.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC2019", "AoC2019\AoC2019.csproj", "{27B85596-AA02-47D8-96DF-19C2468E8F19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC2024", "AoC2024\AoC2024.csproj", "{907FB049-4733-4D81-9036-33E4E0C53FAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{27B85596-AA02-47D8-96DF-19C2468E8F19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27B85596-AA02-47D8-96DF-19C2468E8F19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27B85596-AA02-47D8-96DF-19C2468E8F19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{907FB049-4733-4D81-9036-33E4E0C53FAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{907FB049-4733-4D81-9036-33E4E0C53FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{907FB049-4733-4D81-9036-33E4E0C53FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{907FB049-4733-4D81-9036-33E4E0C53FAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

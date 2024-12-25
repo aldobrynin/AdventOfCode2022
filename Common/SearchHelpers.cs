@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Text;
 
 namespace Common;
@@ -110,6 +111,26 @@ public static class SearchHelpers {
 
         sb.AppendLine("}");
         return sb.ToString();
+    }
+
+    public static T BinarySearchLowerBound<T>(T left, T right, Func<T, bool> isLessOrEqual) where T : INumber<T> {
+        while (left < right) {
+            var mid = left + (right - left) / T.CreateChecked(2);
+            if (isLessOrEqual(mid)) right = mid;
+            else left = mid + T.One;
+        }
+
+        return left;
+    }
+
+    public static T BinarySearchUpperBound<T>(T left, T right, Func<T, bool> isLessOrEqual) where T : INumber<T> {
+        while (left < right) {
+            var mid = left + (right - left) / T.CreateChecked(2);
+            if (isLessOrEqual(mid)) left = mid + T.One;
+            else right = mid;
+        }
+
+        return left - T.One;
     }
 }
 
