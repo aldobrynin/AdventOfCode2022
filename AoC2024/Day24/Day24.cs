@@ -56,7 +56,6 @@ public static partial class Day24 {
             }
 
             if (!zGate.HasInput(carry.Output)) {
-                zGate.Dump();
                 var correctGate = GetGateByInputAndOperation(carry.Output, "XOR");
                 (correctGate.Output, zGate.Output) = (zGate.Output, correctGate.Output);
                 yield return (correctGate.Output, zGate.Output);
