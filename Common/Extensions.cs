@@ -303,4 +303,6 @@ public static class Extensions {
         }
         // ReSharper disable once IteratorNeverReturns
     }
+
+    public static TResult Apply<T, TResult>(this T source, Func<T, TResult> selector) => selector(source);
 }
