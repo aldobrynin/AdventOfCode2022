@@ -132,6 +132,21 @@ public static class Extensions {
             yield return list;
     }
 
+    public static IEnumerable<IReadOnlyList<T>> PartitionBy<T>(this IEnumerable<T> source,
+        Func<T, bool> isStartOfPartition) {
+        var list = new List<T>();
+        foreach (var s in source) {
+            if (isStartOfPartition(s)) {
+                yield return list;
+                list = [s];
+            }
+            else list.Add(s);
+        }
+
+        if (list.Count > 0)
+            yield return list;
+    }
+
     public static HashSet<T> IntersectAll<T>(this IEnumerable<IEnumerable<T>> source) {
         HashSet<T> set = null!;
         foreach (var current in source) {
