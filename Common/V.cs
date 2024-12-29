@@ -28,7 +28,7 @@ public record V(long X, long Y) {
     }
 
     public static V Parse(string s) {
-        var tokens = s.Split([',', ' '], 2);
+        var tokens = s.Split([',', ' '], 2, StringSplitOptions.RemoveEmptyEntries);
         return new V(int.Parse(tokens[0]), int.Parse(tokens[1]));
     }
 
