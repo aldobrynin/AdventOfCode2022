@@ -262,6 +262,9 @@ public static class Extensions {
 
     public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) => source.SelectMany(x => x);
 
+    public static IEnumerable<(T Prev, T Next)> ZipWithNext<T>(this IEnumerable<T> source) =>
+        source.ZipWithNext((prev, next) => (prev, next));
+
     public static IEnumerable<TResult> ZipWithNext<T, TResult>(this IEnumerable<T> source,
         Func<T, T, TResult> selector) {
         using var enumerator = source.GetEnumerator();
