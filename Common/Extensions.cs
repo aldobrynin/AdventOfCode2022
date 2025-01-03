@@ -323,4 +323,22 @@ public static class Extensions {
     }
 
     public static TResult Apply<T, TResult>(this T source, Func<T, TResult> selector) => selector(source);
+
+
+    public static int IndexOf<T>(this IEnumerable<T> sequence, T[] target, IEqualityComparer<T>? equalityComparer = null) {
+        var targetIndex = 0;
+        equalityComparer ??= EqualityComparer<T>.Default;
+        foreach (var (value, index) in sequence.WithIndex()) {
+            if (!equalityComparer.Equals(value, target[targetIndex])) {
+                targetIndex = 0;
+                continue;
+            }
+
+            if (++targetIndex == target.Length) {
+                return index - target.Length + 1;
+            }
+        }
+
+        return -1;
+    }
 }
