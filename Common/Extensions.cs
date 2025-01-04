@@ -341,4 +341,25 @@ public static class Extensions {
 
         return -1;
     }
+
+    public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, bool> predicate) {
+        foreach (var item in source) {
+            yield return item;
+            if (predicate(item)) break;
+        }
+    }
+
+    public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source) where T : IComparable<T> {
+        using var enumerator = source.GetEnumerator();
+        if (!enumerator.MoveNext()) throw new ArgumentException("Sequence contains no elements");
+        var min = enumerator.Current;
+        var max = enumerator.Current;
+        while (enumerator.MoveNext()) {
+            var current = enumerator.Current;
+            if (current.CompareTo(min) < 0) min = current;
+            if (current.CompareTo(max) > 0) max = current;
+        }
+
+        return (min, max);
+    }
 }
