@@ -1,3 +1,5 @@
+using Spectre.Console;
+
 namespace Common.AoC;
 
 public static class Scaffolder {
@@ -8,7 +10,8 @@ public static class Scaffolder {
         if (!Directory.Exists(dayDirectory)) Directory.CreateDirectory(dayDirectory);
 
         var dayString = $"Day{day:00}";
-        await File.WriteAllTextAsync(Path.Combine(dayDirectory, $"{dayString}.cs"),
+        var fullPath = Path.Combine(dayDirectory, $"{dayString}.cs");
+        await File.WriteAllTextAsync(fullPath,
             $$"""
               namespace AoC{{year}}.{{dayString}};
 
@@ -21,6 +24,8 @@ public static class Scaffolder {
                   }
               }
               """);
+        AnsiConsole.MarkupLine("File created: [underline green]{0}[/]", fullPath);
+
         await File.WriteAllTextAsync(Path.Combine(dayDirectory, $"{dayString}.Sample.cs"),
             $$""""
               namespace AoC{{year}}.{{dayString}};
