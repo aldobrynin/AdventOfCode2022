@@ -22,51 +22,6 @@ public static partial class Day16 {
         "eqrr",
     ];
 
-    record Device(int Register0, int Register1, int Register2, int Register3) {
-        public static readonly Device Empty = new(0, 0, 0, 0);
-        public static Device From(int[] registers) => new(registers[0], registers[1], registers[2], registers[3]);
-
-        private int GetRegisterValue(int register) => register switch {
-            0 => Register0,
-            1 => Register1,
-            2 => Register2,
-            3 => Register3,
-            _ => throw new InvalidOperationException($"Unknown register: {register}")
-        };
-
-        private Device SetRegisterValue(int register, int value) => register switch {
-            0 => this with { Register0 = value },
-            1 => this with { Register1 = value },
-            2 => this with { Register2 = value },
-            3 => this with { Register3 = value },
-            _ => throw new InvalidOperationException($"Unknown register: {register}")
-        };
-
-        public Device Apply(string opcode, int inputA, int inputB, int inputC) {
-            var result = opcode switch {
-                "addr" => GetRegisterValue(inputA) + GetRegisterValue(inputB),
-                "addi" => GetRegisterValue(inputA) + inputB,
-                "mulr" => GetRegisterValue(inputA) * GetRegisterValue(inputB),
-                "muli" => GetRegisterValue(inputA) * inputB,
-                "banr" => GetRegisterValue(inputA) & GetRegisterValue(inputB),
-                "bani" => GetRegisterValue(inputA) & inputB,
-                "borr" => GetRegisterValue(inputA) | GetRegisterValue(inputB),
-                "bori" => GetRegisterValue(inputA) | inputB,
-                "setr" => GetRegisterValue(inputA),
-                "seti" => inputA,
-                "gtir" => inputA > GetRegisterValue(inputB) ? 1 : 0,
-                "gtri" => GetRegisterValue(inputA) > inputB ? 1 : 0,
-                "gtrr" => GetRegisterValue(inputA) > GetRegisterValue(inputB) ? 1 : 0,
-                "eqir" => inputA == GetRegisterValue(inputB) ? 1 : 0,
-                "eqri" => GetRegisterValue(inputA) == inputB ? 1 : 0,
-                "eqrr" => GetRegisterValue(inputA) == GetRegisterValue(inputB) ? 1 : 0,
-                _ => throw new InvalidOperationException($"Unknown opcode: {opcode}")
-            };
-
-            return SetRegisterValue(inputC, result);
-        }
-    }
-
     public static void Solve(IEnumerable<string> input) {
         var blocks = input
             .SplitBy(string.IsNullOrWhiteSpace)
@@ -97,13 +52,16 @@ public static partial class Day16 {
         var opcodeMapping = ResolveMapping();
 
         testProgram
-            .Aggregate(Device.Empty, (current, x) => current.Apply(opcodeMapping[x[0]], x[1], x[2], x[3]))
-            .Register0
+            .Select(program => new Instruction(opcodeMapping[program[0]], program[1], program[2], program[3]))
+            .Aggregate(Device.New(registerCount: 4), (current, instruction) => current.Apply(instruction))
+            .GetRegisterValue(0)
             .Part2();
 
         string[] GetValidOpcodes(Device before, int[] program, Device after, IEnumerable<string> candidates)
             => candidates
-                .Where(op => before.Apply(op, program[1], program[2], program[3]) == after)
+                .Select(opcode => new Instruction(opcode, program[1], program[2], program[3]))
+                .Where(instruction => before.Copy().Apply(instruction) == after)
+                .Select(instruction => instruction.Opcode)
                 .ToArray();
 
         Dictionary<int, string> ResolveMapping() {
