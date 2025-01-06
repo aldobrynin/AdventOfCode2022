@@ -1,15 +1,15 @@
 namespace AoC2018;
 
-public record Device(int[] Registers) {
-    public static Device New(int registerCount) => new(new int[registerCount]);
+public record Device(long[] Registers) {
+    public static Device New(int registerCount) => new(new long[registerCount]);
     public static Device From(int[] registers) => new([..registers]);
 
-    public int GetRegisterValue(int register) {
+    public long GetRegisterValue(int register) {
         ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(register, Registers.Length);
         return Registers[register];
     }
 
-    public Device SetRegisterValue(int register, int value) {
+    public Device SetRegisterValue(int register, long value) {
         ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(register, Registers.Length);
         Registers[register] = value;
         return this;
@@ -25,7 +25,7 @@ public record Device(int[] Registers) {
             "banr" => GetRegisterValue(inputA) & GetRegisterValue(inputB),
             "bani" => GetRegisterValue(inputA) & inputB,
             "borr" => GetRegisterValue(inputA) | GetRegisterValue(inputB),
-            "bori" => GetRegisterValue(inputA) | inputB,
+            "bori" => GetRegisterValue(inputA) | (long)inputB,
             "setr" => GetRegisterValue(inputA),
             "seti" => inputA,
             "gtir" => inputA > GetRegisterValue(inputB) ? 1 : 0,
