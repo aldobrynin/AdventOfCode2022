@@ -132,6 +132,21 @@ public static class Extensions {
             yield return list;
     }
 
+    public static IEnumerable<IReadOnlyList<T>> PartitionBy<T>(this IEnumerable<T> source,
+        Func<T, bool> isStartOfPartition) {
+        var list = new List<T>();
+        foreach (var s in source) {
+            if (isStartOfPartition(s)) {
+                yield return list;
+                list = [s];
+            }
+            else list.Add(s);
+        }
+
+        if (list.Count > 0)
+            yield return list;
+    }
+
     public static HashSet<T> IntersectAll<T>(this IEnumerable<IEnumerable<T>> source) {
         HashSet<T> set = null!;
         foreach (var current in source) {
@@ -247,6 +262,9 @@ public static class Extensions {
 
     public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) => source.SelectMany(x => x);
 
+    public static IEnumerable<(T Prev, T Next)> ZipWithNext<T>(this IEnumerable<T> source) =>
+        source.ZipWithNext((prev, next) => (prev, next));
+
     public static IEnumerable<TResult> ZipWithNext<T, TResult>(this IEnumerable<T> source,
         Func<T, T, TResult> selector) {
         using var enumerator = source.GetEnumerator();
@@ -302,5 +320,46 @@ public static class Extensions {
             current = generator(current);
         }
         // ReSharper disable once IteratorNeverReturns
+    }
+
+    public static TResult Apply<T, TResult>(this T source, Func<T, TResult> selector) => selector(source);
+
+
+    public static int IndexOf<T>(this IEnumerable<T> sequence, T[] target, IEqualityComparer<T>? equalityComparer = null) {
+        var targetIndex = 0;
+        equalityComparer ??= EqualityComparer<T>.Default;
+        foreach (var (value, index) in sequence.WithIndex()) {
+            if (!equalityComparer.Equals(value, target[targetIndex])) {
+                targetIndex = 0;
+                continue;
+            }
+
+            if (++targetIndex == target.Length) {
+                return index - target.Length + 1;
+            }
+        }
+
+        return -1;
+    }
+
+    public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, bool> predicate) {
+        foreach (var item in source) {
+            yield return item;
+            if (predicate(item)) break;
+        }
+    }
+
+    public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source) where T : IComparable<T> {
+        using var enumerator = source.GetEnumerator();
+        if (!enumerator.MoveNext()) throw new ArgumentException("Sequence contains no elements");
+        var min = enumerator.Current;
+        var max = enumerator.Current;
+        while (enumerator.MoveNext()) {
+            var current = enumerator.Current;
+            if (current.CompareTo(min) < 0) min = current;
+            if (current.CompareTo(max) > 0) max = current;
+        }
+
+        return (min, max);
     }
 }
